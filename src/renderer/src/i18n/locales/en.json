@@ -1,4 +1,5 @@
 {
+  "statusBar": { "clock": "Clock" },
   "csv": {
     "detectingDelimiter": "Detecting delimiter…",
     "indexProgress": "Indexing CSV… {{percent}}%",

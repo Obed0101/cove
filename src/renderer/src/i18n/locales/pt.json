@@ -1,4 +1,5 @@
 {
+  "statusBar": { "clock": "Relógio" },
   "common": {
     "retry": "Tentar novamente",
     "cancel": "Cancelar"

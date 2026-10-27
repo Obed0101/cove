@@ -77,7 +77,7 @@ function measureWidth(ref: ElementRef): number {
 }
 
 /** Measure rendered widths to choose the roomiest fitting density and collapse usage chips when needed. */
-export function useStatusBarDensity(): {
+export function useStatusBarDensity(clockVisible = false): {
   density: StatusBarDensity
   overflowing: boolean
   collapsedUsageProviders: readonly string[]
@@ -92,6 +92,11 @@ export function useStatusBarDensity(): {
   const overflowingRef = useRef(false)
   const collapsedUsageRef = useRef(NO_COLLAPSED_USAGE)
   const levelWidthsRef = useRef<(StatusBarLevelWidth | undefined)[]>([])
+  const clockVisibleRef = useRef(clockVisible)
+  if (clockVisibleRef.current !== clockVisible) {
+    clockVisibleRef.current = clockVisible
+    levelWidthsRef.current = []
+  }
   const barElementRef = useRef<HTMLElement | null>(null)
   const usageElementRef = useRef<HTMLElement | null>(null)
   const segmentsElementRef = useRef<HTMLElement | null>(null)

@@ -1,4 +1,5 @@
 {
+  "statusBar": { "clock": "时钟" },
   "app": {
     "saving": {
       "delayedTitle": "配置存储操作耗时比平时更长",

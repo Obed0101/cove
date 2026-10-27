@@ -11,14 +11,14 @@ export function getDropIndicatorClasses(dropIndicator: DropIndicator): string {
   return ''
 }
 
-// Keep the foreground marker above selection/unread layers; zero horizontal inset avoids scrollWidth jitter at the strip’s end.
+// Paint inside the slot without changing its drag or scroll geometry.
 export const ACTIVE_TAB_INDICATOR_CLASSES =
-  'pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-foreground z-20'
+  'pointer-events-none absolute -z-10 inset-1 rounded-md bg-accent group-focus-visible:ring-2 group-focus-visible:ring-ring'
 
 export function getTabRootStateClasses(isActive: boolean): string {
   return isActive
-    ? 'bg-[color-mix(in_srgb,var(--foreground)_6%,var(--card))] text-foreground'
-    : 'bg-card text-muted-foreground hover:text-foreground'
+    ? 'isolate text-foreground'
+    : 'isolate text-muted-foreground hover:text-foreground'
 }
 
 export function getTabStripBorderClasses(

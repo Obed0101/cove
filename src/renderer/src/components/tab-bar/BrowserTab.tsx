@@ -182,7 +182,10 @@ export default function BrowserTab({
         }
       }}
     >
-      {isActive && <span className={ACTIVE_TAB_INDICATOR_CLASSES} aria-hidden />}
+      <span
+        className={`${ACTIVE_TAB_INDICATOR_CLASSES} ${isActive ? '' : 'opacity-0 group-hover:opacity-50 group-focus-visible:opacity-100'}`}
+        aria-hidden
+      />
       {/* Keep browser identity distinct on inactive tabs too; muted icons look disabled. */}
       {agentDriving ? (
         // Why: the dimmed favicon keeps the site recognizable under the agent's arrow.

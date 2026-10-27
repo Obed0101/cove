@@ -1,4 +1,4 @@
-import { Activity, Plug, Server } from 'lucide-react'
+import { Activity, Clock, Plug, Server } from 'lucide-react'
 import React from 'react'
 import {
   DropdownMenu,
@@ -13,9 +13,13 @@ import { isStatusBarItemAvailable } from './status-bar-agent-gating'
 import type { StatusBarController } from './use-status-bar-controller'
 
 export function StatusBarVisibilityMenu({
-  controller
+  controller,
+  clockVisible,
+  onClockVisibleChange
 }: {
   controller: StatusBarController
+  clockVisible: boolean
+  onClockVisibleChange: (visible: boolean) => void
 }): React.JSX.Element {
   const {
     detectedAgentIds,
@@ -38,6 +42,10 @@ export function StatusBarVisibilityMenu({
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-0 w-fit" sideOffset={0} align="start">
+        <DropdownMenuCheckboxItem checked={clockVisible} onCheckedChange={onClockVisibleChange}>
+          <Clock className="size-3.5" />
+          {translate('statusBar.clock', 'Clock')}
+        </DropdownMenuCheckboxItem>
         {isStatusBarItemAvailable('claude', detectedAgentIds) && (
           <DropdownMenuCheckboxItem
             checked={statusBarItems.includes('claude')}

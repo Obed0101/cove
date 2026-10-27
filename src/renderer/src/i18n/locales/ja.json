@@ -1,4 +1,5 @@
 {
+  "statusBar": { "clock": "時計" },
   "app": {
     "saving": {
       "delayedTitle": "プロファイルのストレージ処理に通常より時間がかかっています",

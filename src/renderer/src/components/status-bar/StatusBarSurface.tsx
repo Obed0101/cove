@@ -37,6 +37,7 @@ import { useStatusBarController } from './use-status-bar-controller'
 import { isOwnerNotSetUpPlaceholder } from './owner-usage-rate-limits'
 import { StatusBarVisibilityMenu } from './StatusBarVisibilityMenu'
 import { isPairedWebClientWindow } from '@/lib/desktop-window-chrome'
+import { PersonalClockSegment, readClockVisible, saveClockVisible } from './PersonalClockSegment'
 
 const PetStatusSegment = lazyWithRetry(() =>
   import('./PetStatusSegment').then((module) => ({ default: module.PetStatusSegment }))
@@ -62,7 +63,8 @@ export function StatusBarSurface({
 }: StatusBarProps): React.JSX.Element | null {
   // Memoized labels still need to follow language changes.
   useTranslation()
-  const controller = useStatusBarController(floatingTerminalOpen)
+  const [clockVisible, setClockVisible] = React.useState(readClockVisible)
+  const controller = useStatusBarController(floatingTerminalOpen, clockVisible)
   if (!controller) {
     return null
   }
@@ -132,6 +134,7 @@ export function StatusBarSurface({
         data-overflowing={overflowing}
       >
         <div ref={usageRef} className="flex shrink-0 items-center gap-3">
+          {clockVisible && !compact ? <PersonalClockSegment /> : null}
           {isEmptyUsageState ? (
             showEmptyUsageCta ? (
               <StatusBarUsageEmptyCta remoteOwner={remoteOwner} />
@@ -347,7 +350,14 @@ export function StatusBarSurface({
         </div>
       </div>
 
-      <StatusBarVisibilityMenu controller={controller} />
+      <StatusBarVisibilityMenu
+        controller={controller}
+        clockVisible={clockVisible}
+        onClockVisibleChange={(visible) => {
+          setClockVisible(visible)
+          saveClockVisible(visible)
+        }}
+      />
     </div>
   )
 }

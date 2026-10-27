@@ -18,6 +18,12 @@ describe('STATUS_BAR_DENSITY_LEVELS', () => {
 })
 
 describe('pickStatusBarDensityLevel', () => {
+  it('settles at compact when the clock makes only the full level too wide', () => {
+    const widths = [w(510), w(430), w(400), w(390), w(360)]
+    expect(pickStatusBarDensityLevel(widths, 480)).toBe(1)
+    expect(pickStatusBarDensityLevel(recordStatusBarDensityWidth(widths, 1, w(430)), 480)).toBe(1)
+    expect(pickStatusBarDensityLevel(widths, 520)).toBe(0)
+  })
   it('keeps the roomiest level that fits', () => {
     expect(pickStatusBarDensityLevel([w(700), w(600), w(500), w(400), w(300)], 800)).toBe(0)
     expect(pickStatusBarDensityLevel([w(700), w(600), w(500), w(400), w(300)], 550)).toBe(2)

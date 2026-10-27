@@ -1,4 +1,5 @@
 {
+  "statusBar": { "clock": "Reloj" },
   "app": {
     "saving": {
       "delayedTitle": "El almacenamiento del perfil está tardando más de lo habitual",

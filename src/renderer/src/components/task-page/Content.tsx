@@ -59,14 +59,13 @@ export function TaskPageContent({
       />
     )
   ) : taskSource === 'github' && githubMode === 'project' ? (
-    <div className="mt-3 flex min-h-0 min-w-0 max-h-full flex-col overflow-hidden rounded-md border border-border/50 bg-muted/50 shadow-sm">
+    <div className="mt-3 flex min-h-0 min-w-0 max-h-full flex-col overflow-hidden border-t border-border/60">
       <ProjectViewWrapper
         selectedRepoIds={repoSelection}
         sourceHostId={accountBackedTaskSourceHostId}
       />
     </div>
   ) : taskSource === 'github' ? (
-    // Join the table shell to the filter chrome without a doubled seam.
     <TaskPageGitHubList model={model} />
   ) : taskSource === 'gitlab' && gitlabView === 'todos' ? (
     <TaskPageGitLabTodoList model={model} />

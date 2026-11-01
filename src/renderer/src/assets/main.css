@@ -97,6 +97,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-shell: var(--shell);
+  --color-pane-surface: var(--pane-surface);
+  --color-control-active: var(--control-active);
+  --color-floating-surface: var(--floating-surface);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-worktree-sidebar: var(--worktree-sidebar);
@@ -131,6 +135,8 @@
   --color-terminal-pane-title-on-light-separator: var(--terminal-pane-title-on-light-separator);
   --color-ai-action-accent: var(--ai-action-accent);
   --color-status-success: var(--status-success);
+  /* Cove: worktree "alive" dot uses the design preview's --ok (git-added) green. */
+  --color-worktree-status-active: var(--git-decoration-added);
   --color-status-success-background: var(--status-success-background);
   --color-status-success-border: var(--status-success-border);
   --color-status-warning: var(--status-warning);
@@ -239,9 +245,22 @@
   --chart-3: var(--color-blue-600);
   --chart-4: var(--color-blue-700);
   --chart-5: var(--color-blue-800);
-  --worktree-sidebar: #f5f5f5;
+  /* Window chrome surface behind the workbench card (sidebars, tab strip, status bar). */
+  --shell: #fafafa;
+  /* Workbench card fill; the Cove terminal themes paint the same color. */
+  --pane-surface: color-mix(in srgb, var(--shell) 94%, var(--foreground));
+  /* Pressed segment in segmented controls (the preview's --control-active). */
+  --control-active: color-mix(in srgb, var(--foreground) 8%, transparent);
+  /* Popovers and menus (the preview's .popover): opaque in Solid, 90 % in Glass. */
+  --floating-surface: #fafafa;
+  --worktree-sidebar: var(--shell);
   --worktree-sidebar-foreground: #0a0a0a;
-  --worktree-sidebar-accent: #eaeaea;
+  /* Cove: the design preview's --selected, 8% foreground over the shell. */
+  --worktree-sidebar-accent: color-mix(
+    in srgb,
+    var(--worktree-sidebar-foreground) 8%,
+    var(--shell)
+  );
   --worktree-sidebar-accent-foreground: #171717;
   --worktree-sidebar-border: #e5e5e5;
   --worktree-sidebar-ring: #a1a1a1;
@@ -346,10 +365,16 @@
   --chart-3: var(--color-blue-600);
   --chart-4: var(--color-blue-700);
   --chart-5: var(--color-blue-800);
-  /* Mirror light mode’s lifted worktree sidebar above the dark canvas. */
-  --worktree-sidebar: #2a2a2a;
+  --shell: #171717;
+  --pane-surface: color-mix(in srgb, var(--shell) 94%, var(--foreground));
+  --floating-surface: #171717;
+  --worktree-sidebar: var(--shell);
   --worktree-sidebar-foreground: #fafafa;
-  --worktree-sidebar-accent: #353535;
+  --worktree-sidebar-accent: color-mix(
+    in srgb,
+    var(--worktree-sidebar-foreground) 8%,
+    var(--shell)
+  );
   --worktree-sidebar-accent-foreground: #fafafa;
   /* Match --border / --sidebar-border (7%) so the left sidebar's divider lines
      aren't brighter than the rest of the UI in dark mode (#5906). */
@@ -391,6 +416,54 @@
   /* Brighter than terminal defaults so the always-visible line clears 3:1 on `--card`. */
   --tab-group-split-divider: #71717a;
   --tab-group-split-divider-strong: #a1a1aa;
+}
+
+/* Cove Glass: the design preview's material, simulated in the renderer. The body paints the
+   tinted backdrop once so shell surfaces go transparent instead of stacking their tint. */
+.glass {
+  --glass-tint: color-mix(in srgb, #fafafa 38%, transparent);
+  --glass-backdrop:
+    radial-gradient(ellipse at 10% 70%, #cfe0d5, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, #d6e0e8, transparent 60%), #eef1f1;
+  --shell: transparent;
+  --pane-surface: color-mix(in srgb, var(--foreground) 3%, transparent);
+  --accent: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --control-active: color-mix(in srgb, #fafafa 72%, transparent);
+  --floating-surface: color-mix(in srgb, #fafafa 90%, transparent);
+  --muted-foreground: color-mix(in srgb, var(--foreground) 68%, #fafafa);
+  --worktree-sidebar-accent: color-mix(in srgb, var(--worktree-sidebar-foreground) 8%, transparent);
+}
+
+.dark.glass {
+  --glass-tint: color-mix(in srgb, #171717 38%, transparent);
+  --glass-backdrop:
+    radial-gradient(ellipse at 10% 70%, #3b5246, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, #4c5a66, transparent 60%), #1d2627;
+  --control-active: color-mix(in srgb, var(--foreground) 12%, transparent);
+  --floating-surface: color-mix(in srgb, #171717 90%, transparent);
+  --muted-foreground: color-mix(in srgb, var(--foreground) 68%, #171717);
+  --worktree-sidebar-accent: color-mix(
+    in srgb,
+    var(--worktree-sidebar-foreground) 12%,
+    transparent
+  );
+}
+
+html.glass body {
+  background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-backdrop);
+}
+
+html.glass [data-floating-terminal-frame] {
+  background: color-mix(in srgb, #fafafa 80%, transparent);
+  backdrop-filter: blur(20px);
+}
+
+html.dark.glass [data-floating-terminal-frame] {
+  background: color-mix(in srgb, #171717 80%, transparent);
+}
+
+html.glass [data-floating-terminal-frame] > div {
+  background: transparent;
 }
 
 /* Status and diff colors follow the chat scheme without copying the app palette. */
@@ -455,6 +528,7 @@
 .plugin-security-chrome {
   /* Host-owned contrast prevents plugin themes from disguising provenance or consent. */
   --background: var(--orca-security-background);
+  --floating-surface: var(--orca-security-background);
   --foreground: var(--orca-security-foreground);
   --card: var(--orca-security-card);
   --card-foreground: var(--orca-security-card-foreground);
@@ -658,6 +732,11 @@ body:has(> [data-slot='dialog-overlay'], > [data-slot='sheet-overlay'])
     @apply border-border outline-ring/50;
   }
 
+  /* Cove: default-weight lucide icons draw at the design preview's 1.7 stroke. */
+  svg.lucide[stroke-width='2'] {
+    stroke-width: 1.7;
+  }
+
   body {
     @apply bg-background text-foreground;
     margin: 0;
@@ -704,7 +783,8 @@ body:has(> [data-slot='dialog-overlay'], > [data-slot='sheet-overlay'])
 
 /* Reserve scrollbar space only while overflowing; fitting Windows lists must omit gutters and arrow buttons. */
 .worktree-sidebar-scrollbar {
-  padding-right: 4px;
+  /* Cove: rows inset 8px on both sides, matching the design preview sidebar padding. */
+  padding-right: 8px;
   scrollbar-color: transparent transparent;
 }
 
@@ -894,7 +974,8 @@ html.native-shell .app-layout {
   content: '';
   position: absolute;
   border-radius: 1px;
-  background: var(--tab-group-split-divider);
+  /* Cove: split panes are separate cards, so the divider only shows while hovering or dragging. */
+  background: transparent;
   transition: background 100ms ease;
 }
 
@@ -935,21 +1016,21 @@ html.native-shell .app-layout {
 }
 
 .titlebar {
-  height: 36px;
-  min-height: 36px;
+  height: 44px;
+  min-height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: var(--bg-titlebar, var(--card));
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-titlebar, var(--shell));
+  color: var(--foreground);
   -webkit-app-region: drag;
   user-select: none;
 }
 
-/* Reserve the same 36px baseline (4px drag strip + 32px tabs) for macOS traffic lights and sidebar chrome. */
+/* Reserve the same 44px baseline (4px drag strip + 40px tabs) for macOS traffic lights and sidebar chrome. */
 .titlebar-left {
-  height: 36px;
-  min-height: 36px;
+  height: 44px;
+  min-height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -958,8 +1039,7 @@ html.native-shell .app-layout {
   /* Why: in workspace view this strip sits directly above the worktree
      sidebar — match its surface so the left column reads as one panel. */
   background: var(--worktree-sidebar);
-  /* Use inset shadow instead of border to preserve 36px content height and y=18 alignment with native traffic lights. */
-  box-shadow: inset 0 -1px 0 var(--border);
+  color: var(--worktree-sidebar-foreground);
   -webkit-app-region: drag;
   user-select: none;
 }
@@ -967,7 +1047,8 @@ html.native-shell .app-layout {
 /* Why: when the sidebar is collapsed this header floats over the tab strip,
    so keep the standard titlebar surface instead of the sidebar tint. */
 .titlebar-left-floating {
-  background: var(--bg-titlebar, var(--card));
+  background: var(--bg-titlebar, var(--shell));
+  color: var(--foreground);
 }
 
 .titlebar-traffic-light-pad {
@@ -1120,17 +1201,18 @@ html.native-shell .app-layout {
   gap: 4px;
   height: 24px;
   max-width: min(280px, 32vw);
-  margin-left: 2px;
+  margin-left: 0;
   margin-right: 4px;
-  padding: 0 6px;
+  padding: 0 4px;
   border-radius: 4px;
-  color: var(--muted-foreground);
-  font-size: 12px;
+  color: var(--foreground);
+  font-size: 13px;
   font-weight: 600;
   line-height: 24px;
   white-space: nowrap;
   overflow: hidden;
-  cursor: pointer;
+  /* Static label: only its right-click menu is interactive, so no pointer affordance. */
+  cursor: default;
 }
 
 /* Why: when the app name sits inside the worktree sidebar header, it should
@@ -1308,24 +1390,14 @@ html.native-shell .app-layout {
   color: var(--accent-foreground);
 }
 
+/* Cove: selection is a translucent foreground wash in both themes, matching the design preview. */
 [data-file-explorer-row][data-selected='true'] {
-  /* Why: flat bg-accent ≈ panel background in light mode, so selection mixes
-     foreground into accent and adds an inset ring to stay legible in both themes. */
-  background: color-mix(in srgb, var(--foreground) 8%, var(--accent));
-  box-shadow: inset 0 0 0 1px var(--border);
-  color: var(--accent-foreground);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
 }
 
 [data-file-explorer-row][data-selected='true']:hover {
-  background: color-mix(in srgb, var(--foreground) 10%, var(--accent));
-}
-
-.dark [data-file-explorer-row][data-selected='true'] {
-  background: color-mix(in srgb, var(--accent) 70%, transparent);
-}
-
-.dark [data-file-explorer-row][data-selected='true']:hover {
-  background: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
 }
 
 .sidebar {
@@ -1355,22 +1427,18 @@ html.native-shell .app-layout {
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--worktree-sidebar-ring) 30%, transparent);
 }
 
-/* Why: the brighter border carries the selected state; a translucent wash keeps
-   card text legible instead of lifting the surface toward the foreground color. */
+/* Cove: the open worktree gets a quiet filled row (no ring) so it reads at a glance. */
 [data-worktree-card-surface][data-worktree-card-active='primary'] {
-  border-color: color-mix(in srgb, var(--worktree-sidebar-border) 40%, transparent);
-  background: color-mix(in srgb, var(--worktree-sidebar-foreground) 8%, transparent);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--worktree-sidebar-foreground) 4%, transparent);
+  border-color: transparent;
+  background: color-mix(in srgb, var(--sidebar-foreground) 7%, transparent);
 }
 
 .dark [data-worktree-card-surface][data-worktree-card-active='primary'] {
-  border-color: color-mix(
-    in srgb,
-    var(--worktree-sidebar-foreground) 18%,
-    var(--worktree-sidebar-border)
-  );
-  background: color-mix(in srgb, var(--worktree-sidebar-foreground) 10%, transparent);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--worktree-sidebar-foreground) 3%, transparent);
+  background: color-mix(in srgb, var(--sidebar-accent) 70%, transparent);
+}
+
+[data-worktree-card-surface]:not([data-worktree-card-active]) {
+  --foreground: var(--muted-foreground);
 }
 
 [data-worktree-card-surface][data-worktree-card-active='secondary'] {
@@ -1873,7 +1941,26 @@ html.native-shell .app-layout {
 }
 
 .settings-view-shell {
+  /* Cove: settings live on the pane card, so nested cards share its surface instead of sinking to --card. */
+  --card: var(--pane-surface);
   animation: settings-shell-enter 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-view-shell {
+    animation: none;
+  }
+}
+
+/* Cove: blocks inside floating panels share their surface instead of sinking to the window background; :where keeps security chrome in charge. */
+:where([data-slot='dialog-content'], [data-slot='sheet-content']) {
+  --background: var(--floating-surface);
+  --card: var(--floating-surface);
+}
+
+/* Cove: while a sidebar opens or closes, its content holds the open width so the moving edge reveals it instead of reflowing it every frame. */
+[data-sidebar-animating] > :not(.absolute, [data-sidebar-fixed-width]) {
+  min-width: var(--sidebar-open-width);
 }
 
 .repo-icon-emoji-picker .EmojiPickerReact {
@@ -2434,6 +2521,73 @@ html.native-shell .app-layout {
 
 .animate-update-card-enter {
   animation: update-card-enter 200ms ease-out both;
+}
+
+/* Cove: state-change motion only (a finished focus run, a widget or tab that just appeared, a page opened). */
+@keyframes cove-focus-complete {
+  from {
+    background-color: var(--status-success-background);
+    box-shadow: 0 0 0 1px var(--status-success-border);
+  }
+  to {
+    background-color: transparent;
+    box-shadow: 0 0 0 1px transparent;
+  }
+}
+
+@keyframes cove-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cove-tab-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cove-footer-widget-in {
+  animation: cove-rise-in 160ms ease-out both;
+}
+
+.cove-page-in {
+  animation: cove-rise-in 180ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.cove-tab-in {
+  transform-origin: left center;
+  animation: cove-tab-in 140ms ease-out both;
+}
+
+/* A `from`-only keyframe fills to the inline width, so the markup keeps the real value. */
+@keyframes cove-meter-fill {
+  from {
+    width: 0;
+  }
+}
+
+.cove-meter-fill {
+  animation: cove-meter-fill 400ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cove-footer-widget-in,
+  .cove-page-in,
+  .cove-tab-in,
+  .cove-meter-fill {
+    animation: none;
+  }
 }
 
 /* Why: `skills update` reports no parseable progress, so the skill-update bar is

@@ -53,7 +53,7 @@ export function TaskPageJiraFilters({
     sortedAvailableJiraProjects
   } = model
   return (
-    <div className="rounded-md rounded-b-none border border-border/50 bg-muted/50 px-3 pt-2 pb-0 shadow-sm">
+    <div className="rounded-t-lg border border-border px-3 pt-2 pb-0">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <div className="min-w-0 max-w-64">
@@ -243,7 +243,7 @@ export function TaskPageJiraFilters({
                     'Search issues or enter JQL, e.g. project = ABC'
                   )
             }
-            className="h-8 rounded-md border-border/50 bg-background pl-8 pr-8 text-xs"
+            className="h-8 rounded-md border-border bg-transparent pl-8 pr-8 text-xs"
           />
           {jiraSearchInput ? (
             <button

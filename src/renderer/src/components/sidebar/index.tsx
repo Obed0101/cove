@@ -137,15 +137,18 @@ function Sidebar({
     }
   }, [agentDashboardDrawerOpen, setAgentDashboardDrawerOpen, showAgentDashboard])
 
-  const { containerRef, onResizeStart, isResizing } = useSidebarResize<HTMLDivElement>({
-    isOpen: sidebarOpen,
-    width: sidebarWidth,
-    minWidth: MIN_WIDTH,
-    maxWidth: MAX_WIDTH,
-    deltaSign: 1,
-    setWidth: setSidebarWidth,
-    onDraftWidthChange: setLiveSidebarWidth
-  })
+  const { containerRef, onResizeStart, isResizing, contentOpen } = useSidebarResize<HTMLDivElement>(
+    {
+      isOpen: sidebarOpen,
+      width: sidebarWidth,
+      minWidth: MIN_WIDTH,
+      maxWidth: MAX_WIDTH,
+      deltaSign: 1,
+      setWidth: setSidebarWidth,
+      onDraftWidthChange: setLiveSidebarWidth,
+      animateToggle: true
+    }
+  )
 
   useWorkspaceRevealBodyRedirect(sidebarOpen && sidebarBody === 'agents')
   // A collapsed sidebar takes no drops.
@@ -165,7 +168,7 @@ function Sidebar({
         style={leftSidebarStyle}
         {...dropHandlers}
       >
-        {sidebarOpen && (
+        {contentOpen && (
           <>
             <SidebarNav />
             <SidebarHeader

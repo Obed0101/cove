@@ -14,7 +14,6 @@ import {
 import { FileExplorerScopeNotice } from './FileExplorerScopeNotice'
 import { useFileExplorerRootNavigation } from './use-file-explorer-root-navigation'
 import { useFileExplorerScopeTransition } from './use-file-explorer-scope-transition'
-import { basename } from '@/lib/path'
 import { cn } from '@/lib/utils'
 import { isGitRepoKind } from '../../../../shared/repo-kind'
 import { getVisibleFileExplorerWorktreePath } from './file-explorer-reset'
@@ -86,7 +85,6 @@ function FileExplorerFiles(): React.JSX.Element {
     rightSidebarOpen,
     worktreePath
   })
-  const repoName = activeRepo?.displayName ?? (worktreePath ? basename(worktreePath) : '')
   const activeRepoSupportsGit = activeRepo ? isGitRepoKind(activeRepo) : false
 
   const expanded = useMemo(
@@ -246,21 +244,6 @@ function FileExplorerFiles(): React.JSX.Element {
         }
         className="flex min-h-0 flex-1 flex-col"
       >
-        <FileExplorerToolbar
-          repoName={repoName}
-          worktreePath={worktreePath}
-          {...getRouteForLocalPathOpenOwner(openInOwner)}
-          workspaceId={activeWorktreeId}
-          refresh={manualRefresh}
-          canRefresh={isFilesViewActive}
-          canCollapseAll={canCollapseAll}
-          onCollapseAll={handleCollapseAll}
-          showGitIgnoredFilesToggle={activeRepoSupportsGit}
-          showGitIgnoredFiles={showGitIgnoredFiles}
-          onToggleGitIgnoredFiles={toggleGitIgnoredFiles}
-          showDotfiles={showDotfiles}
-          onToggleDotfiles={handleToggleDotfiles}
-        />
         {activeWorktree?.isSparse && (
           <FileExplorerScopeNotice
             rootSelect={
@@ -284,7 +267,26 @@ function FileExplorerFiles(): React.JSX.Element {
             sparse={!!activeWorktree?.isSparse}
           />
         )}
-        <FileExplorerQueryStrip view={explorerView} onSelectView={setRightSidebarExplorerView}>
+        <FileExplorerQueryStrip
+          view={explorerView}
+          onSelectView={setRightSidebarExplorerView}
+          actions={
+            <FileExplorerToolbar
+              worktreePath={worktreePath}
+              {...getRouteForLocalPathOpenOwner(openInOwner)}
+              workspaceId={activeWorktreeId}
+              refresh={manualRefresh}
+              canRefresh={isFilesViewActive}
+              canCollapseAll={canCollapseAll}
+              onCollapseAll={handleCollapseAll}
+              showGitIgnoredFilesToggle={activeRepoSupportsGit}
+              showGitIgnoredFiles={showGitIgnoredFiles}
+              onToggleGitIgnoredFiles={toggleGitIgnoredFiles}
+              showDotfiles={showDotfiles}
+              onToggleDotfiles={handleToggleDotfiles}
+            />
+          }
+        >
           {/* Keep query rows mounted to preserve input selection when switching modes. */}
           <div className="relative min-h-8">
             <div hidden={explorerView !== 'files'}>

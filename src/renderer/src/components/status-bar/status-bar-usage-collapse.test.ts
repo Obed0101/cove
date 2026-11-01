@@ -130,6 +130,23 @@ describe('measureUsageRow unit label', () => {
     expect(shown.chips.map((chip) => chip.percentage)).toEqual([true, true])
   })
 
+  it('includes a non-chip clock and its gap in natural and pinned widths', () => {
+    const usage = renderRow({
+      unitCollapsed: false,
+      moreInRow: false,
+      chips: [{ provider: 'codex', urgent: true, percentage: true, collapsed: false }]
+    })
+    const withoutClock = measureUsageRow(usage)
+    const clock = document.createElement('span')
+    usage.prepend(clock)
+    vi.spyOn(usage, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(0, 0, withoutClock.renderedWidth + 50 + GAP, 16)
+    )
+    const withClock = measureUsageRow(usage)
+    expect(withClock.naturalWidth - withoutClock.naturalWidth).toBe(50 + GAP)
+    expect(withClock.pinnedWidth - withoutClock.pinnedWidth).toBe(50 + GAP)
+  })
+
   it('drops the label from the pinned width unless an urgent chip shows a percentage', () => {
     const calm = [
       { provider: 'codex', urgent: false, percentage: true, collapsed: false },

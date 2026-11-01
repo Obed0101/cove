@@ -73,35 +73,41 @@ export function formatResetCreditExpiry(
       })
 }
 
-export function ProviderIcon({ provider }: { provider: string }): React.JSX.Element {
+export function ProviderIcon({
+  provider,
+  size = 13
+}: {
+  provider: string
+  size?: number
+}): React.JSX.Element {
   if (provider === 'codex') {
-    return <OpenAIIcon size={13} />
+    return <OpenAIIcon size={size} />
   }
   if (provider === 'gemini') {
-    return <GeminiIcon size={13} />
+    return <GeminiIcon size={size} />
   }
   if (provider === 'opencode-go') {
-    return <OpenCodeGoIcon size={13} />
+    return <OpenCodeGoIcon size={size} />
   }
   if (provider === 'kimi') {
-    return <AgentIcon agent="kimi" size={13} />
+    return <AgentIcon agent="kimi" size={size} />
   }
   if (provider === 'antigravity') {
-    return <AgentIcon agent="antigravity" size={13} />
+    return <AgentIcon agent="antigravity" size={size} />
   }
   if (provider === 'minimax') {
-    return <MiniMaxIcon size={13} />
+    return <MiniMaxIcon size={size} />
   }
   if (provider === 'grok') {
-    return <AgentIcon agent="grok" size={13} />
+    return <AgentIcon agent="grok" size={size} />
   }
   if (provider === 'zcode') {
-    return <AgentIcon agent="zcode" size={13} />
+    return <AgentIcon agent="zcode" size={size} />
   }
   if (provider === 'cursor') {
-    return <AgentIcon agent="cursor" size={13} />
+    return <AgentIcon agent="cursor" size={size} />
   }
-  return <ClaudeIcon size={13} />
+  return <ClaudeIcon size={size} />
 }
 
 function ErrorMessage({

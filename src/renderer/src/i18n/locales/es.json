@@ -1,4 +1,51 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "Volver al espacio de trabajo",
+    "inboxDescription": "Novedades de agentes que necesitan tu atención.",
+    "tasksTitle": "Tareas",
+    "tasksDescription": "Trabajo pendiente en todos tus proyectos.",
+    "taskProvider": "Proveedor de tareas"
+  },
+  "taskPage": {
+    "presets": "Filtros rápidos de tareas",
+    "githubMode": "Vista de GitHub",
+    "board": {
+      "needsReview": "Pendiente de revisión",
+      "changesRequested": "Cambios solicitados",
+      "approved": "Aprobado",
+      "unassigned": "Sin asignar",
+      "noLabel": "Sin etiqueta",
+      "groupRepo": "Proyecto",
+      "groupAssignee": "Responsable",
+      "groupLabel": "Etiqueta",
+      "groupBy": "Agrupar",
+      "groupByTitle": "Agrupar tablero por",
+      "viewMode": "Vista de tareas"
+    }
+  },
+  "statusBar": {
+    "clock": "Reloj",
+    "footerWidgets": "Widgets del pie",
+    "localClock": "Reloj local",
+    "focusTimer": "Temporizador de foco",
+    "focusIdle": "Foco · {{time}}",
+    "focusRunning": "Pausa · {{time}}",
+    "focusComplete": "Foco completado · Reiniciar",
+    "quickNote": "Nota rápida",
+    "quickNoteClose": "Cerrar nota",
+    "quickNotePlaceholder": "Guarda aquí una idea…",
+    "quickNoteSaved": "Guardada en este dispositivo.",
+    "weather": "Clima",
+    "weatherLabel": "Clima: {{temperature}} en {{city}}",
+    "weatherSetCity": "Elegir ciudad",
+    "weatherClose": "Cerrar clima",
+    "weatherCity": "Ciudad",
+    "weatherCityPlaceholder": "Ciudad, p. ej. Madrid",
+    "weatherSave": "Guardar",
+    "weatherNotFound": "No se encontró ninguna ciudad con ese nombre.",
+    "weatherFailed": "No se pudo conectar con Open-Meteo. Inténtalo de nuevo.",
+    "weatherSource": "Clima actual de Open-Meteo. La ciudad se guarda en este dispositivo."
+  },
   "app": {
     "saving": {
       "delayedTitle": "El almacenamiento del perfil está tardando más de lo habitual",
@@ -107,6 +154,18 @@
         "spanish": "Español",
         "french": "Français",
         "portuguese": "Português (Brasil)"
+      },
+      "windowMaterial": {
+        "title": "Material de la ventana",
+        "description": "Superficies sólidas o vidrio translúcido sobre un fondo suave.",
+        "solid": "Sólido",
+        "glass": "Vidrio"
+      },
+      "projectIcons": {
+        "title": "Iconos de proyecto",
+        "description": "Sprites pixelados en la barra lateral o el icono propio de cada repositorio.",
+        "pixel": "Píxel",
+        "repository": "Repositorio"
       },
       "statusBar": {
         "claudeToggleDescription": "Muestra el consumo de tokens y el costo de Claude para el espacio de trabajo activo.",

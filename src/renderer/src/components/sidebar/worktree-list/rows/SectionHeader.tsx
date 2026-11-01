@@ -1,11 +1,10 @@
 import React from 'react'
-import { ChevronDown } from 'lucide-react'
 import { ProjectHeaderHostLabel, ProjectHeaderHostTooltip } from './ProjectHeaderHostLabel'
 import type { ProjectHeaderHostContext } from './project-header-host-context'
 import type { VirtualItem } from '@tanstack/react-virtual'
 import { cn } from '@/lib/utils'
 import type { RepoSshGateResolver } from '@/hooks/use-repo-ssh-gate-resolver'
-import { RepoIconGlyph } from '@/components/repo/repo-icon'
+import { ProjectHeaderIcon } from '@/components/repo/project-header-icon'
 import { RepoForkIndicator } from '@/components/repo/repo-fork-indicator'
 import type { FolderWorkspacePathStatus } from '../../../../../../shared/folder-workspace-path-status'
 import { isConfirmedStaleFolderPathStatus } from '../../../../../../shared/folder-workspace-path-status'
@@ -42,15 +41,15 @@ import {
   RepoHeaderProjectActionsMenu,
   type RepoHeaderProjectActions
 } from './repo-header-project-actions'
-import {
-  handleRepoHeaderCollapseAffordancePointerDown,
-  shouldIgnoreRepoHeaderToggle
-} from './header-event-guards'
+import { shouldIgnoreRepoHeaderToggle } from './header-event-guards'
+import { SectionHeaderCollapseChevron } from './SectionHeaderCollapseChevron'
 import type { WorktreeSidebarHeaderDrag } from '../drag/use-header-drag'
 import { getWorktreeOptionId } from './option-dom'
+import { getRepoIdFromWorktreeId } from '../../../../../../shared/worktree/id'
 
 export type SectionHeaderRowContext = {
   groupBy: WorktreeGroupBy
+  activeWorktreeId?: string | null
   projectHeaderHostContexts?: ReadonlyMap<string, ProjectHeaderHostContext>
   collapsedGroups: Set<string>
   workspaceStatuses: readonly WorkspaceStatusDefinition[]
@@ -91,6 +90,7 @@ export function renderWorktreeSectionHeaderRow(args: {
   isActiveStickyHeader: boolean
   hasStickyHost: boolean
   hasHeaderTopSpacing: boolean
+  hasHeaderBottomSpacing: boolean
   measureVirtualRowElement: (element: HTMLDivElement | null) => void
 }): React.JSX.Element {
   const { ctx, row, vItem, isActiveStickyHeader } = args
@@ -183,6 +183,11 @@ export function renderWorktreeSectionHeaderRow(args: {
     : null
   const collapseKey = row.collapseKey ?? row.key
   const isHeaderCollapsed = ctx.collapsedGroups.has(collapseKey)
+  const isCurrentProject = Boolean(
+    headerRepo &&
+    ctx.activeWorktreeId &&
+    getRepoIdFromWorktreeId(ctx.activeWorktreeId) === headerRepo.id
+  )
   // Why: repo/project/status/pinned share compact section chrome; flat "All" stays a simple label.
   const showHeaderCollapseAffordance =
     row.count > 0 &&
@@ -201,7 +206,8 @@ export function renderWorktreeSectionHeaderRow(args: {
       className={cn(
         'left-0 right-0',
         // Why: drop the inter-group spacer once the header pins so it sits flush at top (see getActiveStickyHeaderIndexForScroll).
-        args.hasHeaderTopSpacing && !isActiveStickyHeader && 'pt-1',
+        args.hasHeaderTopSpacing && !isActiveStickyHeader && 'pt-1.5',
+        args.hasHeaderBottomSpacing && 'pb-0.5',
         isActiveStickyHeader
           ? cn(
               'sticky z-20 bg-worktree-sidebar',
@@ -243,8 +249,12 @@ export function renderWorktreeSectionHeaderRow(args: {
           data-workspace-pin-drop-target={isPinnedHeader ? '' : undefined}
           className={cn(
             // Keep grab on the title; action buttons use pointer cursors.
-            'group relative flex h-7 w-full items-center gap-1.5 pr-2 text-left transition-all',
+            'group relative flex h-9 w-full items-center gap-2 rounded-lg pr-2.5 text-left transition-all',
             !(isDraggableRepoHeader || isDraggableProjectGroupHeader) && 'cursor-pointer',
+            row.repo &&
+              (isCurrentProject
+                ? 'bg-worktree-sidebar-accent text-worktree-sidebar-foreground'
+                : 'text-muted-foreground hover:bg-worktree-sidebar-foreground/5'),
             ctx.highlightedRevealRowKey === row.key &&
               'rounded-md bg-worktree-sidebar-accent ring-1 ring-worktree-sidebar-ring/50',
             (isDraggingThis || isDraggingThisProjectGroup) &&
@@ -312,7 +322,7 @@ export function renderWorktreeSectionHeaderRow(args: {
             data-repo-header-drag-handle={isDraggableRepoHeader ? '' : undefined}
             data-project-group-header-drag-handle={isDraggableProjectGroupHeader ? '' : undefined}
             className={cn(
-              'flex min-w-0 flex-1 items-center gap-1.5 self-stretch',
+              'flex min-w-0 flex-1 items-center gap-2 self-stretch',
               hostContext && 'can-hover:pr-18',
               (isDraggableRepoHeader || isDraggableProjectGroupHeader) &&
                 'cursor-grab active:cursor-grabbing'
@@ -325,11 +335,10 @@ export function renderWorktreeSectionHeaderRow(args: {
               )}
             >
               {row.repo ? (
-                <RepoIconGlyph
+                <ProjectHeaderIcon
                   repoIcon={row.repo.repoIcon}
+                  index={repoHeaderIndex ?? 0}
                   color={repoHeaderColor}
-                  className="size-4"
-                  iconClassName="size-3.5"
                 />
               ) : (
                 <headerVisual.icon className="size-3" />
@@ -338,7 +347,7 @@ export function renderWorktreeSectionHeaderRow(args: {
 
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 items-center gap-1.5">
-                <div className="min-w-0 truncate text-[13px] font-semibold leading-4">{label}</div>
+                <div className="min-w-0 truncate text-sm font-semibold leading-5">{label}</div>
                 {hostContext ? <ProjectHeaderHostLabel context={hostContext} /> : null}
                 <RepoForkIndicator upstream={row.repo?.upstream} />
                 <FolderPathStatusIndicator status={projectGroupPathStatus} />
@@ -347,25 +356,14 @@ export function renderWorktreeSectionHeaderRow(args: {
             </div>
           </div>
 
-          <ProjectHeaderActions>
-            {showHeaderCollapseAffordance ? (
-              <div
-                className="flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground"
-                data-repo-header-collapse-affordance=""
-                aria-hidden
-                onPointerDown={handleRepoHeaderCollapseAffordancePointerDown}
-                onClick={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  ctx.toggleGroupWithScrollAnchor(collapseKey)
-                }}
-              >
-                <ChevronDown
-                  className={cn('size-3.5 transition-transform', isHeaderCollapsed && '-rotate-90')}
-                />
-              </div>
-            ) : null}
+          {showHeaderCollapseAffordance ? (
+            <SectionHeaderCollapseChevron
+              collapsed={isHeaderCollapsed}
+              onToggle={() => ctx.toggleGroupWithScrollAnchor(collapseKey)}
+            />
+          ) : null}
 
+          <ProjectHeaderActions>
             {isProjectGroupHeader && !row.repo && projectGroupIdForHeader ? (
               <ProjectGroupHeaderMenu
                 groupId={projectGroupIdForHeader}

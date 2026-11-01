@@ -77,6 +77,7 @@ export function buildWorktreeVirtualRowContext(args: BuildArgs): WorktreeVirtual
     onWorkspaceStatusDrop: statusDrag.handleWorkspaceStatusDrop,
     header: {
       groupBy: props.groupBy,
+      activeWorktreeId: props.activeWorktreeId,
       collapsedGroups: props.collapsedGroups,
       workspaceStatuses: props.workspaceStatuses,
       projectGroups: args.projectGroups,

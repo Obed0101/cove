@@ -69,7 +69,7 @@ export function AutomationListToolbar({
           <TooltipTrigger asChild>
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="icon-sm"
               aria-label={translate(
                 'auto.components.automations.AutomationsPage.19a6e30eae',
@@ -77,7 +77,7 @@ export function AutomationListToolbar({
               )}
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="shrink-0 border border-border bg-background shadow-none hover:bg-muted/50"
+              className="shrink-0 shadow-none"
             >
               <RefreshCw className={cn('size-4', isRefreshing && 'animate-spin')} />
             </Button>

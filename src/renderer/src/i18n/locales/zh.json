@@ -1,4 +1,34 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "返回工作区",
+    "inboxDescription": "需要你关注的智能体更新。",
+    "tasksTitle": "任务",
+    "tasksDescription": "跨项目待处理的工作。",
+    "taskProvider": "任务来源"
+  },
+  "statusBar": {
+    "clock": "时钟",
+    "footerWidgets": "底栏小组件",
+    "localClock": "本地时钟",
+    "focusTimer": "专注计时器",
+    "focusIdle": "专注 · {{time}}",
+    "focusRunning": "暂停 · {{time}}",
+    "focusComplete": "专注完成 · 重新开始",
+    "quickNote": "快速笔记",
+    "quickNoteClose": "关闭笔记",
+    "quickNotePlaceholder": "在这里记下想法…",
+    "quickNoteSaved": "已保存在此设备上。",
+    "weather": "天气",
+    "weatherLabel": "天气：{{city}} {{temperature}}",
+    "weatherSetCity": "设置城市",
+    "weatherClose": "关闭天气",
+    "weatherCity": "城市",
+    "weatherCityPlaceholder": "城市，例如 Madrid",
+    "weatherSave": "保存",
+    "weatherNotFound": "找不到该名称的城市。",
+    "weatherFailed": "无法连接 Open-Meteo，请重试。",
+    "weatherSource": "当前天气来自 Open-Meteo。城市保存在此设备上。"
+  },
   "app": {
     "saving": {
       "delayedTitle": "配置存储操作耗时比平时更长",
@@ -107,6 +137,18 @@
         "spanish": "Español",
         "french": "Français",
         "portuguese": "Português (Brasil)"
+      },
+      "windowMaterial": {
+        "title": "窗口材质",
+        "description": "实色表面，或柔和背景上的半透明玻璃。",
+        "solid": "实色",
+        "glass": "玻璃"
+      },
+      "projectIcons": {
+        "title": "项目图标",
+        "description": "侧边栏中的像素精灵，或每个仓库自己的图标。",
+        "pixel": "像素",
+        "repository": "仓库"
       },
       "statusBar": {
         "claudeToggleDescription": "显示当前工作区的 Claude Token 与费用消耗情况。",

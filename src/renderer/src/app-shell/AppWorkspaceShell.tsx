@@ -1,6 +1,7 @@
 import { Suspense, useRef } from 'react'
 import { lazyWithRetry as lazy } from '@/lib/lazy-with-retry'
 import { translate } from '@/i18n/i18n'
+import { cn } from '@/lib/utils'
 import Sidebar from '../components/Sidebar'
 import RightSidebar from '../components/right-sidebar'
 import { RecoverableRenderErrorBoundary } from '../components/error-boundaries/RecoverableRenderErrorBoundary'
@@ -8,9 +9,10 @@ import { FloatingTerminalToggleButton } from '../components/floating-terminal/Fl
 import { TerminalWorkbenchContainer } from '../components/TerminalWorkbenchContainer'
 import type { VirtualizedScrollAnchor } from '../hooks/useVirtualizedScrollAnchor'
 import { TitlebarLeftControls } from './TitlebarLeftControls'
-import { RightSidebarToggle, TitlebarMainStrip } from './TitlebarMainStrip'
+import { TitlebarMainStrip } from './TitlebarMainStrip'
 import type { AppChromeLayout } from './use-app-chrome-layout'
 import type { FloatingWorkspacePanelState } from './use-floating-workspace-panel'
+import { WorkspaceStatusBar } from './WorkspaceStatusBar'
 
 const Landing = lazy(() => import('../components/Landing'))
 const WorktreeCreationPanel = lazy(
@@ -98,6 +100,10 @@ export function AppWorkspaceShell(props: {
   const scrollOffsetRef = useRef(0)
   const scrollAnchorRef = useRef<VirtualizedScrollAnchor>(null)
   const sidebarScrollRefs = { scrollOffsetRef, scrollAnchorRef }
+  const showMainTitlebar =
+    layout.stackedSidebarOpen &&
+    layout.activeView !== 'automations' &&
+    layout.activeView !== 'artifacts'
 
   return (
     // Avoid active-worktree reset keys that remount whole surfaces during wake.
@@ -111,7 +117,7 @@ export function AppWorkspaceShell(props: {
         'The app is still running. Retry the shell or use the menu to report the crash details.'
       )}
     >
-      <div className="flex flex-row flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-row flex-1 min-h-0 overflow-hidden bg-shell text-foreground">
         {/* Keep the non-workspace titlebar from spanning the right sidebar. */}
         <div className="flex flex-col flex-1 min-w-0 min-h-0">
           {/* Workspace tab groups reach the top; other pages retain the titlebar. */}
@@ -123,11 +129,11 @@ export function AppWorkspaceShell(props: {
           ) : null}
           <div className="flex flex-row flex-1 min-h-0 overflow-hidden">
             {layout.showSidebar ? (
-              layout.leftTitlebarChromeLayout.shouldMount ? (
-                /* Remove the collapsed header from flex layout so panes reclaim the left edge. */
-                <div
-                  className={`flex min-h-0 flex-col shrink-0${layout.sidebarOpen ? '' : ' relative w-0 overflow-visible'}`}
-                >
+              /* Remove the collapsed header from flex layout so panes reclaim the left edge; Cove: one tree for both chrome layouts so toggling never remounts (and can animate) the sidebar. */
+              <div
+                className={`flex min-h-0 flex-col shrink-0${layout.leftTitlebarChromeLayout.shouldMount && !layout.sidebarOpen ? ' relative w-0 overflow-visible' : ''}`}
+              >
+                {layout.leftTitlebarChromeLayout.shouldMount ? (
                   <div
                     // The floating header covers the center border; restore the seam and size to its own controls.
                     className={`titlebar-left${
@@ -144,39 +150,26 @@ export function AppWorkspaceShell(props: {
                   >
                     {titlebarLeftControls}
                   </div>
-                  {/* Keep a shrinkable flex viewport below the fixed header so the sidebar can scroll. */}
-                  <div className="flex min-h-0 flex-1">
-                    <WorktreeSidebar layout={layout} scrollRefs={sidebarScrollRefs} />
-                  </div>
+                ) : null}
+                {/* Keep a shrinkable flex viewport below the fixed header so the sidebar can scroll. */}
+                <div className="flex min-h-0 flex-1">
+                  <WorktreeSidebar layout={layout} scrollRefs={sidebarScrollRefs} />
                 </div>
-              ) : (
-                <WorktreeSidebar layout={layout} scrollRefs={sidebarScrollRefs} />
-              )
+              </div>
             ) : null}
             <div className="flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
               {/* Automations/artifacts own their headers; another titlebar would leave an empty stripe. */}
-              {layout.stackedSidebarOpen &&
-              layout.activeView !== 'automations' &&
-              layout.activeView !== 'artifacts' ? (
-                <div className="titlebar">{titlebarMainStrip}</div>
-              ) : null}
+              {showMainTitlebar ? <div className="titlebar">{titlebarMainStrip}</div> : null}
               <div className="relative flex flex-1 min-w-0 min-h-0 overflow-hidden">
-                {/* Match the open sidebar header’s alignment to prevent toggle jitter. */}
-                {layout.workspaceChromeActive && !layout.rightSidebarOpen && (
-                  <div
-                    className="absolute top-0 z-10 flex items-center h-[36px]"
-                    style={
-                      {
-                        // Why: --window-controls-width keeps the toggle clear of the fixed window-controls overlay (138px on custom chrome, 0px otherwise); no internal spacer — one would cover the pane-actions Ellipsis button with an unclickable div.
-                        right: 'var(--window-controls-width)',
-                        WebkitAppRegion: 'no-drag'
-                      } as React.CSSProperties
-                    }
-                  >
-                    {layout.showRightSidebarControls ? <RightSidebarToggle /> : null}
-                  </div>
-                )}
-                <div className="flex flex-1 min-w-0 min-h-0 flex-col">
+                {/* Cove: pages sit in a rounded card on the deepest surface so content contrasts with the shell. */}
+                <div
+                  className={cn(
+                    'flex flex-1 min-w-0 min-h-0 flex-col text-foreground',
+                    !layout.terminalWorkbenchVisible &&
+                      'relative mx-1 overflow-hidden rounded-lg border border-border bg-background',
+                    !layout.terminalWorkbenchVisible && !showMainTitlebar && 'mt-1'
+                  )}
+                >
                   {layout.shouldMountTerminalWorkbench ? (
                     <TerminalWorkbenchContainer isVisible={layout.terminalWorkbenchVisible}>
                       <Suspense fallback={null}>
@@ -206,7 +199,7 @@ export function AppWorkspaceShell(props: {
                       title={translate('auto.App.b7a714db1e', 'This page hit an error.')}
                       description={translate(
                         'auto.App.03a14f6b5b',
-                        'Retry the page or navigate to another Orca surface.'
+                        'Retry the page or navigate to another Cove surface.'
                       )}
                     >
                       <ActivePage layout={layout} />
@@ -220,6 +213,7 @@ export function AppWorkspaceShell(props: {
                   />
                 ) : null}
               </div>
+              <WorkspaceStatusBar floatingTerminalOpen={floatingWorkspace.open} />
             </div>
           </div>
         </div>

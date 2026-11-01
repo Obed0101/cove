@@ -21,6 +21,9 @@ import { resolveClientHostedBrowserRowStripGroupId } from '../tab-bar/client-hos
 import { useEditorGroupFileDropOwner } from '../editor/use-editor-group-file-drop-owner'
 import { cn } from '@/lib/utils'
 import { UNFOCUSED_SPLIT_GROUP_OPACITY } from './split-group-dim'
+import { RightSidebarToggle } from '../../app-shell/TitlebarMainStrip'
+import { WorkbenchPaneHead } from './WorkbenchPaneHead'
+import { TabGroupTerminalSplitButtons } from './TabGroupTerminalSplitButtons'
 
 const EditorPanel = lazy(() => import('../editor/EditorPanel'))
 const EMPTY_GROUPS: readonly TabGroup[] = []
@@ -39,10 +42,6 @@ export default function TabGroupPanel({
   markdownAnnotationsEnabled = true,
   touchesRightEdge,
   touchesLeftEdge,
-  touchesBottomEdge = false,
-  suppressLeftBorder = false,
-  suppressRightBorder = false,
-  suppressBottomBorder = false,
   reserveClosedExplorerToggleSpace,
   reserveCollapsedSidebarHeaderSpace,
   isTabDragActive = false,
@@ -247,19 +246,8 @@ export default function TabGroupPanel({
   )
   return (
     <div
-      // Dim unfocused splits only when siblings exist; keep vertical seams neutral and change only the bottom focus border.
-      className={`group/tab-group relative flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden${
-        hasSplitGroups
-          ? // Why: skip border-l/border-r on edge-touching groups; the split-layout wrapper and right sidebar already paint borders at those seams (double line otherwise).
-            ` ${
-              touchesLeftEdge || suppressLeftBorder ? '' : 'border-l'
-            } ${touchesRightEdge || suppressRightBorder ? '' : 'border-r'} ${
-              touchesBottomEdge || suppressBottomBorder ? '' : 'border-b'
-            } border-border ${
-              isFocused && !touchesBottomEdge && !suppressBottomBorder ? 'border-b-accent' : ''
-            }`
-          : ''
-      }`}
+      // Cove: every pane is its own card; the resize handle is the gap between split cards.
+      className="group/tab-group relative flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden"
       style={hasSplitGroups && !isFocused ? { opacity: UNFOCUSED_SPLIT_GROUP_OPACITY } : undefined}
       onPointerDown={commands.focusGroup}
       // Why: keyboard/AT focus can enter a split group without a pointer event, so sync group focus to DOM focus for global shortcuts.
@@ -267,14 +255,15 @@ export default function TabGroupPanel({
     >
       {/* Each visible split needs its own strip; the shared titlebar cannot represent them all. */}
       {/* Omit external strips entirely because hidden duplicates would still register competing drag sortables. */}
-      {tabStrip !== 'attached' ? null : (
+      {/* Cove: tab chips sit on the shell above the card, as in cove-preview. */}
+      {tabStrip === 'attached' ? (
         <div
-          className="@container/tab-strip h-[32px] shrink-0 border-b border-border bg-card"
+          className="@container/tab-strip h-9 shrink-0"
           data-tab-group-strip-id={groupId}
           data-terminal-focus-release-surface="true"
           data-worktree-id={worktreeId}
         >
-          <div className="flex h-full items-stretch pr-1.5">
+          <div className="flex h-full items-stretch pr-1">
             {/* Why: Electron drag hit-test respects no-drag only on DOM descendants, not z-index siblings, so this no-drag spacer keeps the collapsed left-sidebar's floating toggle clickable. */}
             {reserveCollapsedSidebarHeaderSpace && !sidebarOpen ? (
               <div
@@ -292,6 +281,9 @@ export default function TabGroupPanel({
               className={actionChromeClassName}
               style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
             >
+              {activeTab?.contentType === 'terminal' ? (
+                <TabGroupTerminalSplitButtons terminalTabId={activeTab.entityId} />
+              ) : null}
               <TabBarQuickCommandsButton
                 worktreeId={worktreeId}
                 groupId={groupId}
@@ -301,66 +293,74 @@ export default function TabGroupPanel({
                 <TabGroupPaneActionsMenu isFocused={isFocused} onCloseGroup={commands.closeGroup} />
               ) : null}
             </div>
-            {/* Why: Electron drag hit-test respects no-drag only on DOM descendants, not z-index siblings, so this no-drag spacer keeps the floating right-sidebar toggle + window controls clickable. */}
+            {/* Cove: with the explorer closed its toggle ends the top-right tab row; the spacer keeps window controls clickable. */}
             {reserveClosedExplorerToggleSpace && !rightSidebarOpen ? (
-              <div
-                className="shrink-0"
-                style={
-                  {
-                    width: 'calc(40px + var(--window-controls-width, 0px))',
-                    WebkitAppRegion: 'no-drag'
-                  } as React.CSSProperties
-                }
-              />
+              <div className="right-sidebar-header-no-drag flex shrink-0 items-center pr-[var(--window-controls-width,0px)]">
+                {/* Cove: a 28px foreground icon button at the end of the pane header. */}
+                <RightSidebarToggle className="sidebar-toggle flex size-7 items-center justify-center rounded-md !p-0 !text-foreground" />
+              </div>
             ) : null}
           </div>
         </div>
-      )}
-
+      ) : null}
       <div
-        ref={setBodyRef}
-        data-tab-group-body-id={groupId}
-        data-worktree-id={worktreeId}
-        className="relative flex-1 min-h-0 overflow-hidden"
-        style={bodyAnchorStyle}
+        className={cn(
+          'flex flex-1 min-h-0 flex-col overflow-hidden rounded-lg border bg-pane-surface',
+          hasSplitGroups ? cn(touchesLeftEdge && 'ml-1', touchesRightEdge && 'mr-1') : 'mx-1',
+          hasSplitGroups && isFocused ? 'border-foreground/20' : 'border-border'
+        )}
       >
-        {/* Why: empty anchor so the agent-sessions tour reads as a terminal-area tip, not toolbar chrome. */}
-        {isFocused ? (
-          <div
-            className="pointer-events-none absolute inset-x-0 top-1/4 h-px"
-            data-contextual-tour-target="workspace-agent-terminal-tip"
-          />
+        {tabStrip !== 'attached' ? (
+          <WorkbenchPaneHead worktreeId={worktreeId} activeTab={activeTab} />
         ) : null}
-        {activeTab &&
-          activeTab.contentType !== 'terminal' &&
-          activeTab.contentType !== 'agent-session' &&
-          activeTab.contentType !== 'browser' &&
-          activeTab.contentType !== 'simulator' && (
-            // Why: a capture-phase owner, so Monaco never sees the drop and the file opens as a tab here.
-            <div ref={attachEditorFileDropOwner} className="absolute inset-0 flex min-h-0 min-w-0">
-              {/* Why: split groups render editor content in a plain relative pane body, not the legacy Terminal.tsx flex column. */}
-              <Suspense
-                fallback={
-                  <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-                    {translate(
-                      'auto.components.tab.group.TabGroupPanel.814fb04c43',
-                      'Loading editor...'
-                    )}
-                  </div>
-                }
+        <div
+          ref={setBodyRef}
+          data-tab-group-body-id={groupId}
+          data-worktree-id={worktreeId}
+          className="relative flex-1 min-h-0 overflow-hidden"
+          style={bodyAnchorStyle}
+        >
+          {/* Why: empty anchor so the agent-sessions tour reads as a terminal-area tip, not toolbar chrome. */}
+          {isFocused ? (
+            <div
+              className="pointer-events-none absolute inset-x-0 top-1/4 h-px"
+              data-contextual-tour-target="workspace-agent-terminal-tip"
+            />
+          ) : null}
+          {activeTab &&
+            activeTab.contentType !== 'terminal' &&
+            activeTab.contentType !== 'agent-session' &&
+            activeTab.contentType !== 'browser' &&
+            activeTab.contentType !== 'simulator' && (
+              // Why: a capture-phase owner, so Monaco never sees the drop and the file opens as a tab here.
+              <div
+                ref={attachEditorFileDropOwner}
+                className="absolute inset-0 flex min-h-0 min-w-0"
               >
-                <EditorPanel
-                  activeFileId={activeTab.entityId}
-                  activeViewStateId={activeTab.id}
-                  isVisible={isVisible}
-                  isCmdSaveOwner={isFocused}
-                  markdownAnnotationsEnabled={markdownAnnotationsEnabled}
-                />
-              </Suspense>
-            </div>
-          )}
+                {/* Why: split groups render editor content in a plain relative pane body, not the legacy Terminal.tsx flex column. */}
+                <Suspense
+                  fallback={
+                    <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+                      {translate(
+                        'auto.components.tab.group.TabGroupPanel.814fb04c43',
+                        'Loading editor...'
+                      )}
+                    </div>
+                  }
+                >
+                  <EditorPanel
+                    activeFileId={activeTab.entityId}
+                    activeViewStateId={activeTab.id}
+                    isVisible={isVisible}
+                    isCmdSaveOwner={isFocused}
+                    markdownAnnotationsEnabled={markdownAnnotationsEnabled}
+                  />
+                </Suspense>
+              </div>
+            )}
 
-        {/* Why: terminal/browser/simulator/structured-chat panes render at the worktree level; tab activation only changes overlay visibility and never remounts a live surface. */}
+          {/* Why: terminal/browser/simulator/structured-chat panes render at the worktree level; tab activation only changes overlay visibility and never remounts a live surface. */}
+        </div>
       </div>
     </div>
   )

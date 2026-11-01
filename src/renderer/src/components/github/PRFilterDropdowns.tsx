@@ -164,11 +164,11 @@ export default function PRFilterDropdowns({
         <PopoverTrigger asChild>
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="sm"
             className={cn(
-              'h-8 gap-1.5 rounded-md border-border/60 bg-background px-2.5 text-xs font-medium text-foreground shadow-xs hover:bg-muted/60',
-              activeCount > 0 && 'border-border'
+              'h-7 gap-1.5 rounded-md px-2 text-xs font-medium text-muted-foreground hover:text-foreground',
+              activeCount > 0 && 'text-foreground'
             )}
           >
             <ListFilter className="size-3.5" />

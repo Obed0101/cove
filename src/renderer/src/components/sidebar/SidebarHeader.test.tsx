@@ -327,10 +327,10 @@ describe('SidebarHeader', () => {
       root.render(<SidebarHeader onWorkspaceBoardMenuOpenChange={vi.fn()} />)
     })
 
-    const headerRow = container.querySelector('.mt-2')
+    const headerRow = container.querySelector('[class~="group/projects-header"]')
     const headerClasses = new Set(headerRow?.className.split(/\s+/) ?? [])
     expect(headerClasses.has('flex-wrap')).toBe(false)
-    expect(headerClasses.has('h-8')).toBe(true)
+    expect(headerClasses.has('h-[35px]')).toBe(true)
     expect(container.querySelector('[aria-label="View activity"]')).toBeTruthy()
     expect(container.querySelector('[aria-label="Add project"]')).toBeTruthy()
     expect(container.querySelector('[aria-label="New workspace"]')).toBeTruthy()

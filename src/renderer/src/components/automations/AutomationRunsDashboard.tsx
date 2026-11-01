@@ -38,7 +38,7 @@ const STATUS_LABELS: Record<AutomationRunsStatusFilter, { key: string; fallback:
 
 function SummaryCard({ label, value }: { label: string; value: number }): React.JSX.Element {
   return (
-    <div className="rounded-lg border border-border/60 bg-card px-3 py-2.5 text-card-foreground">
+    <div className="rounded-lg border border-border/60 bg-pane-surface px-3 py-2.5 text-foreground">
       <div className="text-xs text-muted-foreground">{label}</div>
       <div className="mt-1 text-lg font-medium tabular-nums">{value}</div>
     </div>
@@ -196,7 +196,7 @@ export function AutomationRunsDashboard({
             <TooltipTrigger asChild>
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 size="icon-sm"
                 aria-label={translate(
                   'auto.components.automations.AutomationRunsDashboard.refresh',
@@ -204,7 +204,7 @@ export function AutomationRunsDashboard({
                 )}
                 onClick={onRefresh}
                 disabled={loading}
-                className="shrink-0 border border-border bg-background shadow-none hover:bg-muted/50"
+                className="shrink-0 shadow-none"
               >
                 <RefreshCw className={loading ? 'size-4 animate-spin' : 'size-4'} />
               </Button>

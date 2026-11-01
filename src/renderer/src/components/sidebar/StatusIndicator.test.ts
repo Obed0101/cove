@@ -58,23 +58,23 @@ describe('StatusIndicator', () => {
     expect(markup).not.toContain('data-agent-spinner')
   })
 
-  it('renders active as full emerald dot', () => {
+  it('renders active as a full green dot', () => {
     const classNames = renderDotClassNames('active')
 
-    expect(classNames).toContain('bg-emerald-500')
+    expect(classNames).toContain('bg-worktree-status-active')
   })
 
-  it('renders done as an emerald dot', () => {
+  it('renders done as a green dot', () => {
     const classNames = renderDotClassNames('done')
 
-    expect(classNames).toContain('bg-emerald-500')
+    expect(classNames).toContain('bg-worktree-status-active')
   })
 
   it("renders a user's Stop muted, distinct from done and from a failure", () => {
     const classNames = renderDotClassNames('interrupted')
 
     expect(classNames).toContain('bg-muted-foreground')
-    expect(classNames).not.toContain('bg-emerald-500')
+    expect(classNames).not.toContain('bg-worktree-status-active')
     expect(classNames).not.toContain('bg-red-500')
   })
 

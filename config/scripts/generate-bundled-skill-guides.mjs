@@ -14,6 +14,7 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, '..', '..')
 
 const CANONICAL_GUIDE_NAMES = [
   'computer-use',
+  'cove-config',
   'jira-tickets',
   'linear-tickets',
   'orca-cli',
@@ -28,6 +29,7 @@ const CANONICAL_GUIDE_NAMES = [
 // Aliases preserve renamed discovery stubs; append ledger entries, never remove them.
 const GUIDE_ALIASES = {
   'computer-use': [],
+  'cove-config': [],
   'jira-tickets': [],
   'linear-tickets': [],
   'orca-cli': [],
@@ -43,6 +45,7 @@ const GUIDE_ALIASES = {
 // Migration is one-way: old fat installs need new stubs to converge, so only add STUB_TOPICS; bodies live in skill-stubs/<topic>.md.
 const STUB_TOPICS = [
   'computer-use',
+  'cove-config',
   'jira-tickets',
   'linear-tickets',
   'orca-cli',

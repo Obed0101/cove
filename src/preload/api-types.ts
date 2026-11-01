@@ -8,6 +8,7 @@ import type {
   ZcodePlanCredentialsApi
 } from './api/agent-account-api'
 import type { HooksApi } from './api/agent-hook-api'
+import type { CoveConfigApi } from './api/cove-config-api'
 import type { SkillsApi } from './api/agent-skill-api'
 import type { AgentAwakeApi, AgentStatusApi } from './api/agent-status-api'
 import type {
@@ -110,6 +111,7 @@ export type PreloadApi = {
   claudeAccounts: ClaudeAccountsApi
   cli: CliApi
   codexConfigSync: CodexConfigSyncApi
+  coveConfig: CoveConfigApi
   preflight: PreflightApi
   notifications: NotificationsApi
   onboarding: OnboardingApi

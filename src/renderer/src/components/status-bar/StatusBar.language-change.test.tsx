@@ -40,16 +40,16 @@ it('refreshes mounted status bar labels after switching language without changin
       <StatusBar floatingTerminalOpen={false} />
     </TooltipProvider>
   )
-  const refreshButton = screen.getByRole('button', { name: 'Refresh rate limits' })
+  const customizeButton = screen.getByRole('button', { name: 'Customize widgets' })
 
   await act(async () => {
     await i18n.changeLanguage('ja')
   })
 
-  expect(screen.getByRole('button', { name: 'レート制限をリセット' })).toBe(refreshButton)
+  expect(screen.getByRole('button', { name: 'ウィジェットをカスタマイズ' })).toBe(customizeButton)
 
   await act(async () => {
     await i18n.changeLanguage('en')
   })
-  expect(screen.getByRole('button', { name: 'Refresh rate limits' })).toBe(refreshButton)
+  expect(screen.getByRole('button', { name: 'Customize widgets' })).toBe(customizeButton)
 })

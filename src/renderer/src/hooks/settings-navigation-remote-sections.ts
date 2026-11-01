@@ -56,11 +56,11 @@ export function buildRemoteSettingsSections(
       id: 'servers',
       title: translate(
         'auto.hooks.useSettingsNavigationMetadata.de0c2907a1',
-        'Remote Orca Servers'
+        'Remote Cove Servers'
       ),
       description: isWebClient
-        ? 'Connect this browser to a saved Orca server.'
-        : 'Run Orca on another machine and work on it from here.',
+        ? 'Connect this browser to a saved Cove server.'
+        : 'Run Cove on another machine and work on it from here.',
       icon: Server,
       searchEntries: [runtimeEnvironmentsSearchEntry],
       group: 'remote'
@@ -148,7 +148,7 @@ export function buildRemoteSettingsSections(
             title: translate('auto.hooks.useSettingsNavigationMetadata.pluginsTitle', 'Plugins'),
             description: translate(
               'auto.hooks.useSettingsNavigationMetadata.pluginsDescription',
-              'Install and manage experimental Orca plugins.'
+              'Install and manage experimental Cove plugins.'
             ),
             icon: Blocks,
             searchEntries: getPluginsPaneSearchEntries(),

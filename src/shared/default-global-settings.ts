@@ -78,10 +78,10 @@ export function buildDefaultSettings(args: {
     terminalCursorStyle: 'block',
     terminalCursorStyleDefaultedToBlock: true,
     terminalCursorBlink: true,
-    terminalThemeDark: 'Ghostty Default Style Dark',
+    terminalThemeDark: 'Cove Dark',
     terminalDividerColorDark: '#3f3f46',
     terminalUseSeparateLightTheme: true,
-    terminalThemeLight: 'Builtin Tango Light',
+    terminalThemeLight: 'Cove Light',
     terminalCustomThemes: [],
     terminalDividerColorLight: '#d4d4d8',
     terminalInactivePaneOpacity: args.terminalInactivePaneOpacity,
@@ -105,6 +105,8 @@ export function buildDefaultSettings(args: {
     // Why: opt-in only, matching Ghostty's default (upgrades never enable it unexpectedly).
     terminalFocusFollowsMouse: false,
     windowBackgroundBlur: false,
+    windowMaterial: 'solid',
+    projectIconStyle: 'pixel',
     minimizeToTrayOnClose: false,
     // Why: default-on everywhere so it round-trips across platforms; only darwin acts on it.
     showMenuBarIcon: true,
@@ -154,7 +156,8 @@ export function buildDefaultSettings(args: {
     orchestrationChatErrorEscalationEnabled: true,
     showArtifactsButton: false,
     showSkillsButton: false,
-    showMobileButton: true,
+    // Cove: primary nav is Inbox / Tasks / Automations; Mobile is opt-in.
+    showMobileButton: false,
     showPinnedWorktreesInGroups: false,
     ctrlTabOrderMode: 'mru',
     // Why: Orca-first keeps core shortcuts working from a focused terminal; TUI-ownership users opt in.
@@ -165,7 +168,8 @@ export function buildDefaultSettings(args: {
     floatingTerminalCwd: '~',
     floatingTerminalTrustedCwds: [],
     floatingTerminalCwdMigratedToAppWorkspace: true,
-    floatingTerminalTriggerLocation: 'floating-button',
+    // Cove: no floating button over the explorer; the toggle sits in the footer beside "+".
+    floatingTerminalTriggerLocation: 'status-bar',
     notifications: args.notifications,
     diffDefaultView: 'inline',
     diffWordWrap: false,
@@ -259,7 +263,8 @@ export function buildDefaultSettings(args: {
     experimentalEphemeralVms: false,
     experimentalConnectors: false,
     experimentalWslHosts: false,
-    compactWorktreeCards: false,
+    // Cove: one-line worktree rows under each project.
+    compactWorktreeCards: true,
     // Why: local desktop stays the default until the user picks a saved runtime environment.
     activeRuntimeEnvironmentId: null,
     // Why: hydrate a stable empty shape so renderer optional-chained reads never hit undefined.

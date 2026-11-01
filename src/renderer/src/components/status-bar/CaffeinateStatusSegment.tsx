@@ -70,11 +70,12 @@ export function CaffeinateStatusSegment({
     }
   }, [])
 
-  if (isPairedWebClientWindow()) {
+  const mode = serviceStatus.mode === configuredMode ? serviceStatus.mode : configuredMode
+  // Cove: the footer only surfaces keep-awake while it is engaged; Settings › Agents owns the toggle.
+  if (isPairedWebClientWindow() || mode === 'off') {
     return null
   }
 
-  const mode = serviceStatus.mode === configuredMode ? serviceStatus.mode : configuredMode
   const active =
     serviceStatus.mode === configuredMode ? serviceStatus.active : configuredMode === 'on'
   const title = getAgentAwakeTitle()

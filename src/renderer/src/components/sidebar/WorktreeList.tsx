@@ -257,10 +257,8 @@ const WorktreeList = React.memo(function WorktreeList({
         hostOptions={rowModel.hostOptions}
         occurrencePlan={rowModel.occurrencePlan}
         visibleProjectRepoIdsBySection={visibleProjectRepoIdsBySection}
-        // Full-page Tasks/Activity views have no selected worktree card.
-        activeWorktreeId={
-          activeView === 'tasks' || activeView === 'activity' ? null : currentSidebarWorktreeId
-        }
+        // Full-page views (Tasks, Inbox, Automations, Mobile…) have no selected worktree card.
+        activeWorktreeId={activeView === 'terminal' ? currentSidebarWorktreeId : null}
         activeWorkspaceExecutionHostId={activeWorkspaceExecutionHostId}
         currentWorktreeId={currentSidebarWorktreeId}
         groupBy={groupBy}

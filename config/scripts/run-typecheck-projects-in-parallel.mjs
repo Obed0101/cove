@@ -118,7 +118,7 @@ export function selectTypecheckCompiler(
   { root, resolveBunExecutable, platform = process.platform, arch = process.arch }
 ) {
   if (compiler === 'auto') {
-    compiler = supportsTsrs(platform, arch) ? 'tsrs' : 'bun'
+    compiler = 'native'
   }
   if (compiler === 'tsrs' && !supportsTsrs(platform, arch)) {
     throw new Error(`tsrs is unavailable on ${platform}/${arch}; use --compiler=bun.`)

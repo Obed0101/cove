@@ -74,7 +74,8 @@ function SettingsSearchField({
             'auto.components.settings.SettingsSidebar.dbceaa8840',
             'Search settings'
           )}
-          className="bg-background/60 pl-9 pr-14 text-[13px]"
+          // Cove: the sidebar search of the design preview — no fill until hover or focus, ring-colored border on focus.
+          className="h-8 border-transparent bg-transparent pl-9 pr-14 text-[13px] shadow-none hover:bg-worktree-sidebar-foreground/8 focus-visible:border-ring focus-visible:bg-worktree-sidebar-foreground/8 focus-visible:ring-0 dark:bg-transparent"
         />
         {searchQuery === '' ? (
           <span className="pointer-events-none absolute right-2 top-1/2 flex -translate-y-1/2 items-center">
@@ -127,7 +128,7 @@ function SettingsSetupGuideNavRow({
       )}
       onClick={() => onSelect()}
       className={cn(
-        'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-worktree-sidebar-ring/50',
+        'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left outline-none transition-colors duration-150 ease-out focus-visible:ring-1 focus-visible:ring-worktree-sidebar-ring',
         setupActive
           ? 'bg-worktree-sidebar-accent font-medium text-worktree-sidebar-accent-foreground'
           : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8 hover:text-worktree-sidebar-foreground'
@@ -171,10 +172,11 @@ export function SettingsSidebar({
     setupGuideProgress.ready && setupGuideProgress.doneCount < setupGuideProgress.total
   const navItemClassName = (isActive: boolean): string =>
     cn(
-      'flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-[13px] outline-none transition-colors duration-150 focus-visible:ring-[3px] focus-visible:ring-worktree-sidebar-ring/50',
+      // Cove: same 32px rows as the main sidebar navigation.
+      'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] outline-none transition-colors duration-150 ease-out focus-visible:ring-1 focus-visible:ring-worktree-sidebar-ring',
       isActive
-        ? 'bg-worktree-sidebar-accent font-medium text-worktree-sidebar-accent-foreground ring-1 ring-worktree-sidebar-ring/25'
-        : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-accent/60 hover:text-worktree-sidebar-foreground'
+        ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
+        : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8 hover:text-worktree-sidebar-foreground'
     )
   const installStatusLabel = (status: VisibleInstallStatus): string => {
     switch (status) {

@@ -2,23 +2,17 @@
 import { spawnProcess } from '@orca/process-host'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { resolveProjectCompilerInfo } from './run-typecheck-projects-in-parallel.mjs'
-import { resolveTsrsLauncher, supportsTsrs } from './tsrs-typecheck-compiler.mjs'
+import { resolveTsrsLauncher } from './tsrs-typecheck-compiler.mjs'
 
 const PULL_DEBOUNCE_MS = 100
 const BRIDGE_ID_PREFIX = 'orca-diagnostics-'
 
-export function resolveTypescriptLanguageServer({
-  root,
-  env = process.env,
-  platform = process.platform,
-  arch = process.arch
-}) {
+export function resolveTypescriptLanguageServer({ root, env = process.env }) {
   const requested = env.ORCA_TYPESCRIPT_LSP ?? 'auto'
   if (!['auto', 'tsrs', 'tsc'].includes(requested)) {
     throw new Error('ORCA_TYPESCRIPT_LSP must be auto, tsrs, or tsc')
   }
-  // tsrs answers first diagnostics in about a third of the time and memory on supported hosts.
-  const server = requested === 'auto' ? (supportsTsrs(platform, arch) ? 'tsrs' : 'tsc') : requested
+  const server = requested === 'auto' ? 'tsc' : requested
   const launcher =
     server === 'tsrs'
       ? resolveTsrsLauncher(root).launcher

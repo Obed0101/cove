@@ -375,7 +375,7 @@ export const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktr
         onWheel={markDirectScrollInput}
         onDragOver={nativeDrag.handleWorktreeDragOver}
         onDrop={nativeDrag.handleWorktreeDrop}
-        className="worktree-sidebar-scrollbar h-full overflow-y-auto overflow-x-hidden pl-1 scrollbar-sleek outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset pt-px"
+        className="worktree-sidebar-scrollbar h-full overflow-y-auto overflow-x-hidden pl-2 scrollbar-sleek outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset pt-px"
         style={WORKTREE_SIDEBAR_SCROLL_STYLE}
       >
         <div

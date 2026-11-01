@@ -18,6 +18,22 @@
       ]
     },
     {
+      "name": "cove-config",
+      "sourcePath": "skills/cove-config",
+      "packageDigest": "f5c2ea9794cd671b326e4c77585f920fee2765e3d3ac45b2611d42aabdd3c9cd",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2265,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "44a7ad53a1c43ca80658b2b21f6feaa761fa44b956b5747d2f48750f15d6d3d7",
+          "textNormalizedSha256": "44a7ad53a1c43ca80658b2b21f6feaa761fa44b956b5747d2f48750f15d6d3d7",
+          "identitySha256": "44a7ad53a1c43ca80658b2b21f6feaa761fa44b956b5747d2f48750f15d6d3d7"
+        }
+      ]
+    },
+    {
       "name": "jira-tickets",
       "sourcePath": "skills/jira-tickets",
       "packageDigest": "48ca2a93818e17bf1e942452e835800e8f967a935d3082e1e9c03fff9ddb3d19",

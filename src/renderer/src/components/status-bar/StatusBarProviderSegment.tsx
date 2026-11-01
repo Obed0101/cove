@@ -33,6 +33,8 @@ import { useResetCountdownClock } from '@/hooks/useResetCountdownClock'
 import { useNow } from '@/hooks/use-now'
 
 const CALM_STALE_USAGE_MAX_AGE_MS = 30 * 60_000
+// Cove: footer chips use the design preview's 12px provider logos.
+const STATUS_BAR_PROVIDER_ICON_SIZE = 12
 
 function MiniBar({
   usedPct,
@@ -44,10 +46,10 @@ function MiniBar({
   return (
     <div
       data-usage-bar
-      className="w-[48px] h-[6px] rounded-full bg-muted overflow-hidden flex-shrink-0"
+      className="w-10 h-1 rounded-xs bg-foreground/10 overflow-hidden flex-shrink-0"
     >
       <div
-        className="h-full rounded-full transition-all duration-300 bg-muted-foreground/40"
+        className="h-full transition-all duration-300 bg-muted-foreground"
         style={{ width: `${getDisplayedUsagePercentage(usedPct, display)}%` }}
       />
     </div>
@@ -254,7 +256,8 @@ export function ProviderSegment({
     : null
   const sections = getStatusBarUsageSections(p, mode)
   const groupedBuckets = sections.map((section) => section.window).filter(isGroupedUsagePool)
-  const showLabels = mode === 'verbose' || !compact
+  // Cove: compact chips match the design preview's bare percentage; verbose and the popover keep labels.
+  const showLabels = mode !== 'compact' && (mode === 'verbose' || !compact)
   const now = useResetCountdownClock(
     showLabels
       ? groupedBuckets
@@ -266,7 +269,7 @@ export function ProviderSegment({
   if (!p || p.status === 'idle') {
     return (
       <span className="inline-flex items-center gap-1 text-muted-foreground">
-        <ProviderIcon provider={provider} />
+        <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} />
         <span className="animate-pulse">···</span>
       </span>
     )
@@ -275,7 +278,7 @@ export function ProviderSegment({
   if (p.status === 'fetching' && !tightest) {
     return (
       <span className="inline-flex items-center gap-1 text-muted-foreground">
-        <ProviderIcon provider={provider} />
+        <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} />
         <span className="animate-pulse">···</span>
       </span>
     )
@@ -284,7 +287,7 @@ export function ProviderSegment({
   if (p.status === 'unavailable') {
     return (
       <span className="inline-flex items-center gap-1 text-muted-foreground/50">
-        <ProviderIcon provider={provider} /> --
+        <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} /> --
       </span>
     )
   }
@@ -295,7 +298,7 @@ export function ProviderSegment({
         className="inline-flex items-center gap-1 text-muted-foreground"
         title={getProviderUsageErrorMessage(p)}
       >
-        <ProviderIcon provider={provider} />
+        <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} />
         {/* Why "--" when compact: an icon alone would read as a healthy chip. */}
         {compact ? '--' : <OwnerNotSetUpLabel placeholder={p.usageMetadata.ownerNotSetUp} />}
       </span>
@@ -305,7 +308,7 @@ export function ProviderSegment({
   if (p.status === 'error' && !tightest) {
     return (
       <span className="inline-flex items-center gap-1 text-muted-foreground">
-        <ProviderIcon provider={provider} />
+        <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} />
         {!calm && <AlertTriangle size={11} className="text-muted-foreground/80" />}
         {!compact && <span className="text-[11px] font-medium">{statusLabel}</span>}
       </span>
@@ -321,8 +324,12 @@ export function ProviderSegment({
 
   return (
     <span className="inline-flex items-center gap-1.5">
-      <ProviderIcon provider={provider} />
-      {mode === 'verbose' && tightest && !compact ? (
+      <ProviderIcon provider={provider} size={STATUS_BAR_PROVIDER_ICON_SIZE} />
+      {/* Cove: compact chips read "logo Name ▬ 22%" like the design preview. */}
+      {mode === 'compact' && tightest && !compact ? (
+        <span>{getProviderDisplayName(provider)}</span>
+      ) : null}
+      {tightest && !compact ? (
         <MiniBar usedPct={clampUsedPercent(tightest.window.usedPercent)} display={display} />
       ) : null}
       {showGroupedPools ? (

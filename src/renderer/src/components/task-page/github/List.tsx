@@ -12,6 +12,8 @@ import { translate } from '@/i18n/i18n'
 import { Button } from '@/components/ui/button'
 import { LoaderCircle } from 'lucide-react'
 import { TaskPageGitHubRows } from './Rows'
+import { TaskPageGitHubBoard } from './Board'
+import { useGitHubTaskViewPreference } from './github-task-view-preference'
 import { PaginationBar } from '../PaginationBar'
 import { supersedeGitHubListScrollRestore } from './task-page-github-list-scroll-restore'
 export function TaskPageGitHubList({
@@ -50,9 +52,10 @@ export function TaskPageGitHubList({
     totalPages,
     handleLoadNextPage
   } = model
+  const { view, groupBy } = useGitHubTaskViewPreference()
   return (
-    // Join the table shell to filter chrome without a doubled seam.
-    <div className="flex min-h-0 min-w-0 max-h-full flex-col overflow-hidden rounded-md rounded-t-none border border-t-0 border-border/50 bg-background shadow-sm">
+    // Cove: flat on the page surface; the toolbar hairline above is the only seam.
+    <div className="flex min-h-0 min-w-0 max-h-full flex-col overflow-hidden">
       <div
         ref={githubListScrollRef}
         data-task-list-scroll="github"
@@ -89,7 +92,8 @@ export function TaskPageGitHubList({
           className={cn(
             'sticky top-0 z-40 grid h-8 gap-3 border-b border-border/50 px-3 text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground [&>span]:flex [&>span]:items-center',
             GITHUB_TASK_HEADER_SURFACE_CLASS,
-            githubTaskGridClass
+            githubTaskGridClass,
+            view === 'board' && 'hidden'
           )}
         >
           <span className={GITHUB_TASK_STICKY_ID_HEADER_CLASS}>
@@ -218,7 +222,7 @@ export function TaskPageGitHubList({
           </div>
         ))}
 
-        {showGitHubTaskSkeletons ? (
+        {showGitHubTaskSkeletons && view === 'list' ? (
           // Fill a typical viewport with shimmer rows to avoid a height jump when results arrive.
           <div className="divide-y divide-border/40">
             {Array.from({
@@ -277,6 +281,7 @@ export function TaskPageGitHubList({
                     surface the empty state instead of a blank panel. */}
         {!showGitHubTaskSkeletons &&
         filteredWorkItems.length === 0 &&
+        !(view === 'board' && groupBy === 'status') &&
         (softHiddenVisibleCount === 0 || totalPages <= 1) &&
         !tasksError &&
         !githubUnavailable &&
@@ -289,7 +294,11 @@ export function TaskPageGitHubList({
           </div>
         ) : null}
 
-        <TaskPageGitHubRows model={model} />
+        {view === 'list' ? (
+          <TaskPageGitHubRows model={model} />
+        ) : groupBy === 'status' || showGitHubTaskSkeletons || filteredWorkItems.length > 0 ? (
+          <TaskPageGitHubBoard model={model} groupBy={groupBy} />
+        ) : null}
       </div>
 
       {/* Why: pagination sits outside the scroll container so it

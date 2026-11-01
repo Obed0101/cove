@@ -229,7 +229,7 @@ export default function SkillsPage(): React.JSX.Element {
   }
 
   return (
-    <main className="flex min-h-0 flex-1 flex-col bg-background">
+    <main className="flex min-h-0 flex-1 flex-col">
       {selectionMode ? (
         <SkillsSelectionHeader
           title={

@@ -51,7 +51,7 @@ describe('ProviderSegment monthly window', () => {
       <ProviderSegment p={grokMonthlyLimits('ok')} compact={false} display="used" mode="compact" />
     )
 
-    expect(markup).toContain('>25% 30d<')
+    expect(markup).toContain('>25%<')
   })
 
   it('shows monthly data while fetching instead of the loading placeholder', async () => {
@@ -66,7 +66,7 @@ describe('ProviderSegment monthly window', () => {
       />
     )
 
-    expect(markup).toContain('>25% 30d<')
+    expect(markup).toContain('>25%<')
     expect(markup).not.toContain('···')
   })
 
@@ -86,7 +86,7 @@ describe('ProviderSegment monthly window', () => {
       <ProviderSegment p={limits} compact={false} display="used" mode="compact" />
     )
 
-    expect(markup).toContain('>30% 30d<')
+    expect(markup).toContain('>30%<')
     expect(markup).not.toContain('>10%')
     expect(markup).not.toContain('>20%')
   })
@@ -110,12 +110,12 @@ describe('ProviderSegment monthly window', () => {
       <ProviderSegment p={limits} compact={false} display="used" mode="compact" />
     )
 
-    expect(markup).toContain('>80% Pro<')
+    expect(markup).toContain('>80%<')
     expect(markup).not.toContain('>25%')
   })
 
-  // Keep the chip’s countdown consistent with the popup for the same resetsAt.
-  it('shows remaining session time on the chip when resetsAt is known (repro-8378)', async () => {
+  // Keep the verbose countdown consistent with the popup for the same resetsAt.
+  it('shows remaining session time in verbose mode when resetsAt is known (repro-8378)', async () => {
     const { ProviderSegment } = await import('./StatusBar')
     const now = 1_700_000_000_000
     const dateNow = vi.spyOn(Date, 'now').mockReturnValue(now)
@@ -130,21 +130,25 @@ describe('ProviderSegment monthly window', () => {
         error: null,
         status: 'ok'
       }
-      const markup = renderToStaticMarkup(
+      const verbose = renderToStaticMarkup(
+        <ProviderSegment p={limits} compact={false} display="used" mode="verbose" />
+      )
+      const compact = renderToStaticMarkup(
         <ProviderSegment p={limits} compact={false} display="used" mode="compact" />
       )
 
-      expect(markup).toContain('>42% 2h 33m<')
-      expect(markup).not.toContain('5h')
-      // The consolidated footer intentionally renders only the tightest window.
-      expect(markup).not.toContain('>10%')
-      expect(markup).not.toContain('wk')
+      expect(verbose).toContain('>42% 2h 33m<')
+      expect(verbose).not.toContain('5h')
+      // Cove's compact chip renders only the tightest window as a bare percentage.
+      expect(compact).toContain('>42%<')
+      expect(compact).not.toContain('2h 33m')
+      expect(compact).not.toContain('>10%')
     } finally {
       dateNow.mockRestore()
     }
   })
 
-  it('shows the footer bar only in verbose mode', async () => {
+  it('hides the footer bar only when the chip is icon-only', async () => {
     const { ProviderSegment } = await import('./StatusBar')
     const limits = grokMonthlyLimits('ok')
 
@@ -154,9 +158,13 @@ describe('ProviderSegment monthly window', () => {
     const compact = renderToStaticMarkup(
       <ProviderSegment p={limits} compact={false} display="used" mode="compact" />
     )
+    const iconOnly = renderToStaticMarkup(
+      <ProviderSegment p={limits} compact display="used" mode="compact" />
+    )
 
     expect(verbose).toContain('data-usage-bar')
-    expect(compact).not.toContain('data-usage-bar')
+    expect(compact).toContain('data-usage-bar')
+    expect(iconOnly).not.toContain('data-usage-bar')
   })
 
   it('restores every inline window in verbose mode', async () => {

@@ -138,7 +138,7 @@ export function TerminalWindowSection({
                 <p className="text-xs text-muted-foreground">
                   {translate(
                     'auto.components.settings.TerminalWindowSection.53ce336e15',
-                    'Restart Orca to apply the window blur change.'
+                    'Restart Cove to apply the window blur change.'
                   )}
                 </p>
               </div>
@@ -181,8 +181,8 @@ export function TerminalWindowSection({
               'Horizontal Padding'
             )}
             description=""
-            value={settings.terminalPaddingX ?? 4}
-            defaultValue={4}
+            value={settings.terminalPaddingX ?? 24}
+            defaultValue={24}
             min={0}
             max={512}
             step={1}
@@ -208,8 +208,8 @@ export function TerminalWindowSection({
               'Vertical Padding'
             )}
             description=""
-            value={settings.terminalPaddingY ?? 4}
-            defaultValue={4}
+            value={settings.terminalPaddingY ?? 20}
+            defaultValue={20}
             min={0}
             max={512}
             step={1}

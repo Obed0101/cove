@@ -78,7 +78,8 @@ export function renderFloatingTerminalPanelSurface({
       data-floating-terminal-panel
       aria-hidden={!open}
       tabIndex={-1}
-      className={`fixed z-[45] flex min-h-[280px] min-w-[420px] rounded-lg bg-transparent text-card-foreground shadow-[0_4px_12px_rgba(0,0,0,0.16),0_24px_64px_rgba(0,0,0,0.32)] outline-none dark:shadow-[0_8px_20px_rgba(0,0,0,0.35),0_28px_72px_rgba(0,0,0,0.58)] ${open ? 'opacity-100' : 'invisible pointer-events-none opacity-0'}`}
+      // Cove: fade and settle in 150ms; scale exists only while closed so the open panel keeps no transform.
+      className={`fixed z-[45] flex min-h-[280px] min-w-[420px] rounded-lg bg-transparent text-card-foreground shadow-[0_4px_12px_rgba(0,0,0,0.16),0_24px_64px_rgba(0,0,0,0.32)] outline-none transition-[opacity,scale,visibility] duration-150 ease-out motion-reduce:transition-none dark:shadow-[0_8px_20px_rgba(0,0,0,0.35),0_28px_72px_rgba(0,0,0,0.58)] ${open ? 'opacity-100' : 'invisible pointer-events-none scale-[0.98] opacity-0'}`}
       style={{
         visibility: open ? 'visible' : 'hidden',
         left: bounds.left,
@@ -111,6 +112,7 @@ export function renderFloatingTerminalPanelSurface({
         {({ isTabDragActive, hoveredTabInsertion, setDragRootNode }) => (
           <div
             ref={setDragRootNode}
+            data-floating-terminal-frame=""
             className="relative flex h-full w-full min-h-0 flex-col overflow-hidden rounded-lg border border-black/14 bg-card dark:border-white/14"
           >
             <div

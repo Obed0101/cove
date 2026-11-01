@@ -35,7 +35,16 @@ vi.mock('./ScrollToCurrentWorkspaceToolbarButton', () => ({
 }))
 
 vi.mock('./SidebarSettingsHelpMenu', () => ({
-  SidebarSettingsHelpMenu: () => <button type="button">Settings</button>
+  SidebarSettingsHelpMenu: ({ children }: { children?: ReactNode }) => (
+    <>
+      <button type="button">Settings</button>
+      {children}
+    </>
+  )
+}))
+
+vi.mock('./SidebarUpdateCheckRow', () => ({
+  SidebarUpdateCheckRow: () => null
 }))
 
 const roots: Root[] = []

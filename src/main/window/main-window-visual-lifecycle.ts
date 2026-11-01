@@ -93,7 +93,7 @@ export function installMacosVisibilityRepaint(window: BrowserWindow): void {
 }
 
 // Center is 18 CSS px × zoom; 12px traffic lights start 6px above it.
-export const TITLEBAR_CSS_CENTER = 18
+export const TITLEBAR_CSS_CENTER = 22
 export const TRAFFIC_LIGHT_RADIUS = 6
 export const TRAFFIC_LIGHT_X = 16
 export const MIN_WIDTH = 600

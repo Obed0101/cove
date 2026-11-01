@@ -1,6 +1,7 @@
 import type { PreloadApi } from '../../../preload/api-types'
 import type { StatsSummary } from '../../../shared/process-stats-types'
 import { createWebE2EApi } from './preload-api/web-e2e-api'
+import { coveConfigDesktopOnlyMessage } from '@/lib/cove-config-desktop-only'
 import {
   createClaudeAccountsApi,
   createCodexAccountsApi,
@@ -125,6 +126,17 @@ function createWebPreloadApi(): Partial<PreloadApi> {
     codexConfigSync: {
       status: () =>
         Promise.resolve({ state: 'synced', reason: null, systemConfigPath: '' } as const)
+    },
+    // ~/.cove/config.json belongs to the desktop host; the web client never reads or writes it.
+    coveConfig: {
+      get: () => Promise.resolve({ path: '', exists: false, config: {}, issues: [] }),
+      edit: () =>
+        Promise.resolve({
+          ok: false,
+          issues: [{ path: '', message: coveConfigDesktopOnlyMessage() }]
+        } as const),
+      open: () => Promise.resolve(coveConfigDesktopOnlyMessage()),
+      onChanged: () => () => {}
     },
     developerPermissions: createDeveloperPermissionsApi(),
     computerUsePermissions: createComputerUsePermissionsApi(),

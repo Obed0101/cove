@@ -2,20 +2,23 @@ import { Minimize2, PanelRight } from 'lucide-react'
 import { translate } from '@/i18n/i18n'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { TOGGLE_TERMINAL_PANE_EXPAND_EVENT } from '@/constants/terminal'
-import { ActivityTitlebarControls } from '../components/activity/ActivityTitlebarControls'
 import { useShortcutLabel } from '../hooks/useShortcutLabel'
 import { useAppStore } from '../store'
 import { hasCustomTitleBar } from './app-window-chrome'
 import type { AppChromeLayout } from './use-app-chrome-layout'
 
-export function RightSidebarToggle(): React.JSX.Element {
+export function RightSidebarToggle({
+  className = 'sidebar-toggle mr-2'
+}: {
+  className?: string
+}): React.JSX.Element {
   const toggleRightSidebar = useAppStore((s) => s.toggleRightSidebar)
   const rightSidebarShortcutLabel = useShortcutLabel('sidebar.right.toggle')
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <button
-          className="sidebar-toggle mr-2"
+          className={className}
           onClick={toggleRightSidebar}
           aria-label={translate('auto.App.9e0b441a91', 'Toggle right sidebar')}
         >
@@ -45,9 +48,7 @@ export function TitlebarMainStrip({ layout }: { layout: AppChromeLayout }): Reac
 
   return (
     <>
-      {layout.activeView === 'activity' ? (
-        <ActivityTitlebarControls />
-      ) : layout.creationLayoutActive ? null : (
+      {layout.creationLayoutActive ? null : (
         <div
           id="titlebar-tabs"
           className={`flex flex-1 min-w-0 self-stretch${!layout.workspaceChromeActive ? ' invisible pointer-events-none' : ''}`}

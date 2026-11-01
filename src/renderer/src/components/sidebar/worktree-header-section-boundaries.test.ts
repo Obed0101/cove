@@ -20,10 +20,10 @@ const groupHeader = (id: string): RenderRow =>
   }) as RenderRow
 const item = { type: 'item' } as RenderRow
 
-// Estimated starts: first header 28, later headers 32, items 116.
+// Estimated starts: first header 38, later headers 44 (both include 2px bottom spacing), items 116.
 const rows = [repoHeader('a'), item, repoHeader('b'), item, repoHeader('c'), item]
-const startOfB = 28 + 116
-const startOfC = startOfB + 32 + 116
+const startOfB = 38 + 116
+const startOfC = startOfB + 44 + 116
 
 describe('getRepoHeaderSectionEndByRepoId', () => {
   it('ends a section at the successor from the header’s own bucket', () => {

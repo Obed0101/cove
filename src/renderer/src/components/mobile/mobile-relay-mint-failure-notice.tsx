@@ -42,22 +42,22 @@ export function MobileRelayMintFailureNotice({
   const title = visibleBusy
     ? translate(
         'auto.components.mobile.MobileRelayMintFailureNotice.retryingTitle',
-        'Retrying Orca Relay…'
+        'Retrying Cove Relay…'
       )
     : providerMissing
       ? translate(
           'auto.components.mobile.MobileRelayMintFailureNotice.unavailableTitle',
-          'Orca Relay isn’t available on this desktop.'
+          'Cove Relay isn’t available on this desktop.'
         )
       : reconnectRequired
         ? translate(
             'auto.components.mobile.MobileRelayMintFailureNotice.reconnectTitle',
-            'Your Orca account session expired.'
+            'Your Cove account session expired.'
           )
         : notEntitled
           ? translate(
               'auto.components.mobile.MobileRelayMintFailureNotice.notEntitledTitle',
-              'Orca Relay isn’t included with this Orca account.'
+              'Cove Relay isn’t included with this Cove account.'
             )
           : translate(
               'auto.components.mobile.MobileRelayMintFailureNotice.title',
@@ -76,7 +76,7 @@ export function MobileRelayMintFailureNotice({
       : reconnectRequired
         ? translate(
             'auto.components.mobile.MobileRelayMintFailureNotice.reconnectBody',
-            'Sign in again to use Orca Relay, or use LAN to pair over Tailscale or the same Wi‑Fi.'
+            'Sign in again to use Cove Relay, or use LAN to pair over Tailscale or the same Wi‑Fi.'
           )
         : notEntitled
           ? translate(
@@ -86,7 +86,7 @@ export function MobileRelayMintFailureNotice({
           : failure.code === 'relay_rate_limited'
             ? translate(
                 'auto.components.mobile.MobileRelayMintFailureNotice.rateLimitedBody',
-                'Orca Relay is busy. Wait a minute and retry, or use LAN to pair over Tailscale or the same Wi‑Fi.'
+                'Cove Relay is busy. Wait a minute and retry, or use LAN to pair over Tailscale or the same Wi‑Fi.'
               )
             : translate(
                 'auto.components.mobile.MobileRelayMintFailureNotice.body',

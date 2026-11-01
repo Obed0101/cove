@@ -109,7 +109,7 @@ function UsageMetric({
       {showBar ? (
         <span data-usage-bar className="h-[5px] w-7 overflow-hidden rounded-full bg-muted">
           <span
-            className={`block h-full rounded-full ${barColor(used)}`}
+            className={`cove-meter-fill block h-full rounded-full ${barColor(used)}`}
             style={{ width: `${shown}%` }}
           />
         </span>

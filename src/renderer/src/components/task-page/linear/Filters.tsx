@@ -61,7 +61,7 @@ export function TaskPageLinearFilters({
   } = model
   return (
     <div
-      className="min-w-0 rounded-md rounded-b-none border border-border/50 bg-muted/50 px-3 pt-2 pb-0 shadow-sm"
+      className="min-w-0 rounded-t-lg border border-border px-3 pt-2 pb-0"
       data-contextual-tour-target="tasks-search-presets"
     >
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
@@ -94,7 +94,7 @@ export function TaskPageLinearFilters({
                   <TooltipContent side="bottom" sideOffset={6}>
                     {translate(
                       'auto.components.TaskPage.linearModeHasWorktreeTooltip',
-                      'Linear tickets linked to an Orca workspace'
+                      'Linear tickets linked to an Cove workspace'
                     )}
                   </TooltipContent>
                 </Tooltip>
@@ -254,11 +254,11 @@ export function TaskPageLinearFilters({
                 linearMode === 'in-orca'
                   ? translate(
                       'auto.components.TaskPage.linearHasWorktreeSearchPlaceholder',
-                      'Filter issues linked to an Orca workspace...'
+                      'Filter issues linked to an Cove workspace...'
                     )
                   : translate('auto.components.TaskPage.eec0c5c079', 'Search Linear issues...')
               }
-              className="h-8 rounded-md border-border/50 bg-background pl-8 pr-8 text-xs"
+              className="h-8 rounded-md border-border bg-transparent pl-8 pr-8 text-xs"
             />
             {linearSearchInput ? (
               <button
@@ -293,7 +293,7 @@ export function TaskPageLinearFilters({
                 'auto.components.TaskPage.0b65d3fb2c',
                 'Search Linear projects...'
               )}
-              className="h-8 rounded-md border-border/50 bg-background pl-8 pr-8 text-xs"
+              className="h-8 rounded-md border-border bg-transparent pl-8 pr-8 text-xs"
             />
             {linearProjectSearchInput ? (
               <button

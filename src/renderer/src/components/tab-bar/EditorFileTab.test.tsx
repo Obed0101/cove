@@ -215,8 +215,8 @@ vi.mock('../right-sidebar/status-display', () => ({
 }))
 
 vi.mock('./drop-indicator', () => ({
-  ACTIVE_TAB_INDICATOR_CLASSES: 'active-tab-indicator',
   getDropIndicatorClasses: () => '',
+  getTabIndicatorClasses: () => 'active-tab-indicator',
   getTabStripBorderClasses: () => '',
   getTabRootStateClasses: () => ''
 }))

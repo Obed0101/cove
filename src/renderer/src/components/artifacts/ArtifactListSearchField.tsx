@@ -38,7 +38,7 @@ export function ArtifactListSearchField({
         // Let the first Escape clear search without the page-level handler also blurring it.
         data-escape-clears-value={hasText ? 'true' : undefined}
         className={cn(
-          'h-8 border-border bg-background pl-8 text-xs shadow-none focus-visible:border-ring/70 focus-visible:ring-0 dark:bg-background',
+          'h-8 border-border bg-transparent pl-8 text-xs shadow-none focus-visible:border-ring/70 focus-visible:ring-0',
           hasText && 'pr-7'
         )}
         onChange={(event) => onQueryChange(event.target.value)}

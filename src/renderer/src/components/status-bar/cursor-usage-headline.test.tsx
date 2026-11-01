@@ -56,7 +56,7 @@ describe('Cursor compact usage headline', () => {
       const segment = renderToStaticMarkup(
         <ProviderSegment p={p} compact={false} mode="compact" display={display} />
       )
-      expect(segment).toContain(`>${shown}% Cursor Models<`)
+      expect(segment).toContain(`>${shown}%<`)
       const row = renderToStaticMarkup(
         <UsageRow
           p={p}

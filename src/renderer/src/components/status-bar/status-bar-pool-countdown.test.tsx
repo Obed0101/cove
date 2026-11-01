@@ -51,23 +51,29 @@ describe('status-bar pool countdown', () => {
     vi.useRealTimers()
   })
 
-  it.each([
-    ['verbose', 'used'],
-    ['verbose', 'remaining'],
-    ['compact', 'used'],
-    ['compact', 'remaining']
-  ] as const)('ticks without new quota data in %s mode with %s percentages', (mode, display) => {
+  it.each(['used', 'remaining'] as const)(
+    'ticks without new quota data in verbose mode with %s percentages',
+    (display) => {
+      const { container } = render(
+        <ProviderSegment p={limits()} compact={false} mode="verbose" display={display} />
+      )
+      expect(container.textContent).toContain('5h (1h 30m)')
+      expect(container.textContent).toContain(display === 'used' ? '90%' : '10%')
+
+      act(() => vi.advanceTimersByTime(30_001))
+      expect(container.textContent).toContain('5h (1h 29m)')
+
+      act(() => vi.advanceTimersByTime(MINUTE))
+      expect(container.textContent).toContain('5h (1h 28m)')
+    }
+  )
+
+  it('keeps the compact chip to the bare percentage without a countdown clock', () => {
     const { container } = render(
-      <ProviderSegment p={limits()} compact={false} mode={mode} display={display} />
+      <ProviderSegment p={limits()} compact={false} mode="compact" display="used" />
     )
-    expect(container.textContent).toContain('5h (1h 30m)')
-    expect(container.textContent).toContain(display === 'used' ? '90%' : '10%')
-
-    act(() => vi.advanceTimersByTime(30_001))
-    expect(container.textContent).toContain('5h (1h 29m)')
-
-    act(() => vi.advanceTimersByTime(MINUTE))
-    expect(container.textContent).toContain('5h (1h 28m)')
+    expect(container.textContent).toBe('Antigravity90%')
+    expect(vi.getTimerCount()).toBe(0)
   })
 
   it.each(['verbose', 'compact'] as const)(
@@ -91,7 +97,7 @@ describe('status-bar pool countdown', () => {
         expect(container.textContent).toContain('10% 5h (1h 30m)')
         expect(container.textContent).toContain('5% wk (1h 30m)')
       } else {
-        expect(container.textContent).toBe('5% Gemini wk (1h 30m)')
+        expect(container.textContent).toBe('Antigravity5%')
       }
     }
   )
@@ -141,7 +147,7 @@ describe('status-bar pool countdown', () => {
 
   it('stops countdown updates when the labels become hidden', () => {
     const { container, rerender } = render(
-      <ProviderSegment p={limits()} compact={false} mode="compact" display="used" />
+      <ProviderSegment p={limits()} compact={false} mode="verbose" display="used" />
     )
     expect(container.textContent).toContain('1h 30m')
     expect(vi.getTimerCount()).toBe(1)

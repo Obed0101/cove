@@ -132,8 +132,9 @@ export function WorktreeCardParentContent({
   return (
     <div
       className={cn(
-        'flex w-full min-w-0 gap-0.5 pl-0',
-        titleOnlyCard ? 'items-center' : 'items-start'
+        'flex w-full min-w-0 pl-0',
+        // Cove: title-only rows seat a 6px dot in a 20px lane, like the design preview's worktree rows.
+        titleOnlyCard ? 'items-center gap-px' : 'items-start gap-0.5'
       )}
       style={
         parentContentMarginLeft < 0 ? { marginLeft: `${parentContentMarginLeft}px` } : undefined
@@ -144,7 +145,11 @@ export function WorktreeCardParentContent({
         <div
           className={cn(
             'flex shrink-0 justify-center',
-            newCardStyle ? 'mr-1 w-5 items-center' : 'items-start pt-[2px]',
+            newCardStyle
+              ? 'mr-1 w-5 items-center'
+              : titleOnlyCard
+                ? 'w-5 items-center'
+                : 'items-start pt-[2px]',
             affiliateListMode && 'px-1'
           )}
           data-worktree-card-status-slot=""

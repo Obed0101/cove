@@ -5,6 +5,8 @@ import type { ExternalConversationSettings } from './external-conversation-setti
 import type { NativeChatGlobalSettings } from './native-chat-appearance-settings'
 import type { WorktreeDeletionPreferences } from './worktree-deletion-preferences'
 import type { AgentPermissionGlobalSettings } from './tui-agent-permission-choice'
+import type { WindowMaterialSettings } from './window-material-settings'
+import type { ProjectIconStyleSettings } from './project-icon-style-settings'
 
 /** Settings groups owned by their feature modules and composed into GlobalSettings. */
 export type GlobalSettingsBase = ClaudeAgentViewSettings &
@@ -13,4 +15,6 @@ export type GlobalSettingsBase = ClaudeAgentViewSettings &
   ClaudeAccountSwitchSettings &
   AgentPermissionGlobalSettings &
   ExternalConversationSettings &
-  BrowserLinkOpeningSettings
+  BrowserLinkOpeningSettings &
+  WindowMaterialSettings &
+  ProjectIconStyleSettings

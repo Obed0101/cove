@@ -33,7 +33,11 @@ export function TaskPageGitHubModeControls({
   return taskSource === 'github' ? (
     <div className="flex min-w-0 flex-wrap items-center gap-2">
       {projectModeVisible ? (
-        <div className="flex items-center gap-1 text-xs">
+        <div
+          role="group"
+          aria-label={translate('taskPage.githubMode', 'GitHub view')}
+          className="flex gap-0.5 rounded-lg bg-foreground/5 p-0.5"
+        >
           {githubModeButtons.map((mode) => {
             const active =
               mode.id === 'project'
@@ -57,11 +61,12 @@ export function TaskPageGitHubModeControls({
                   })
                   handleSelectGithubTaskKind(mode.id)
                 }}
+                aria-pressed={active}
                 className={cn(
-                  'rounded-md border px-2.5 py-1 text-xs font-medium transition',
+                  'flex h-6 items-center whitespace-nowrap rounded-md px-2.5 text-xs transition-[color,background-color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
                   active
-                    ? 'border-border/50 bg-foreground/90 text-background shadow-xs'
-                    : 'border-border/60 bg-muted/50 text-foreground shadow-xs hover:bg-muted/70'
+                    ? 'bg-control-active text-foreground ring-1 ring-border'
+                    : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
                 )}
               >
                 {mode.label}
@@ -104,14 +109,14 @@ export function TaskPageGitHubModeControls({
               )
             })
           }}
-          triggerClassName="h-8 w-auto max-w-[220px] rounded-md border border-border/50 bg-muted/50 px-2 text-xs font-medium shadow-sm transition hover:bg-muted/50 focus:ring-2 focus:ring-ring/20 focus:outline-none"
+          triggerClassName="h-7 w-auto max-w-[220px] rounded-md border border-transparent bg-foreground/5 px-2 text-xs font-medium transition hover:bg-foreground/8 focus:ring-2 focus:ring-ring/20 focus:outline-none"
         />
       </div>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="icon-sm"
             onClick={() => {
               if (!selectedGitHubRepoExternalLink?.url) {
@@ -129,7 +134,7 @@ export function TaskPageGitHubModeControls({
                     'Select one GitHub project to open in GitHub'
                   )
             }
-            className="h-8 w-8 rounded-md border-border/50 bg-muted/50 text-foreground shadow-sm transition hover:bg-muted/50"
+            className="size-7 rounded-md text-muted-foreground hover:text-foreground"
           >
             <ExternalLink className="size-3.5" />
           </Button>

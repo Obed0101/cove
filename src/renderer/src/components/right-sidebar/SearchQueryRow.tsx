@@ -4,6 +4,10 @@ import { Search as SearchIcon, CaseSensitive, WholeWord, Regex, X, Loader2 } fro
 import { Button } from '@/components/ui/button'
 import { ToggleButton } from './SearchResultItems'
 import { translate } from '@/i18n/i18n'
+import {
+  FILE_EXPLORER_QUERY_FIELD_CLASS_NAME,
+  FILE_EXPLORER_QUERY_INPUT_CLASS_NAME
+} from './file-explorer-query-field'
 
 export type SearchQueryRowProps = {
   inputRef: React.Ref<HTMLInputElement>
@@ -35,17 +39,14 @@ export function SearchQueryRow({
   onToggleRegex
 }: SearchQueryRowProps): React.JSX.Element {
   return (
-    <div
-      className="flex h-8 items-center gap-1 rounded-md border border-border bg-input/50 px-2 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring"
-      data-ignore-file-explorer-keys="true"
-    >
-      <SearchIcon className="size-3.5 shrink-0 text-muted-foreground" />
+    <div className={FILE_EXPLORER_QUERY_FIELD_CLASS_NAME} data-ignore-file-explorer-keys="true">
+      <SearchIcon className="size-4 shrink-0" strokeWidth={1.75} />
       <ImeInput
         ref={inputRef}
         type="text"
         data-file-search-input="true"
         data-explorer-query-input="search"
-        className="min-w-0 flex-1 bg-transparent py-1 text-xs text-foreground outline-none placeholder:text-muted-foreground/60"
+        className={FILE_EXPLORER_QUERY_INPUT_CLASS_NAME}
         aria-label={translate(
           'auto.components.right.sidebar.SearchQueryRow.queryLabel',
           'Search files'

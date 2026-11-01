@@ -1,4 +1,34 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "Retour à l’espace de travail",
+    "inboxDescription": "Les mises à jour des agents qui demandent votre attention.",
+    "tasksTitle": "Tâches",
+    "tasksDescription": "Le travail à reprendre dans vos projets.",
+    "taskProvider": "Fournisseur de tâches"
+  },
+  "statusBar": {
+    "clock": "Horloge",
+    "footerWidgets": "Widgets du pied de page",
+    "localClock": "Horloge locale",
+    "focusTimer": "Minuteur de concentration",
+    "focusIdle": "Concentration · {{time}}",
+    "focusRunning": "Pause · {{time}}",
+    "focusComplete": "Concentration terminée · Recommencer",
+    "quickNote": "Note rapide",
+    "quickNoteClose": "Fermer la note",
+    "quickNotePlaceholder": "Gardez une idée ici…",
+    "quickNoteSaved": "Enregistrée sur cet appareil.",
+    "weather": "Météo",
+    "weatherLabel": "Météo : {{temperature}} à {{city}}",
+    "weatherSetCity": "Choisir une ville",
+    "weatherClose": "Fermer la météo",
+    "weatherCity": "Ville",
+    "weatherCityPlaceholder": "Ville, p. ex. Madrid",
+    "weatherSave": "Enregistrer",
+    "weatherNotFound": "Aucune ville trouvée sous ce nom.",
+    "weatherFailed": "Impossible de joindre Open-Meteo. Réessayez.",
+    "weatherSource": "Météo actuelle fournie par Open-Meteo. La ville est enregistrée sur cet appareil."
+  },
   "app": {
     "saving": {
       "delayedTitle": "Le stockage du profil prend plus de temps que d’habitude",
@@ -247,6 +277,18 @@
         "spanish": "Español",
         "french": "Français",
         "portuguese": "Português (Brasil)"
+      },
+      "windowMaterial": {
+        "title": "Matériau de la fenêtre",
+        "description": "Surfaces opaques ou verre translucide sur un arrière-plan doux.",
+        "solid": "Opaque",
+        "glass": "Verre"
+      },
+      "projectIcons": {
+        "title": "Icônes de projet",
+        "description": "Sprites pixelisés dans la barre latérale, ou l’icône propre à chaque dépôt.",
+        "pixel": "Pixel",
+        "repository": "Dépôt"
       },
       "statusBar": {
         "claudeToggleDescription": "Afficher l'utilisation des tokens et des coûts de Claude pour l'espace de travail actif.",

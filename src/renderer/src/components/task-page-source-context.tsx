@@ -40,10 +40,11 @@ export const GITHUB_TASK_GRID_CLASS =
 export const GITHUB_PR_TASK_GRID_CLASS =
   'min-w-[1020px] grid-cols-[72px_minmax(360px,2fr)_132px_128px_132px_92px_158px]'
 // Why: sticky cells need the row's opaque, animated surface to prevent bleed and hover flashes.
-export const GITHUB_TASK_ROW_SURFACE_CLASS = 'bg-background transition-colors'
+// Cove: rows sit on the card surface, not the black app background.
+export const GITHUB_TASK_ROW_SURFACE_CLASS = 'bg-pane-surface transition-colors'
 export const GITHUB_TASK_ROW_HOVER_SURFACE_CLASS = 'group-hover/github-task-row:bg-accent'
 export const GITHUB_TASK_HEADER_SURFACE_CLASS =
-  '[background:color-mix(in_srgb,var(--muted)_25%,var(--background))]'
+  '[background:color-mix(in_srgb,var(--muted)_25%,var(--pane-surface))]'
 export function getGitHubWorkItemWorkspaceSeed(item: GitHubWorkItem): string {
   return getLinkedWorkItemWorkspaceName(item)?.seedName ?? getLinkedWorkItemSuggestedName(item)
 }

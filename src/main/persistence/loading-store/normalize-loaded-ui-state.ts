@@ -96,7 +96,12 @@ export function normalizeLoadedUiState(
       return undefined
     }
     if (needsLegacyDefaultedCompactMigration) {
-      return getWorktreeCardModeProperties('Compact')
+      const compact = getWorktreeCardModeProperties('Compact')
+      // Why: the current Compact set also matches the legacy check; re-returning it rewrites every launch.
+      const alreadyCompact =
+        compact.length === rawCardProps.length &&
+        compact.every((property, index) => property === rawCardProps[index])
+      return alreadyCompact ? undefined : compact
     }
     const candidate = needsInlineAgentsMigration
       ? [...rawCardProps, 'inline-agents' as const]

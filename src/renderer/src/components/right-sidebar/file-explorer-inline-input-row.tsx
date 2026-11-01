@@ -133,14 +133,14 @@ export function InlineInputRow({
 
   return (
     <div
-      className="flex items-center w-full h-[26px] px-2 gap-1"
-      style={{ paddingLeft: `${depth * 16 + 8}px` }}
+      className="flex items-center w-full h-7 px-2 gap-1.5"
+      style={{ paddingLeft: `${depth * 14 + 8}px` }}
     >
       <span className="size-3 shrink-0" />
       {inlineInput.type === 'folder' ? (
-        <Folder className="size-3 shrink-0 text-muted-foreground" />
+        <Folder className="size-4 shrink-0 text-muted-foreground" />
       ) : (
-        <File className="size-3 shrink-0 text-muted-foreground" />
+        <File className="size-4 shrink-0 text-muted-foreground" />
       )}
       <input
         key={inlineInputKey}

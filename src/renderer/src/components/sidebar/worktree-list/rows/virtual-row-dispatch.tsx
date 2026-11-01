@@ -10,6 +10,7 @@ import type { WorktreeGroupBy } from '../../../../../../shared/sidebar-list/row-
 import {
   getVirtualRowTransform,
   getWorktreeVirtualRowTransform,
+  shouldUseHeaderBottomSpacing,
   shouldUseHeaderTopSpacing
 } from '../viewport/virtual-rows'
 import type { RenderRow } from '../listing/render-row'
@@ -167,6 +168,7 @@ export function renderWorktreeVirtualRow(
         index: vItem.index,
         firstHeaderIndex: ctx.firstHeaderIndex
       }),
+      hasHeaderBottomSpacing: shouldUseHeaderBottomSpacing(ctx.renderRows, vItem.index),
       measureVirtualRowElement: ctx.measureVirtualRowElement
     })
   }

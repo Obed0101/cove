@@ -24,7 +24,7 @@ export function TaskPageLinearCustomViewProjects({
     openLinearProjectContext
   } = model
   return (
-    <div className="flex min-h-0 max-h-full flex-col overflow-hidden rounded-md rounded-t-none border border-t-0 border-border/50 bg-background shadow-sm">
+    <div className="flex min-h-0 max-h-full flex-col overflow-hidden rounded-b-lg border border-t-0 border-border">
       <div className="flex h-10 flex-none items-center justify-between gap-3 border-b border-border/50 bg-muted/35 px-3">
         <div className="flex min-w-0 items-center gap-2">
           <Button

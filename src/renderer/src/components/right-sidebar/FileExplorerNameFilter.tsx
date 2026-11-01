@@ -1,7 +1,11 @@
 import React from 'react'
-import { ListFilter, Loader2, X } from 'lucide-react'
+import { Loader2, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { translate } from '@/i18n/i18n'
+import {
+  FILE_EXPLORER_QUERY_FIELD_CLASS_NAME,
+  FILE_EXPLORER_QUERY_INPUT_CLASS_NAME
+} from './file-explorer-query-field'
 
 type FileExplorerNameFilterProps = {
   query: string
@@ -19,15 +23,12 @@ export function FileExplorerNameFilter({
   onClear
 }: FileExplorerNameFilterProps): React.JSX.Element {
   return (
-    <div
-      className="flex h-8 items-center gap-1 rounded-md border border-border bg-input/50 px-2 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring"
-      data-ignore-file-explorer-keys="true"
-    >
-      <ListFilter className="size-3.5 shrink-0 text-muted-foreground" />
+    <div className={FILE_EXPLORER_QUERY_FIELD_CLASS_NAME} data-ignore-file-explorer-keys="true">
+      <Search className="size-4 shrink-0" strokeWidth={1.75} />
       <input
         type="text"
         data-explorer-query-input="files"
-        className="min-w-0 flex-1 bg-transparent py-1 text-xs text-foreground outline-none placeholder:text-muted-foreground/60"
+        className={FILE_EXPLORER_QUERY_INPUT_CLASS_NAME}
         aria-label={translate(
           'auto.components.right.sidebar.FileExplorerNameFilter.26fb73c6e3',
           'Find files'
@@ -36,8 +37,8 @@ export function FileExplorerNameFilter({
           scopeLabel
             ? translate('fileExplorer.root.findInFolder', 'Find in {{path}}', { path: scopeLabel })
             : translate(
-                'auto.components.right.sidebar.FileExplorerNameFilter.26fb73c6e3',
-                'Find files'
+                'auto.components.right.sidebar.FileExplorerNameFilter.placeholder',
+                'Find files…'
               )
         }
         value={query}

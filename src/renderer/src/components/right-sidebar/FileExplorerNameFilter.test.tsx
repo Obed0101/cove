@@ -46,7 +46,7 @@ describe('FileExplorerNameFilter', () => {
       currentTarget: { value: 'FileExplorer' }
     })
 
-    expect(input.props.placeholder).toBe('Find files')
+    expect(input.props.placeholder).toBe('Find files…')
     expect(onQueryChange).toHaveBeenCalledWith('FileExplorer')
   })
 

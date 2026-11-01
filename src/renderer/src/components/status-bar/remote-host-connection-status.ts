@@ -64,7 +64,7 @@ export function runtimeHostBlockedCopy(
           : repairRoute === 'ssh'
             ? translate(
                 'auto.components.status.bar.RuntimeHostStatusRow.managed_access_revoked_explanation',
-                "Orca couldn't pair with it again over SSH. Connect to try again."
+                "Cove couldn't pair with it again over SSH. Connect to try again."
               )
             : translate(
                 'auto.components.status.bar.RuntimeHostStatusRow.connect_access_revoked_explanation',
@@ -79,11 +79,11 @@ export function runtimeHostBlockedCopy(
     ),
     summary: translate(
       'auto.components.status.bar.RuntimeHostStatusRow.update_required_summary',
-      'Orca versions are not compatible'
+      'Cove versions are not compatible'
     ),
     explanation: translate(
       'auto.components.status.bar.RuntimeHostStatusRow.update_required_explanation',
-      'Update Orca on this computer or on the server, then connect again.'
+      'Update Cove on this computer or on the server, then connect again.'
     ),
     ...(compatibility?.kind === 'blocked'
       ? { detail: describeRuntimeCompatBlock(compatibility) }

@@ -7,6 +7,7 @@ import { useAppStore } from '../store'
 export function useDocumentAppearance(): void {
   const theme = useAppStore((s) => s.settings?.theme)
   const appFontFamily = useAppStore((s) => s.settings?.appFontFamily)
+  const windowMaterial = useAppStore((s) => s.settings?.windowMaterial)
 
   useEffect(() => {
     if (!theme) {
@@ -37,4 +38,8 @@ export function useDocumentAppearance(): void {
       buildAppFontFamily(appFontFamily)
     )
   }, [appFontFamily])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('glass', windowMaterial === 'glass')
+  }, [windowMaterial])
 }

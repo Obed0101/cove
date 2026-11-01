@@ -80,13 +80,13 @@ export function useMacTccAttributionSeveredNotice(): void {
       toast.warning(
         translate(
           'auto.hooks.useMacTccAttributionSeveredNotice.title',
-          'macOS permissions may not reach Orca terminals'
+          'macOS permissions may not reach Cove terminals'
         ),
         {
           id: SEVERED_TCC_NOTICE_ID,
           description: translate(
             'auto.hooks.useMacTccAttributionSeveredNotice.description',
-            'Running Orca terminals are hosted by a daemon started by a previous Orca installation. macOS may not apply Orca’s Accessibility, Automation, or protected-file permissions to them. Restart the daemon from Manage Sessions to restore access. This will close all running Orca terminals.'
+            'Running Cove terminals are hosted by a daemon started by a previous Cove installation. macOS may not apply Cove’s Accessibility, Automation, or protected-file permissions to them. Restart the daemon from Manage Sessions to restore access. This will close all running Cove terminals.'
           ),
           duration: Infinity,
           action: {
@@ -132,7 +132,7 @@ export function useMacTccAttributionSeveredNotice(): void {
           id: FOLDER_ACCESS_MISMATCH_NOTICE_ID,
           description: translate(
             'auto.hooks.useMacTccAttributionSeveredNotice.folderAccessDescription',
-            'macOS is blocking Orca’s terminal service from this folder, so commands run there may fail until it’s fixed.'
+            'macOS is blocking Cove’s terminal service from this folder, so commands run there may fail until it’s fixed.'
           ),
           duration: Infinity,
           action: {

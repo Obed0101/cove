@@ -125,7 +125,7 @@ describe('Store', () => {
     expect(store.getUI()._expandedWorktreeCardPropertiesDefaulted).toBe(true)
   })
 
-  it('derives fresh default profiles without branch', async () => {
+  it('derives fresh default profiles as compact cards without branch', async () => {
     writeDataFile({
       schemaVersion: 1,
       repos: [],
@@ -137,20 +137,7 @@ describe('Store', () => {
     })
     const store = await createStore()
 
-    expect(store.getUI().worktreeCardProperties).toEqual([
-      'status',
-      'unread',
-      'issue',
-      'linear-issue',
-      'jira-issue',
-      'pr',
-      'automation',
-      'cli',
-      'comment',
-      'ports',
-      'inline-agents',
-      'host'
-    ])
+    expect(store.getUI().worktreeCardProperties).toEqual(['status', 'unread'])
     expect(store.getUI().worktreeCardProperties).not.toContain('branch')
     expect(store.getUI()._worktreeCardModeDefaulted).toBe(true)
   })
@@ -346,12 +333,12 @@ describe('Store', () => {
     expect(store.getUI().worktreeCardProperties).not.toContain('jira-issue')
   })
 
-  it('leaves fresh default profiles with a single jira-issue entry', async () => {
+  it('leaves fresh expanded-card profiles with a single jira-issue entry', async () => {
     writeDataFile({
       schemaVersion: 1,
       repos: [],
       worktreeMeta: {},
-      settings: {},
+      settings: { compactWorktreeCards: false },
       ui: {},
       githubCache: { pr: {}, issue: {} },
       workspaceSession: {}

@@ -66,7 +66,8 @@ export function useFileExplorerRowScrolling({
   const virtualizer = useVirtualizer({
     count: totalCount,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 26,
+    estimateSize: () => 28,
+    paddingEnd: 8,
     overscan: 20,
     getItemKey: (index) => {
       if (inlineInputIndex >= 0) {

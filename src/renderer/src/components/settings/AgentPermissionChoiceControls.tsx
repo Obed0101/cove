@@ -43,7 +43,7 @@ function ownDescription(chatOwnSupported: boolean): string {
   if (!chatOwnSupported) {
     return translate(
       'settings.agents.permissionOwnLegacyDescription',
-      'Orca adds no permission flag in terminals; chats use Settings → Chat.'
+      'Cove adds no permission flag in terminals; chats use Settings → Chat.'
     )
   }
   return translate(

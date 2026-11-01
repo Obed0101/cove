@@ -16,6 +16,7 @@ import IssueSourceIndicator from '@/components/github/IssueSourceIndicator'
 import IssueSourceSelector, { issueSourceChipClass } from '@/components/github/IssueSourceSelector'
 import RepoBadgeLabel from '@/components/repo/RepoBadgeLabel'
 import { repoMatchesHostIdentity } from '@/store/slices/repo-host-identity'
+import { TaskPageGitHubViewControls } from './ViewControls'
 export function TaskPageGitHubFilters({
   model
 }: {
@@ -66,46 +67,51 @@ export function TaskPageGitHubFilters({
     )
   )
   return (
-    // Join filter chrome and table as one surface.
+    // Cove: one flat toolbar row above the list; the hairline is its only seam.
     <div
-      className="flex min-w-0 flex-col gap-2.5 rounded-md rounded-b-none border border-border/50 bg-muted/35 px-3 py-2.5"
+      className="flex min-w-0 flex-col gap-2 border-b border-border/60 pt-1 pb-2.5"
       data-contextual-tour-target="tasks-search-presets"
     >
-      <div className="flex flex-wrap gap-1.5">
-        {getGitHubTaskKindPresets(activeGithubTaskKind).map((option) => {
-          const active = activeTaskPreset === option.id
-          return (
-            <button
-              key={option.id}
-              type="button"
-              onClick={() => {
-                const query = option.query
-                setTaskSearchInput(query)
-                setAppliedTaskSearch(query)
-                setActiveTaskPreset(option.id)
-                setTaskResumeState({
-                  githubItemsPreset: option.id,
-                  githubItemsQuery: query
-                })
-                setTaskRefreshNonce((current) => current + 1)
-              }}
-              onContextMenu={(event) => {
-                event.preventDefault()
-                handleSetDefaultTaskPreset(option.id)
-              }}
-              className={cn(
-                'rounded-md border px-2.5 py-1 text-xs font-medium transition',
-                active
-                  ? 'border-border/50 bg-foreground/90 text-background shadow-xs'
-                  : 'border-border/60 bg-background text-foreground shadow-xs hover:bg-muted/60'
-              )}
-            >
-              {option.label}
-            </button>
-          )
-        })}
-      </div>
       <div className="flex min-w-0 flex-wrap items-center gap-2">
+        <div
+          role="group"
+          aria-label={translate('taskPage.presets', 'Task presets')}
+          className="flex max-w-full gap-0.5 overflow-x-auto scrollbar-none rounded-lg bg-foreground/5 p-0.5"
+        >
+          {getGitHubTaskKindPresets(activeGithubTaskKind).map((option) => {
+            const active = activeTaskPreset === option.id
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => {
+                  const query = option.query
+                  setTaskSearchInput(query)
+                  setAppliedTaskSearch(query)
+                  setActiveTaskPreset(option.id)
+                  setTaskResumeState({
+                    githubItemsPreset: option.id,
+                    githubItemsQuery: query
+                  })
+                  setTaskRefreshNonce((current) => current + 1)
+                }}
+                onContextMenu={(event) => {
+                  event.preventDefault()
+                  handleSetDefaultTaskPreset(option.id)
+                }}
+                aria-pressed={active}
+                className={cn(
+                  'flex h-6 items-center whitespace-nowrap rounded-md px-2.5 text-xs transition-[color,background-color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+                  active
+                    ? 'bg-control-active text-foreground ring-1 ring-border'
+                    : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
+                )}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
         <PRFilterDropdowns
           parsed={appliedTaskQuery}
           kind={activeGithubTaskKind}
@@ -127,7 +133,7 @@ export function TaskPageGitHubFilters({
                 ? translate('auto.components.TaskPage.eee4df4c66', 'Search GitHub PRs...')
                 : translate('auto.components.TaskPage.b15ceb409d', 'Search GitHub issues...')
             }
-            className="h-8 rounded-md border-border/60 bg-background pl-8 pr-8 text-xs text-foreground shadow-xs"
+            className="h-7 rounded-md border-transparent bg-foreground/5 pl-8 pr-8 text-xs text-foreground shadow-none focus-visible:border-ring"
           />
           {taskSearchInput || appliedTaskSearch ? (
             <button
@@ -140,15 +146,16 @@ export function TaskPageGitHubFilters({
             </button>
           ) : null}
         </div>
+        <TaskPageGitHubViewControls />
         <div
-          className="flex shrink-0 items-center gap-2"
+          className="flex shrink-0 items-center gap-0.5"
           data-contextual-tour-target="tasks-actions"
         >
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="outline"
-                size="icon"
+                variant="ghost"
+                size="icon-sm"
                 onClick={() => {
                   // Why: restore a non-empty draft (accidental dismissal recoverable); empty default guards a stale draft after a repo change.
                   const seed = resolveNewIssueOpenSeed({
@@ -164,7 +171,7 @@ export function TaskPageGitHubFilters({
                 }}
                 disabled={!newIssueTargetRepo}
                 aria-label={translate('auto.components.TaskPage.d3d0998b7d', 'New GitHub issue')}
-                className="size-8 border-border/60 bg-background text-foreground shadow-xs hover:bg-muted/60"
+                className="size-7 text-muted-foreground hover:text-foreground"
               >
                 <Plus className="size-4" />
               </Button>
@@ -176,8 +183,8 @@ export function TaskPageGitHubFilters({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="outline"
-                size="icon"
+                variant="ghost"
+                size="icon-sm"
                 onClick={handleRefreshGithubTasks}
                 disabled={githubTasksBusy}
                 aria-busy={githubTasksBusy}
@@ -186,7 +193,7 @@ export function TaskPageGitHubFilters({
                     ? translate('auto.components.TaskPage.6ffa6be99f', 'Refreshing GitHub work')
                     : translate('auto.components.TaskPage.ff53631e6f', 'Refresh GitHub work')
                 }
-                className="size-8 cursor-pointer border-border/60 bg-background text-foreground shadow-xs hover:bg-muted/60 disabled:pointer-events-auto disabled:cursor-wait"
+                className="size-7 cursor-pointer text-muted-foreground hover:text-foreground disabled:pointer-events-auto disabled:cursor-wait"
               >
                 {githubTasksBusy ? (
                   <LoaderCircle className="size-4 animate-spin" />

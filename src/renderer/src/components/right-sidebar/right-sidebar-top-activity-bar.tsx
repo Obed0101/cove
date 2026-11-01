@@ -4,8 +4,8 @@ import type { CheckStatus } from '../../../../shared/github/pull-request-types'
 import { cn } from '@/lib/utils'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
-import { ActivityBarButton, TopActivityOverflowMenu } from './activity-bar-buttons'
 import type { ActivityBarItem } from './activity-bar-buttons'
+import { RightSidebarSegmentedTabs } from './right-sidebar-segmented-tabs'
 import { ActivityBarPositionMenu } from './activity-bar-position-menu'
 import {
   RIGHT_SIDEBAR_HEADER_NO_DRAG_CLASS_NAME,
@@ -34,9 +34,10 @@ export function RightSidebarTopActivityBar({
   activityBarPosition: ActivityBarPosition
   onChangeActivityBarPosition: (pos: ActivityBarPosition) => void
 }): React.JSX.Element {
+  const allItems = [...topActivityLayout.visibleItems, ...topActivityLayout.overflowItems]
   return (
     <ContextMenu>
-      <div className="flex h-[36px] min-h-[36px] items-center border-b border-border right-sidebar-header-inset right-sidebar-header-drag overflow-hidden">
+      <div className="flex h-[44px] min-h-[44px] items-center right-sidebar-header-inset right-sidebar-header-drag overflow-hidden">
         {!hasDesktopWindowChrome && (
           <TooltipProvider delayDuration={400}>
             <ContextMenuTrigger asChild>
@@ -44,29 +45,12 @@ export function RightSidebarTopActivityBar({
                 ref={topActivityStripRef}
                 className={RIGHT_SIDEBAR_TOP_ACTIVITY_STRIP_CLASS_NAME}
               >
-                <div className={cn('flex min-w-0 shrink', RIGHT_SIDEBAR_HEADER_NO_DRAG_CLASS_NAME)}>
-                  {/* Use More for overflow because this narrow titlebar also holds close/window controls. */}
-                  <div className="flex min-w-0 shrink">
-                    {topActivityLayout.visibleItems.map((item) => (
-                      <ActivityBarButton
-                        key={item.id}
-                        item={item}
-                        active={effectiveTab === item.id}
-                        onClick={() => onSelectTab(item.id)}
-                        layout="top"
-                        statusIndicator={item.id === 'checks' ? checksStatus : null}
-                      />
-                    ))}
-                  </div>
-                  {topActivityLayout.overflowItems.length > 0 && (
-                    <TopActivityOverflowMenu
-                      items={topActivityLayout.overflowItems}
-                      activeTab={effectiveTab}
-                      onSelect={onSelectTab}
-                      checksStatus={checksStatus}
-                    />
-                  )}
-                </div>
+                <RightSidebarSegmentedTabs
+                  items={allItems}
+                  effectiveTab={effectiveTab}
+                  onSelectTab={onSelectTab}
+                  checksStatus={checksStatus}
+                />
               </div>
             </ContextMenuTrigger>
             <div
@@ -100,26 +84,12 @@ export function RightSidebarTopActivityBar({
               className={RIGHT_SIDEBAR_WINDOWS_TOP_ACTIVITY_STRIP_CLASS_NAME}
             >
               {/* Keep navigation in the body so custom desktop titlebars remain visually native and uncrowded. */}
-              <div className="flex min-w-0 flex-1 shrink">
-                {topActivityLayout.visibleItems.map((item) => (
-                  <ActivityBarButton
-                    key={item.id}
-                    item={item}
-                    active={effectiveTab === item.id}
-                    onClick={() => onSelectTab(item.id)}
-                    layout="top"
-                    statusIndicator={item.id === 'checks' ? checksStatus : null}
-                  />
-                ))}
-              </div>
-              {topActivityLayout.overflowItems.length > 0 && (
-                <TopActivityOverflowMenu
-                  items={topActivityLayout.overflowItems}
-                  activeTab={effectiveTab}
-                  onSelect={onSelectTab}
-                  checksStatus={checksStatus}
-                />
-              )}
+              <RightSidebarSegmentedTabs
+                items={allItems}
+                effectiveTab={effectiveTab}
+                onSelectTab={onSelectTab}
+                checksStatus={checksStatus}
+              />
             </div>
           </ContextMenuTrigger>
         </TooltipProvider>

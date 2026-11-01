@@ -21,6 +21,7 @@ vi.mock('../editor/editor-dropped-file-open', () => ({
   editorGroupStillExists: () => true
 }))
 vi.mock('../tab-bar/TabBar', () => ({ default: () => null }))
+vi.mock('./WorkbenchPaneHead', () => ({ WorkbenchPaneHead: () => null }))
 vi.mock('../tab-bar/TabBarQuickCommandsButton', () => ({ TabBarQuickCommandsButton: () => null }))
 vi.mock('@/lib/pane-manager/client-hosted-browser-row-state', () => ({
   useClientHostedBrowserRows: () => []

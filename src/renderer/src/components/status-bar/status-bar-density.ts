@@ -72,18 +72,25 @@ export function recordStatusBarDensityWidth(
 
 type ElementRef = MutableRefObject<HTMLElement | null>
 
-function measureWidth(ref: ElementRef): number {
-  return ref.current?.getBoundingClientRect().width ?? 0
+/** Footer slots that never shrink, wherever their zone sits; each one marks itself with `data-footer-fixed`. */
+export function listFixedFooterNodes(bar: HTMLElement): HTMLElement[] {
+  return [...bar.querySelectorAll<HTMLElement>('[data-footer-fixed]')]
+}
+
+function measureFixedFooterWidth(nodes: readonly HTMLElement[], gap: number): number {
+  return nodes.reduce((sum, node) => {
+    const width = node.getBoundingClientRect().width
+    return width > 0 ? sum + width + gap : sum
+  }, 0)
 }
 
 /** Measure rendered widths to choose the roomiest fitting density and collapse usage chips when needed. */
-export function useStatusBarDensity(): {
+export function useStatusBarDensity(personalWidgetsKey = ''): {
   density: StatusBarDensity
   overflowing: boolean
   collapsedUsageProviders: readonly string[]
   barRef: (node: HTMLElement | null) => void
   usageRef: (node: HTMLElement | null) => void
-  segmentsRef: (node: HTMLElement | null) => void
 } {
   const [level, setLevel] = useState(0)
   const [overflowing, setOverflowing] = useState(false)
@@ -92,10 +99,15 @@ export function useStatusBarDensity(): {
   const overflowingRef = useRef(false)
   const collapsedUsageRef = useRef(NO_COLLAPSED_USAGE)
   const levelWidthsRef = useRef<(StatusBarLevelWidth | undefined)[]>([])
+  const personalWidgetsKeyRef = useRef(personalWidgetsKey)
+  if (personalWidgetsKeyRef.current !== personalWidgetsKey) {
+    personalWidgetsKeyRef.current = personalWidgetsKey
+    levelWidthsRef.current = []
+  }
   const barElementRef = useRef<HTMLElement | null>(null)
   const usageElementRef = useRef<HTMLElement | null>(null)
-  const segmentsElementRef = useRef<HTMLElement | null>(null)
   const observerRef = useRef<ResizeObserver | null>(null)
+  const observedFixedRef = useRef<Set<HTMLElement>>(new Set())
 
   const evaluate = useCallback((): void => {
     const bar = barElementRef.current
@@ -106,7 +118,23 @@ export function useStatusBarDensity(): {
     const available =
       bar.clientWidth - Number.parseFloat(style.paddingLeft) - Number.parseFloat(style.paddingRight)
     const usage = measureUsageRow(usageElementRef.current)
-    const fixedWidth = (Number.parseFloat(style.columnGap) || 0) + measureWidth(segmentsElementRef)
+    const fixedNodes = listFixedFooterNodes(bar)
+    // Why: lazy segments mount inside their slot after the bar renders, so each slot reports its own resizes.
+    const observer = (observerRef.current ??= new ResizeObserver(() => evaluate()))
+    const observed = observedFixedRef.current
+    for (const node of observed) {
+      if (!fixedNodes.includes(node)) {
+        observer.unobserve(node)
+        observed.delete(node)
+      }
+    }
+    for (const node of fixedNodes) {
+      if (!observed.has(node)) {
+        observer.observe(node)
+        observed.add(node)
+      }
+    }
+    const fixedWidth = measureFixedFooterWidth(fixedNodes, Number.parseFloat(style.columnGap) || 0)
     const required = usage.naturalWidth + fixedWidth
     const collapses = STATUS_BAR_DENSITY_LEVELS[committedLevelRef.current].collapseUsage
     levelWidthsRef.current = recordStatusBarDensityWidth(
@@ -163,8 +191,7 @@ export function useStatusBarDensity(): {
       }
     return {
       barRef: bind(barElementRef),
-      usageRef: bind(usageElementRef),
-      segmentsRef: bind(segmentsElementRef)
+      usageRef: bind(usageElementRef)
     }
   }, [evaluate])
 

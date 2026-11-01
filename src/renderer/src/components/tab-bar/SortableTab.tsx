@@ -11,10 +11,11 @@ import type { TerminalAgent } from '../../../../shared/terminal-agent'
 import type { TabDragItemData } from '../tab-group/useTabDragSplit'
 import { useAppStore } from '../../store'
 import {
-  ACTIVE_TAB_INDICATOR_CLASSES,
   getDropIndicatorClasses,
+  getTabIndicatorClasses,
   getTabRootStateClasses,
   getTabStripBorderClasses,
+  TAB_UNREAD_OVERLAY_CLASSES,
   type DropIndicator
 } from './drop-indicator'
 import { preventMiddleButtonDefault } from './middle-button-default-guard'
@@ -209,7 +210,7 @@ export default function SortableTab({
       data-agent-activity-status={activityStatus}
       {...attributes}
       {...dragListeners}
-      className={`group relative flex items-center h-full px-1.5 text-xs cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
+      className={`group relative flex items-center h-full px-2.5 text-[13px] cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
       onDoubleClick={(e) => {
         if (isEditing) {
           return
@@ -244,10 +245,10 @@ export default function SortableTab({
         }
       }}
     >
-      {isActive && <span className={ACTIVE_TAB_INDICATOR_CLASSES} aria-hidden />}
+      <span className={getTabIndicatorClasses(isActive)} aria-hidden />
       {showUnreadActivity && (
         // Why: a real DOM child keeps both drop-indicator pseudo-elements free and pointer events reaching the tab.
-        <span aria-hidden className="pointer-events-none absolute inset-0 bg-amber-500/10" />
+        <span aria-hidden className={TAB_UNREAD_OVERLAY_CLASSES} />
       )}
       <TerminalTabLeadingIcon
         agent={tabAgent}
@@ -318,9 +319,10 @@ export default function SortableTab({
       )}
       {!isEditing && !isPinned && (
         <button
-          className={`relative z-10 flex items-center justify-center w-4 h-4 rounded-sm shrink-0 ${
+          // Cove: a 20px close target 4px inside the tab edge, like the design preview.
+          className={`relative z-10 -mr-1.5 flex items-center justify-center size-5 rounded-md shrink-0 ${
             isActive
-              ? 'text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:text-foreground focus-visible:bg-muted'
+              ? 'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground'
               : 'text-transparent group-hover:text-muted-foreground hover:!text-foreground hover:!bg-muted focus-visible:!text-foreground focus-visible:!bg-muted'
           }`}
           // Why: stable accessible name lets E2E drive the real close path instead of calling the store.
@@ -347,7 +349,7 @@ export default function SortableTab({
             onClose(tab.id)
           }}
         >
-          <X className="w-3 h-3" />
+          <X className="size-3.5" />
         </button>
       )}
     </div>

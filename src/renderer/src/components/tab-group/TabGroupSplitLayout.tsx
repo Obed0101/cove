@@ -17,12 +17,9 @@ export default function TabGroupSplitLayout({
   return (
     <WorkspaceTabDragLayer worktreeId={worktreeId} enabled={isWorktreeActive}>
       {({ isTabDragActive, hoveredTabInsertion, setDragRootNode }) => (
-        /* Keep the 4px drag strip outside resize panes to align the 36px header; the wrapper owns the single sidebar seam. */
-        <div
-          ref={setDragRootNode}
-          className="flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden border-l border-border"
-        >
-          <div className="h-[4px] shrink-0 bg-card" data-terminal-focus-release-surface="true" />
+        /* Keep the 4px drag strip outside resize panes to align the 36px header; the workbench card replaces the sidebar seam. */
+        <div ref={setDragRootNode} className="flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
+          <div className="h-[4px] shrink-0 bg-shell" data-terminal-focus-release-surface="true" />
           <div className="flex flex-1 min-w-0 min-h-0 overflow-hidden">
             <TabGroupSplitNodeTree
               layout={layout}

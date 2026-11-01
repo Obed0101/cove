@@ -1,17 +1,19 @@
 import { defaultRangeExtractor } from '@tanstack/react-virtual'
 import type { Range, VirtualItem } from '@tanstack/react-virtual'
-import {
-  PINNED_GROUP_KEY,
-  getWorktreeLineageGroupKey
-} from '../../../../../../shared/sidebar-list/group-keys'
+import { getWorktreeLineageGroupKey } from '../../../../../../shared/sidebar-list/group-keys'
 import { getRenderRowKey } from '../listing/render-row'
 import type { RenderRow } from '../listing/render-row'
 
-export const GROUP_HEADER_ROW_HEIGHT = 28
+// Cove: SectionHeader is h-9; rows sit 2px apart, 4px below their project and 8px before the next one.
+export const GROUP_HEADER_ROW_HEIGHT = 36
 // Why: HostSectionHeader wraps its h-8 (32px) card in pt-1 (4px), so the row is 36px.
 export const HOST_HEADER_ROW_HEIGHT = 36
-export const WORKTREE_SIDEBAR_VIRTUAL_ROW_GAP = 6
-const SECONDARY_GROUP_HEADER_TOP_MARGIN = 4
+export const WORKTREE_SIDEBAR_VIRTUAL_ROW_GAP = 2
+const SECONDARY_GROUP_HEADER_TOP_MARGIN = 6
+// Why: SectionHeader's pb-0.5 keeps a hovered/selected first row off the filled project row.
+const GROUP_HEADER_BOTTOM_SPACING = 2
+// Why: a later host row renders pt-1 (4px) above its card.
+const SECONDARY_HOST_HEADER_TOP_MARGIN = 4
 const IMPORTED_WORKTREES_LINE_ROW_HEIGHT = 36
 const PENDING_CREATION_ROW_HEIGHT = 56
 const FOLDER_WORKSPACE_ROW_HEIGHT = 64
@@ -45,9 +47,15 @@ export function shouldUseHeaderTopSpacing(args: {
   firstHeaderIndex: number
 }): boolean {
   const previousRenderRow = args.rows[args.index - 1]
-  const followsCollapsedPinnedHeader =
-    previousRenderRow?.type === 'header' && previousRenderRow.key === PINNED_GROUP_KEY
-  return args.index !== args.firstHeaderIndex && !followsCollapsedPinnedHeader
+  // Cove: collapsed projects stack flush; only a project's expanded rows earn the spacer.
+  const followsCollapsedHeader =
+    previousRenderRow?.type === 'header' && args.rows[args.index]?.type === 'header'
+  return args.index !== args.firstHeaderIndex && !followsCollapsedHeader
+}
+
+export function shouldUseHeaderBottomSpacing(rows: readonly RenderRow[], index: number): boolean {
+  const nextRow = rows[index + 1]
+  return nextRow !== undefined && nextRow.type !== 'header' && nextRow.type !== 'host-header'
 }
 
 export function estimateRenderRowSize(
@@ -65,13 +73,18 @@ export function estimateRenderRowSize(
         index,
         firstHeaderIndex
       })
-        ? SECONDARY_GROUP_HEADER_TOP_MARGIN
+        ? SECONDARY_HOST_HEADER_TOP_MARGIN
         : 0)
     )
   }
   if (row?.type === 'header') {
+    // Cove: absorb the row gap so a collapsed project's neighbor header sits flush below it.
+    const flushNextHeader =
+      rows[index + 1]?.type === 'header' ? WORKTREE_SIDEBAR_VIRTUAL_ROW_GAP : 0
     return (
-      GROUP_HEADER_ROW_HEIGHT +
+      GROUP_HEADER_ROW_HEIGHT -
+      flushNextHeader +
+      (shouldUseHeaderBottomSpacing(rows, index) ? GROUP_HEADER_BOTTOM_SPACING : 0) +
       (shouldUseHeaderTopSpacing({
         rows,
         index,

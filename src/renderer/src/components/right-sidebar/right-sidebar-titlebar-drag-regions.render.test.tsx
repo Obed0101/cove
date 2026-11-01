@@ -50,10 +50,11 @@ function getMockKnownWorktree(): { id: string; repoId: string } {
 }
 
 vi.mock('@/hooks/useSidebarResize', () => ({
-  useSidebarResize: () => ({
+  useSidebarResize: ({ isOpen }: { isOpen: boolean }) => ({
     containerRef: { current: null },
     isResizing: false,
-    onResizeStart: vi.fn()
+    onResizeStart: vi.fn(),
+    contentOpen: isOpen
   })
 }))
 
@@ -83,6 +84,7 @@ vi.mock('@/store', async () => {
       activityBarPosition: mockAppState.activityBarPosition,
       setActivityBarPosition: vi.fn(),
       checksByWorktreeId: {},
+      gitStatusByWorktree: {},
       keybindings: {}
     })
     mockAppState.snapshotCache.set(selector, selected)
@@ -143,7 +145,19 @@ vi.mock('@/components/ui/context-menu', () => ({
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <>{children}</>,
-  DropdownMenuItem: ({ children }: { children: ReactNode }) => <>{children}</>,
+  DropdownMenuItem: ({
+    children,
+    onSelect,
+    'aria-label': ariaLabel
+  }: {
+    children: ReactNode
+    onSelect?: () => void
+    'aria-label'?: string
+  }) => (
+    <button type="button" aria-label={ariaLabel} onClick={() => onSelect?.()}>
+      {children}
+    </button>
+  ),
   DropdownMenuShortcut: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuTrigger: ({ children, asChild }: { children: ReactNode; asChild?: boolean }) => {
     if (asChild && isValidElement(children)) {
@@ -187,11 +201,14 @@ function openingTag(markup: string, className: string): string {
   return match[0]
 }
 
-function buttonOpeningTag(markup: string, ariaLabelPrefix: string): string {
-  const escapedPrefix = ariaLabelPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const match = markup.match(new RegExp(`<button[^>]+aria-label="${escapedPrefix}[^"]*"[^>]*>`))
+// Segmented Files/Changes buttons are named by visible text, so match their title too.
+function buttonOpeningTag(markup: string, labelPrefix: string): string {
+  const escapedPrefix = labelPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const match = markup.match(
+    new RegExp(`<button[^>]+(?:aria-label|title)="${escapedPrefix}[^"]*"[^>]*>`)
+  )
   if (!match) {
-    throw new Error(`button with aria-label prefix "${ariaLabelPrefix}" not found in ${markup}`)
+    throw new Error(`button with label prefix "${labelPrefix}" not found in ${markup}`)
   }
   return match[0]
 }
@@ -248,11 +265,12 @@ describe('rendered right sidebar titlebar drag regions', () => {
     expect(activityStrip).toContain('data-context-menu-trigger="true"')
     expect(markup).toContain('right-sidebar-header-drag')
 
-    expectNoDrag(buttonOpeningTag(markup, 'Explorer'))
-    expectNoDrag(buttonOpeningTag(markup, 'Source Control'))
-    expectNoDrag(buttonOpeningTag(markup, 'Checks'))
+    expect(openingTag(markup, 'p-0.5 right-sidebar-header-no-drag')).toBeTruthy()
+    expect(markup).toMatch(/<button[^>]+title="Explorer/)
+    expect(markup).toMatch(/<button[^>]+title="Source Control/)
+    expect(markup).not.toContain('More sidebar tabs')
+    expect(buttonOpeningTag(markup, 'Checks')).toContain('aria-pressed="false"')
     expect(buttonOpeningTag(markup, 'Toggle right sidebar')).toContain('sidebar-toggle')
-    expect(markup).toContain(RIGHT_SIDEBAR_HEADER_NO_DRAG_CLASS_NAME)
   })
 
   it('uses the custom desktop chrome top strip on Linux desktop', () => {
@@ -273,7 +291,7 @@ describe('rendered right sidebar titlebar drag regions', () => {
     const markup = renderToStaticMarkup(<RightSidebar />)
     const activityStrip = openingTag(markup, 'right-sidebar-activity-strip')
 
-    expect(activityStrip).toContain('pl-2')
+    expect(activityStrip).toContain('px-2')
     expect(activityStrip).not.toContain('h-10')
     expect(markup).not.toContain(RIGHT_SIDEBAR_WINDOWS_TOP_ACTIVITY_STRIP_CLASS_NAME)
   })
@@ -321,12 +339,12 @@ describe('rendered right sidebar titlebar drag regions', () => {
 
     const markup = renderToStaticMarkup(<RightSidebar />)
 
-    expect(markup).toContain('aria-label="Explorer')
+    expect(markup).toContain('title="Explorer')
     expect(markup).toContain('aria-label="Agents')
     expect(markup).not.toContain('aria-label="Search')
     expect(markup).toContain('aria-label="Attached worktrees')
     expect(markup).toContain('aria-label="PR Checks')
-    expect(markup).not.toContain('aria-label="Source Control')
+    expect(markup).not.toContain('title="Source Control')
     expect(markup).not.toContain('aria-label="Checks')
   })
 
@@ -382,7 +400,7 @@ describe('rendered right sidebar titlebar drag regions', () => {
 
     await act(async () => {
       container
-        .querySelector<HTMLButtonElement>('[aria-label^="Explorer"]')
+        .querySelector<HTMLButtonElement>('[title^="Explorer"]')
         ?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     })
 

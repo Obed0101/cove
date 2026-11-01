@@ -1,4 +1,74 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "Back to workspace",
+    "inboxDescription": "Agent updates that need your attention.",
+    "tasksTitle": "Tasks",
+    "tasksDescription": "Work to pick up across your projects.",
+    "taskProvider": "Task provider"
+  },
+  "taskPage": {
+    "presets": "Task presets",
+    "githubMode": "GitHub view",
+    "board": {
+      "needsReview": "Needs review",
+      "changesRequested": "Changes requested",
+      "approved": "Approved",
+      "unassigned": "Unassigned",
+      "noLabel": "No label",
+      "groupRepo": "Project",
+      "groupAssignee": "Assignee",
+      "groupLabel": "Label",
+      "groupBy": "Group",
+      "groupByTitle": "Group board by",
+      "viewMode": "Task view"
+    }
+  },
+  "statusBar": {
+    "clock": "Clock",
+    "footerWidgets": "Footer widgets",
+    "localClock": "Local clock",
+    "focusTimer": "Focus timer",
+    "focusIdle": "Focus · {{time}}",
+    "focusRunning": "Pause · {{time}}",
+    "focusComplete": "Focus complete · Restart",
+    "quickNote": "Quick note",
+    "quickNoteClose": "Close note",
+    "quickNotePlaceholder": "Keep a thought here…",
+    "quickNoteSaved": "Saved on this device.",
+    "weather": "Weather",
+    "weatherLabel": "Weather: {{temperature}} in {{city}}",
+    "weatherSetCity": "Set city",
+    "weatherClose": "Close weather",
+    "weatherCity": "City",
+    "weatherCityPlaceholder": "City, e.g. Madrid",
+    "weatherSave": "Save",
+    "weatherNotFound": "No city found with that name.",
+    "weatherFailed": "Couldn’t reach Open-Meteo. Try again.",
+    "weatherSource": "Current weather from Open-Meteo. The city is saved on this device.",
+    "clockNextDay": "+{{days}}d",
+    "clockPreviousDay": "−{{days}}d",
+    "clockWeek": "Week {{week}}",
+    "clockTimeZones": "Time zones",
+    "clockCalendar": "Calendar",
+    "focusSessionComplete": "Focus session complete",
+    "focusRestart": "Restart",
+    "focusOptions": "Focus options",
+    "focusLength": "Session length",
+    "focusMinutes": "{{minutes}} min",
+    "focusReset": "Reset",
+    "quickNoteWithContent": "Quick note, has content",
+    "quickNoteClear": "Clear",
+    "toolbar": "Status bar",
+    "keepAwake": "Keep awake",
+    "updates": "Updates",
+    "pet": "Pet",
+    "floatingTerminal": "Floating terminal",
+    "alignStart": "Left",
+    "alignCenter": "Center",
+    "alignEnd": "Right",
+    "widgetPosition": "Position",
+    "footerConfigWriteFailed": "Could not update the Cove config file"
+  },
   "csv": {
     "detectingDelimiter": "Detecting delimiter…",
     "indexProgress": "Indexing CSV… {{percent}}%",
@@ -41,6 +111,11 @@
       "description": "The active workspace is hidden in the sidebar. Revealing it will adjust only the filters hiding it.",
       "confirm": "Adjust filters and reveal",
       "cancel": "Keep filters"
+    },
+    "updateCheck": {
+      "upToDate": "You’re on the latest version.",
+      "available": "Version {{version}} is available.",
+      "failed": "Couldn’t check for updates."
     }
   },
   "app": {
@@ -335,6 +410,18 @@
         "french": "Français",
         "portuguese": "Português (Brasil)"
       },
+      "windowMaterial": {
+        "title": "Window Material",
+        "description": "Solid surfaces, or translucent glass over a soft backdrop.",
+        "solid": "Solid",
+        "glass": "Glass"
+      },
+      "projectIcons": {
+        "title": "Project Icons",
+        "description": "Pixel sprites in the sidebar, or each repository’s own icon.",
+        "pixel": "Pixel",
+        "repository": "Repository"
+      },
       "statusBar": {
         "claudeToggleDescription": "Show Claude token and cost usage for the active workspace.",
         "codexToggleDescription": "Show Codex token and cost usage for the active workspace.",
@@ -389,6 +476,22 @@
         "sharper": "Sharper",
         "terminalControlledHint": "Set by terminal interface.",
         "terminalControlledTooltip": "Matching your terminal interface. Turn off Match terminal interface to change this."
+      },
+      "coveConfig": {
+        "openFailed": "Could not open the config file",
+        "title": "Configuration File",
+        "line": "Line {{line}}",
+        "valid": "Valid. Changes apply live.",
+        "missing": "Not created yet. Opening it creates the file with its schema for editor autocomplete.",
+        "description": "Configure the footer, sidebar and appearance from ~/.cove/config.json. Changes apply live.",
+        "open": "Open",
+        "keyword": {
+          "config": "config",
+          "file": "file",
+          "json": "json",
+          "cove": "cove"
+        },
+        "desktopOnly": "The Cove config file is only available in the desktop app"
       }
     },
     "browser": {
@@ -705,7 +808,8 @@
       "064bd07810": "Go back",
       "ce37cf5279": "Toggle sidebar ({{value0}})",
       "e4b9e7dff7": "Toggle sidebar",
-      "pluginCommandFailed": "Could not run the plugin command."
+      "pluginCommandFailed": "Could not run the plugin command.",
+      "searchWithShortcut": "Search ({{value0}})"
     },
     "web": {
       "WebConnect": {
@@ -4366,7 +4470,8 @@
             "codexSignInError": "Codex sign-in failed. Please try again.",
             "cursorUsageMenu": "Cursor Usage",
             "hiddenUsageProviders": "Also: {{value0}}",
-            "zcodeUsageMenu": "ZCode Usage"
+            "zcodeUsageMenu": "ZCode Usage",
+            "customizeWidgets": "Customize widgets"
           },
           "StatusBarUsageEmptyCta": {
             "828c764a79": "Connect an account",
@@ -6056,7 +6161,9 @@
           "fee535205b": "Tasks",
           "d599269755": "Hide from sidebar",
           "artifacts": "Artifacts",
-          "skills": "Skills"
+          "skills": "Skills",
+          "inbox": "Inbox",
+          "openProject": "Open project"
         },
         "SidebarRepositoryFilterSection": {
           "d3a9c4cea1": "Clear",
@@ -7105,6 +7212,13 @@
           "outsideDistro": "Pick a folder inside {{value0}}.",
           "underDistro": "This host can only add folders under \\\\wsl.localhost\\{{value0}}.",
           "windowsDrive": "Folders on a Windows drive stay on this computer. Choose this computer as the host to add one."
+        },
+        "SidebarUpdateCheckRow": {
+          "label": "Check for updates"
+        },
+        "WorktreeCardTabCount": {
+          "one": "1 tab",
+          "many": "{{value0}} tabs"
         }
       },
       "shared": {
@@ -14859,7 +14973,8 @@
           "FileExplorerNameFilter": {
             "26fb73c6e3": "Find files",
             "4d5a6b2a49": "Clear file filter",
-            "7a9fb1e6aa": "Contents"
+            "7a9fb1e6aa": "Contents",
+            "placeholder": "Find files…"
           },
           "FileExplorerViewSwitch": {
             "c4e9a2b713": "Names",
@@ -15058,6 +15173,11 @@
                 }
               }
             }
+          },
+          "segmented": {
+            "files": "Files",
+            "changes": "Changes",
+            "worktrees": "Worktrees"
           }
         }
       },
@@ -21347,5 +21467,21 @@
   },
   "browserTab": {
     "agentDriving": "An agent is using this page"
+  },
+  "cmdJ": {
+    "coveConfig": {
+      "open": "Open Cove Config File",
+      "openDescription": "Edit ~/.cove/config.json in your default editor. Changes apply live.",
+      "verbs": {
+        "openConfig": "open config",
+        "editConfig": "edit config",
+        "coveConfig": "cove config",
+        "copyConfigPath": "copy config path",
+        "configPath": "config path"
+      },
+      "copyPath": "Copy Cove Config Path",
+      "copyPathDescription": "Copy the full path of ~/.cove/config.json.",
+      "pathCopied": "Config path copied"
+    }
   }
 }

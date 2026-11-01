@@ -8,6 +8,7 @@ import { SHOW_UI_LANGUAGE_SETTING } from '@/i18n/supported-languages'
 import { getStatusBarToggles } from './appearance-status-bar-search'
 import { getUsagePercentageDisplayEntry } from './appearance-usage-percentage-search'
 import { getMenuBarIconEntries, getSystemTrayEntries } from './appearance-system-presence-search'
+import { getCoveConfigFileEntries } from './appearance-cove-config-search'
 
 export {
   getMenuBarIconEntries,
@@ -21,7 +22,7 @@ export const getThemeEntries = createLocalizedCatalog((): SettingsSearchEntry[] 
     title: translate('auto.components.settings.appearance.search.71e06350b4', 'Theme'),
     description: translate(
       'auto.components.settings.appearance.search.0709c794f7',
-      'Choose how Orca looks in the app window.'
+      'Choose how Cove looks in the app window.'
     ),
     keywords: [
       ...translateSearchKeyword('auto.components.settings.appearance.search.262fe1d24f', 'dark'),
@@ -31,18 +32,52 @@ export const getThemeEntries = createLocalizedCatalog((): SettingsSearchEntry[] 
   }
 ])
 
+export const getWindowMaterialEntries = createLocalizedCatalog((): SettingsSearchEntry[] => [
+  {
+    title: translate('settings.appearance.windowMaterial.title', 'Window Material'),
+    description: translate(
+      'settings.appearance.windowMaterial.description',
+      'Solid surfaces, or translucent glass over a soft backdrop.'
+    ),
+    keywords: [
+      ...translateSearchKeyword('settings.appearance.windowMaterial.solid', 'Solid'),
+      ...translateSearchKeyword('settings.appearance.windowMaterial.glass', 'Glass', {
+        aliases: ['translucent', 'transparency']
+      })
+    ]
+  }
+])
+
+export const getProjectIconStyleEntries = createLocalizedCatalog((): SettingsSearchEntry[] => [
+  {
+    title: translate('settings.appearance.projectIcons.title', 'Project Icons'),
+    description: translate(
+      'settings.appearance.projectIcons.description',
+      'Pixel sprites in the sidebar, or each repository’s own icon.'
+    ),
+    keywords: [
+      ...translateSearchKeyword('settings.appearance.projectIcons.pixel', 'Pixel', {
+        aliases: ['sprite', 'avatar']
+      }),
+      ...translateSearchKeyword('settings.appearance.projectIcons.repository', 'Repository', {
+        aliases: ['repo icon', 'github avatar']
+      })
+    ]
+  }
+])
+
 export const getLanguageEntries = createLocalizedCatalog((): SettingsSearchEntry[] => [
   {
     title: translate('settings.appearance.language.title', 'Language'),
     description: translate(
       'settings.appearance.language.description',
-      'Choose the language used by the Orca interface.'
+      'Choose the language used by the Cove interface.'
     ),
     keywords: [
       ...translateSearchKeyword('settings.appearance.language.title', 'Language'),
       ...translateSearchKeyword(
         'settings.appearance.language.description',
-        'Choose the language used by the Orca interface.'
+        'Choose the language used by the Cove interface.'
       ),
       ...translateSearchKeyword('settings.appearance.language.system', 'System'),
       ...translateSearchKeyword('settings.appearance.language.english', 'English'),
@@ -92,7 +127,7 @@ export const getTypographyEntries = createLocalizedCatalog((): SettingsSearchEnt
     title: translate('auto.components.settings.appearance.search.ddb991024d', 'IDE Font'),
     description: translate(
       'auto.components.settings.appearance.search.07c7c38fac',
-      'Choose the font used by the Orca interface.'
+      'Choose the font used by the Cove interface.'
     ),
     keywords: [
       ...translateSearchKeyword('auto.components.settings.appearance.search.24094af355', 'font'),
@@ -172,7 +207,7 @@ export const getTitlebarEntries = createLocalizedCatalog((): SettingsSearchEntry
     title: translate('auto.components.settings.appearance.search.fdd31b00d0', 'Titlebar App Name'),
     description: translate(
       'auto.components.settings.appearance.search.18b4c4c30b',
-      'Show Orca in the titlebar.'
+      'Show Cove in the titlebar.'
     ),
     keywords: [
       ...translateSearchKeyword(
@@ -257,11 +292,14 @@ export function getAppearancePaneSearchEntries(
   return [
     ...getAppearanceSectionEntries(),
     ...getThemeEntries(),
+    ...getWindowMaterialEntries(),
+    ...getProjectIconStyleEntries(),
     ...(SHOW_UI_LANGUAGE_SETTING ? getLanguageEntries() : []),
     ...getTypographyEntries(),
     ...getZoomEntries(),
     ...getTerminalAppearanceSearchEntries(options),
     ...getLayoutEntries(),
+    ...getCoveConfigFileEntries(),
     ...getTitlebarEntries(),
     ...getStatusBarEntries(),
     ...getSidebarEntries(),

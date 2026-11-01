@@ -2,7 +2,10 @@ import React, { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/store'
 import { translate } from '@/i18n/i18n'
-import { SidebarHeaderActions } from './sidebar-header-actions'
+import {
+  SIDEBAR_HEADER_HOVER_REVEAL_CLASS_NAME,
+  SidebarHeaderActions
+} from './sidebar-header-actions'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverAnchor, PopoverArrow, PopoverContent } from '@/components/ui/popover'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -56,11 +59,11 @@ const SidebarHeader = React.memo(function SidebarHeader({
   )
 
   return (
-    <div className="mt-2 flex h-8 min-w-0 shrink-0 items-center justify-between gap-1.5 px-2">
+    <div className="group/projects-header flex h-[35px] min-w-0 shrink-0 pt-px items-center justify-between gap-1.5 px-2">
       <div className="flex min-w-0 items-center gap-1">
         <span
           // Truncate localized titles because fixed-width actions cannot shrink inside the short header row.
-          className="min-w-0 truncate select-none pl-2 pr-0.5 text-xs font-semibold text-muted-foreground/80"
+          className="min-w-0 truncate select-none pl-2 pr-0.5 text-xs font-medium text-muted-foreground"
           data-sidebar-section-title={groupBy === 'repo' ? 'projects' : 'workspaces'}
         >
           {sidebarTitle}
@@ -77,7 +80,13 @@ const SidebarHeader = React.memo(function SidebarHeader({
         >
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="inline-flex shrink-0">
+              {/* Cove: Inbox in the nav is the primary entry; the bell only appears on header hover or while active. */}
+              <span
+                className={cn(
+                  'inline-flex shrink-0',
+                  !agentsViewActive && !introOpen && SIDEBAR_HEADER_HOVER_REVEAL_CLASS_NAME
+                )}
+              >
                 <PopoverAnchor asChild>
                   <Button
                     type="button"

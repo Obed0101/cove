@@ -92,7 +92,7 @@ export function TaskPageGitLabFilters({
         </div>
       </div>
       <div
-        className="min-w-0 rounded-md rounded-b-none border border-border/50 bg-muted/50 px-3 pt-2 pb-0 shadow-sm"
+        className="min-w-0 rounded-t-lg border border-border px-3 pt-2 pb-0"
         data-contextual-tour-target="tasks-search-presets"
       >
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">

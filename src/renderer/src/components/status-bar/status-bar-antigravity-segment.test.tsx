@@ -99,14 +99,15 @@ describe('Antigravity status-bar segment', () => {
     expect(markup.indexOf('5h')).toBeLessThan(markup.indexOf('wk'))
   })
 
-  it('uses the short pool label in compact mode', async () => {
+  it('keeps the compact chip to the provider name and bare percentage', async () => {
     const { ProviderSegment } = await import('./StatusBar')
     const markup = renderToStaticMarkup(
       <ProviderSegment p={groupedLimits()} compact={false} display="used" mode="compact" />
     )
 
-    expect(markup).toContain('4%')
-    expect(markup).toContain('Gemini wk')
+    expect(markup).toContain('>4%<')
+    expect(markup).toContain('>Antigravity<')
+    expect(markup).not.toContain('Gemini wk')
     expect(markup).not.toContain('Limit Remaining')
   })
 

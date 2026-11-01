@@ -53,5 +53,56 @@ export const DEFAULT_TERMINAL_THEMES: TerminalThemeMap = {
     brightMagenta: '#ad7fa8',
     brightCyan: '#034b50',
     brightWhite: '#3d3d3d'
+  },
+
+  // Cove: backgrounds equal --pane-surface so the terminal reads as the workbench card itself.
+  'Cove Dark': {
+    background: '#252525',
+    foreground: '#fafafa',
+    cursor: '#fafafa',
+    cursorAccent: '#252525',
+    selectionBackground: '#5a7898',
+    selectionForeground: '#ffffff',
+    black: '#1d1f21',
+    red: '#cc6666',
+    green: '#81b88b',
+    yellow: '#e2c08d',
+    blue: '#4493f8',
+    magenta: '#b294bb',
+    cyan: '#8abeb7',
+    white: '#c5c8c6',
+    brightBlack: '#737373',
+    brightRed: '#d54e53',
+    brightGreen: '#b9ca4a',
+    brightYellow: '#e7c547',
+    brightBlue: '#7aa6da',
+    brightMagenta: '#c397d8',
+    brightCyan: '#70c0b1',
+    brightWhite: '#eaeaea'
+  },
+
+  'Cove Light': {
+    background: '#ececec',
+    foreground: '#0a0a0a',
+    cursor: '#0a0a0a',
+    cursorAccent: '#ececec',
+    selectionBackground: '#accef7',
+    selectionForeground: '#0a0a0a',
+    black: '#2e3436',
+    red: '#cc0000',
+    green: '#587c0c',
+    yellow: '#895503',
+    blue: '#0969da',
+    magenta: '#75507b',
+    cyan: '#05727e',
+    white: '#6a6a6a',
+    brightBlack: '#555753',
+    brightRed: '#ef2929',
+    brightGreen: '#1b7a1b',
+    brightYellow: '#6d5a00',
+    brightBlue: '#204a87',
+    brightMagenta: '#ad7fa8',
+    brightCyan: '#034b50',
+    brightWhite: '#3d3d3d'
   }
 }

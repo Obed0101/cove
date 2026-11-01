@@ -82,10 +82,7 @@ export default function AgentDashboardSidebarEntry(): React.JSX.Element {
         'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8'
       )}
     >
-      <LayoutDashboard
-        className="size-4 shrink-0 text-worktree-sidebar-foreground/30"
-        strokeWidth={1.75}
-      />
+      <LayoutDashboard className="size-4 shrink-0 text-worktree-sidebar-foreground/30" />
       <span className="flex-1">
         {translate('dashboard.sidebar.dashboardLabel', 'Agent Dashboard')}
       </span>

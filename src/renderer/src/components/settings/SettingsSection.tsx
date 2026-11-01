@@ -79,13 +79,8 @@ export function SettingsSection({
         </div>
         {headerAction ? <div className="shrink-0">{headerAction}</div> : null}
       </div>
-      {/* Contain row groups in a distinct band so they cannot read as sidebar continuations. */}
-      <div
-        className={cn(
-          'rounded-xl border border-border/50 bg-card/50 px-7 py-6 shadow-xs',
-          bodyClassName
-        )}
-      >
+      {/* Contain row groups in a distinct band so they cannot read as sidebar continuations; Cove: a hairline on the card surface, no fill. */}
+      <div className={cn('rounded-xl border border-border px-7 py-6', bodyClassName)}>
         {children}
       </div>
     </section>

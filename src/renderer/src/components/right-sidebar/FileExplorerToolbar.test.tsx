@@ -110,19 +110,6 @@ function findOpenInMenuItems(node: unknown): ReactElementLike {
   return found
 }
 
-function findRepoNameLabel(node: unknown, repoName: string): ReactElementLike {
-  let found: ReactElementLike | null = null
-  visit(node, (entry) => {
-    if (entry.type === 'span' && entry.props.title === repoName) {
-      found = entry
-    }
-  })
-  if (!found) {
-    throw new Error('repo name label not found')
-  }
-  return found
-}
-
 function getToolbarButtonLabels(node: unknown): unknown[] {
   const labels: unknown[] = []
   visit(node, (entry) => {
@@ -160,7 +147,6 @@ function makeRefreshState(
 
 function makeToolbar(overrides: Partial<Parameters<typeof FileExplorerToolbar>[0]> = {}) {
   return FileExplorerToolbar({
-    repoName: 'orca',
     worktreePath: '/tmp/orca',
     connectionId: null,
     refresh: makeRefreshState(),
@@ -189,17 +175,6 @@ describe('FileExplorerToolbar', () => {
     expect(button.props['aria-disabled']).toBe(false)
     expect(hasIcon(button, RefreshCw)).toBe(true)
     expect(hasIcon(button, Loader2)).toBe(false)
-  })
-
-  it('shows the repo name in a truncated label', () => {
-    const repoName = 'really-long-repo-name-that-should-not-push-refresh-offscreen'
-    const element = makeToolbar({ repoName })
-
-    const label = findRepoNameLabel(element, repoName)
-
-    expect(label.props.children).toBe(repoName)
-    expect(label.props.className).toContain('truncate')
-    expect(label.props.className).toContain('min-w-0')
   })
 
   it('disables the refresh button and shows a spinner while refreshing', () => {

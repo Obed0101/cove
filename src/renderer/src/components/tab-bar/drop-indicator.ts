@@ -11,22 +11,28 @@ export function getDropIndicatorClasses(dropIndicator: DropIndicator): string {
   return ''
 }
 
-// Keep the foreground marker above selection/unread layers; zero horizontal inset avoids scrollWidth jitter at the strip’s end.
-export const ACTIVE_TAB_INDICATOR_CLASSES =
-  'pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-foreground z-20'
+// Isolation keeps this layer above the root background and below the tab contents.
+// An inset outline stays inside the overflow-clipped strip without using a shadow.
+const TAB_INDICATOR_CLASSES =
+  'pointer-events-none absolute -z-10 inset-0 rounded-md group-focus-visible:outline-2 group-focus-visible:-outline-offset-2 group-focus-visible:outline-ring'
+
+export function getTabIndicatorClasses(isActive: boolean): string {
+  return `${TAB_INDICATOR_CLASSES} ${isActive ? 'bg-foreground/8' : 'group-hover:bg-foreground/6'}`
+}
+
+export const TAB_UNREAD_OVERLAY_CLASSES =
+  'pointer-events-none absolute inset-0 rounded-md bg-status-warning/10'
 
 export function getTabRootStateClasses(isActive: boolean): string {
   return isActive
-    ? 'bg-[color-mix(in_srgb,var(--foreground)_6%,var(--card))] text-foreground'
-    : 'bg-card text-muted-foreground hover:text-foreground'
+    ? 'isolate text-foreground'
+    : 'isolate text-muted-foreground hover:text-foreground'
 }
 
 export function getTabStripBorderClasses(
-  hasTabsToRight: boolean,
+  _hasTabsToRight: boolean,
   options?: { includeTopBorder?: boolean }
 ): string {
   const includeTopBorder = options?.includeTopBorder ?? true
-  return [includeTopBorder ? 'border-t' : '', hasTabsToRight ? 'border-r' : '', 'border-border']
-    .filter(Boolean)
-    .join(' ')
+  return includeTopBorder ? 'border-t border-transparent' : ''
 }

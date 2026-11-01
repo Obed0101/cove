@@ -141,12 +141,12 @@ describe('local and CI compiler selection', () => {
   })
 
   it.each([
-    ['darwin', 'arm64', 'tsrs'],
-    ['linux', 'x64', 'tsrs'],
-    ['linux', 'arm64', 'tsrs'],
-    ['darwin', 'x64', 'bun'],
-    ['win32', 'x64', 'bun'],
-    ['win32', 'arm64', 'bun']
+    ['darwin', 'arm64', 'native'],
+    ['linux', 'x64', 'native'],
+    ['linux', 'arm64', 'native'],
+    ['darwin', 'x64', 'native'],
+    ['win32', 'x64', 'native'],
+    ['win32', 'arm64', 'native']
   ])('selects %s/%s without probing an unsupported binary', (platform, arch, compiler) => {
     const selection = selectTypecheckCompiler('auto', {
       root: repoRoot,

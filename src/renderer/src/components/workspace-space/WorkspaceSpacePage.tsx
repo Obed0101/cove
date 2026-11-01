@@ -9,7 +9,7 @@ export default function WorkspaceSpacePage(): React.JSX.Element {
   const isSeparateWindow = window.location.pathname.endsWith('/space.html')
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background p-3">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden p-3">
       {!isSeparateWindow ? (
         <Button variant="ghost" size="xs" onClick={closeSpacePage} className="mb-2 w-fit">
           <ArrowLeft className="size-3.5" />

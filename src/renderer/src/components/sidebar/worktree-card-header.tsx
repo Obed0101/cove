@@ -1,5 +1,5 @@
 import React from 'react'
-import { AlertCircle, Server, ServerOff, Star, Trash2 } from 'lucide-react'
+import { AlertCircle, Server, ServerOff, Trash2 } from 'lucide-react'
 
 import { RepoIconGlyph } from '@/components/repo/repo-icon'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { resolveRepoHeaderColor } from './project-header-color'
 import { formatSparseDirectoryPreview, shouldBeginWorktreeRename } from './worktree-card-model'
 import type { WorktreeCardPresentation } from './worktree-card-presentation'
 import { WorktreeCardSshHostControl } from './WorktreeCardSshHostControl'
+import { WorktreeCardTabCount } from './WorktreeCardTabCount'
 import { WorktreeTitleInlineRename } from './WorktreeTitleInlineRename'
 import type { WorktreeCardController } from './use-worktree-card-controller'
 
@@ -88,7 +89,7 @@ export function WorktreeCardHeader({
     showPinnedRepoIcon,
     showInlineRepoBadge,
     showHeaderActions,
-    showTitleRowPrimary,
+    showTitleRowTabCount,
     showDeleteQuickAction,
     showTitleRowIndicators,
     titleRowIndicators,
@@ -269,27 +270,7 @@ export function WorktreeCardHeader({
 
       {showHeaderActions && (
         <div className="ml-auto flex shrink-0 items-center justify-center gap-1 pr-1.5">
-          {showTitleRowPrimary && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span
-                  className="shrink-0 inline-flex items-center"
-                  aria-label={translate(
-                    'auto.components.sidebar.WorktreeCard.0d224eff10',
-                    'Primary worktree'
-                  )}
-                >
-                  <Star className="size-3 fill-amber-400 text-amber-400" />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={8}>
-                {translate(
-                  'auto.components.sidebar.WorktreeCard.0777de5970',
-                  'Primary worktree (original clone directory)'
-                )}
-              </TooltipContent>
-            </Tooltip>
-          )}
+          {showTitleRowTabCount && <WorktreeCardTabCount worktreeId={worktree.id} />}
 
           {showDeleteQuickAction && (
             <Tooltip>

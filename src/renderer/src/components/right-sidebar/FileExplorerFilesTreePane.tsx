@@ -135,7 +135,8 @@ export function FileExplorerFilesTreePane({
     <ScrollArea
       className={cn(
         // Radix forces inline position:relative, so size by height to let the viewport overflow.
-        'h-full min-h-0',
+        // Cove: rows sit flush under the search and 8px inside the explorer, like the design preview.
+        'mx-2 h-full min-h-0',
         explorerView !== 'files' && 'pointer-events-none invisible',
         isRootDragOver &&
           explorerView === 'files' &&
@@ -146,7 +147,7 @@ export function FileExplorerFilesTreePane({
       ref={fileDropOwnerRef}
       viewportRef={scrollRef}
       viewportTabIndex={-1}
-      viewportClassName="h-full min-h-0 py-2"
+      viewportClassName="h-full min-h-0"
       onWheelCapture={handleWheelCapture}
       onDragOverCapture={rootDragHandlers.onDragOverCapture}
       onDragOver={rootDragHandlers.onDragOver}

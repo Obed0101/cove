@@ -221,9 +221,9 @@ export function AutomationListFilterMenu({
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="h-8 shrink-0 gap-1.5 border border-border bg-background px-2.5 text-xs shadow-none hover:bg-muted/50 focus-visible:border-ring/70 focus-visible:ring-0"
+          className="h-8 shrink-0 gap-1.5 px-2.5 text-xs shadow-none focus-visible:border-ring/70 focus-visible:ring-0"
         >
           <ListFilter className="size-3.5" />
           {translate('auto.components.automations.AutomationListFilterMenu.filters', 'Filters')}

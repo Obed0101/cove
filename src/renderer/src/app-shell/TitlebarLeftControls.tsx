@@ -1,6 +1,7 @@
-import { ArrowLeft, ArrowRight, MoreHorizontal, PanelLeft } from 'lucide-react'
+import { ArrowLeft, ArrowRight, MoreHorizontal, PanelLeft, Search } from 'lucide-react'
 import logo from '../../../../resources/logo.svg'
 import { translate } from '@/i18n/i18n'
+import { APP_DISPLAY_NAME } from '@/lib/app-brand'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
   ContextMenu,
@@ -24,9 +25,52 @@ export function TitlebarLeftControls({ layout }: { layout: AppChromeLayout }): R
   const updateSettings = useAppStore((s) => s.updateSettings)
   const canGoBackWorktree = useAppStore(canGoBackWorktreeHistory)
   const canGoForwardWorktree = useAppStore(canGoForwardWorktreeHistory)
+  const openModal = useAppStore((s) => s.openModal)
   const leftSidebarShortcutLabel = useShortcutLabel('sidebar.left.toggle')
+  const searchShortcutLabel = useShortcutLabel('worktree.palette')
   const historyBackShortcutLabel = useShortcutLabel('worktree.history.back')
   const historyForwardShortcutLabel = useShortcutLabel('worktree.history.forward')
+  const sidebarToggle = (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          className="sidebar-toggle"
+          onClick={toggleSidebar}
+          aria-label={translate('auto.App.e4b9e7dff7', 'Toggle sidebar')}
+        >
+          <PanelLeft size={16} />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" sideOffset={6}>
+        {translate('auto.App.ce37cf5279', 'Toggle sidebar ({{value0}})', {
+          value0: leftSidebarShortcutLabel
+        })}
+      </TooltipContent>
+    </Tooltip>
+  )
+  // The palette spans chats, terminals, workspaces and tasks, so a project-only label would overclaim.
+  const searchLabel = translate(
+    'auto.components.sidebar.SidebarNav.0c3395fd32',
+    'Search worktrees and browser tabs'
+  )
+  const searchButton = (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          className="sidebar-toggle"
+          onClick={() => openModal('worktree-palette')}
+          aria-label={searchLabel}
+        >
+          <Search size={16} />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" sideOffset={6}>
+        {translate('auto.App.searchWithShortcut', 'Search ({{value0}})', {
+          value0: searchShortcutLabel
+        })}
+      </TooltipContent>
+    </Tooltip>
+  )
 
   return (
     // Measure the whole row for tab-strip spacing. w-max prevents the collapsed w-0 wrapper shrinking Windows text to one glyph.
@@ -59,18 +103,14 @@ export function TitlebarLeftControls({ layout }: { layout: AppChromeLayout }): R
             </Tooltip>
           </>
         ) : (
-          <div className="pl-2" />
+          // Without traffic lights, inset the name to the sidebar's icon column (14px + its 4px padding).
+          <div className="pl-3.5" />
         )}
         {layout.showSidebar && !hasCustomTitleBar && layout.showTitlebarAppName && (
           <ContextMenu>
             <ContextMenuTrigger asChild>
-              <div
-                className="titlebar-app-name"
-                aria-label={translate('auto.App.5096cbbc86', 'Orca')}
-              >
-                <span className="titlebar-app-name-main">
-                  {translate('auto.App.5096cbbc86', 'Orca')}
-                </span>
+              <div className="titlebar-app-name">
+                <span className="titlebar-app-name-main">{APP_DISPLAY_NAME}</span>
               </div>
             </ContextMenuTrigger>
             <ContextMenuContent>
@@ -84,27 +124,17 @@ export function TitlebarLeftControls({ layout }: { layout: AppChromeLayout }): R
             </ContextMenuContent>
           </ContextMenu>
         )}
-        {layout.showSidebar && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                className="sidebar-toggle"
-                onClick={toggleSidebar}
-                aria-label={translate('auto.App.e4b9e7dff7', 'Toggle sidebar')}
-              >
-                <PanelLeft size={16} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              {translate('auto.App.ce37cf5279', 'Toggle sidebar ({{value0}})', {
-                value0: leftSidebarShortcutLabel
-              })}
-            </TooltipContent>
-          </Tooltip>
-        )}
+        {layout.showSidebar && !layout.sidebarOpen && sidebarToggle}
       </div>
+      {/* Cove: an open sidebar keeps search and its toggle at the far edge, mirroring the explorer's panel-right. */}
+      {layout.showSidebar && layout.sidebarOpen && (
+        <div className="ml-auto mr-2 flex items-center gap-0.5 pl-2">
+          {searchButton}
+          {sidebarToggle}
+        </div>
+      )}
       {/* Show shared workspace/page history wherever its shortcut is available. */}
-      {shouldShowWorktreeHistoryControls(layout.activeView) && (
+      {!layout.sidebarOpen && shouldShowWorktreeHistoryControls(layout.activeView) && (
         // Collapsed headers shrink-wrap, so ml-auto alone cannot leave a history-button gutter.
         <div className="ml-auto mr-3 flex items-center pl-2">
           <Tooltip>

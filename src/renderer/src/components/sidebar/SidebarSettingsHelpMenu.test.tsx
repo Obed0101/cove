@@ -195,9 +195,9 @@ describe('SidebarSettingsHelpMenu', () => {
     expect(html).toContain('Help')
   })
 
-  it('renders the settings button with correct aria-label', () => {
+  it('names the settings row with its visible label', () => {
     const html = renderToStaticMarkup(<SidebarSettingsHelpMenu />)
-    expect(html).toContain('aria-label="Settings"')
+    expect(html).toContain('<span class="min-w-0 flex-1 truncate">Settings</span>')
   })
 
   it('renders the settings button before the help button', () => {
@@ -338,9 +338,8 @@ describe('SidebarSettingsHelpMenu', () => {
     expect(document.body.querySelector('[data-testid="feedback-dialog"]')).toBeNull()
   })
 
-  it('renders shortcut keys in the settings tooltip', () => {
+  it('renders the settings shortcut inline in the settings row', () => {
     const html = renderToStaticMarkup(<SidebarSettingsHelpMenu />)
-    expect(html).toContain('⌘')
-    expect(html).toContain('>,</span>')
+    expect(html).toMatch(/>⌘,<\/span><\/button>/)
   })
 })

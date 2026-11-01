@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { FitAddon } from '@xterm/addon-fit'
 import type { ITheme, Terminal } from '@xterm/xterm'
 import type { GlobalSettings } from '../../../../shared/global-settings-types'
@@ -10,7 +10,10 @@ import { TerminalKittyKeyboardModeTracker } from '../../../../shared/terminal-ki
 import { translate } from '@/i18n/i18n'
 import { useAppStore } from '@/store'
 import { useEffectiveMacOptionAsAlt } from '@/lib/keyboard-layout/use-effective-mac-option-as-alt'
-import { composeActiveTerminalTheme } from '@/components/terminal-pane/terminal-appearance'
+import {
+  composeActiveTerminalTheme,
+  withWindowMaterialTerminalOpacity
+} from '@/components/terminal-pane/terminal-appearance'
 import { getBuiltinTheme, resolveEffectiveTerminalAppearance } from '@/lib/terminal-theme'
 import { useSystemPrefersDark } from '@/components/terminal-pane/use-system-prefers-dark'
 import { resolveTerminalMinimumContrastRatio } from '@/lib/terminal-contrast-correction'
@@ -39,17 +42,17 @@ export function plainSshOpenFailureText(
     case 'unknown-target':
       return translate(
         'auto.components.plainSshTerminal.unknownTarget',
-        'This SSH host is no longer saved in Orca.'
+        'This SSH host is no longer saved in Cove.'
       )
     case 'not-blocked':
       return translate(
         'auto.components.plainSshTerminal.notBlocked',
-        'Orca can reach this host again, so use its terminals instead. Plain SSH is only for while Orca can’t set up on the host.'
+        'Cove can reach this host again, so use its terminals instead. Plain SSH is only for while Cove can’t set up on the host.'
       )
     case 'already-open':
       return translate(
         'auto.components.plainSshTerminal.alreadyOpen',
-        'Another Orca window already has a plain SSH terminal open to this host.'
+        'Another Cove window already has a plain SSH terminal open to this host.'
       )
     case 'cancelled':
       return translate(
@@ -92,7 +95,11 @@ export function PlainSshTerminalView({
   const containerRef = useRef<HTMLDivElement | null>(null)
   const terminalRef = useRef<Terminal | null>(null)
   const fitRef = useRef<FitAddon | null>(null)
-  const settings = useAppStore((s) => s.settings)
+  const savedSettings = useAppStore((s) => s.settings)
+  const settings = useMemo(
+    () => savedSettings && withWindowMaterialTerminalOpacity(savedSettings),
+    [savedSettings]
+  )
   const systemPrefersDark = useSystemPrefersDark()
   const macOptionAsAlt = useEffectiveMacOptionAsAlt(settings?.terminalMacOptionAsAlt)
   // Why refs: keys and appearance read live values; a remount would hang up the SSH session.
@@ -149,7 +156,7 @@ export function PlainSshTerminalView({
         kind: 'failed',
         message: translate(
           'auto.components.plainSshTerminal.terminalUnavailable',
-          'Orca couldn’t open a terminal here.'
+          'Cove couldn’t open a terminal here.'
         )
       })
       return

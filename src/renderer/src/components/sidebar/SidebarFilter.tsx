@@ -154,7 +154,7 @@ const SidebarFilter = React.memo(function SidebarFilter({
               className="relative text-muted-foreground"
               data-workspace-board-preserve-open={preserveWorkspaceBoardOpen ? '' : undefined}
             >
-              <ListFilter className="size-3.5" strokeWidth={2.25} />
+              <ListFilter className="size-3.5" />
               {hasAnyFilter && (
                 // Expose active filters so silently hidden workspaces have an at-a-glance explanation.
                 <span

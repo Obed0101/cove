@@ -1,6 +1,10 @@
 import type * as ReactModule from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { GlobalSettings } from '../../../../shared/global-settings-types'
+import {
+  DEFAULT_TERMINAL_THEME_DARK,
+  DEFAULT_TERMINAL_THEME_LIGHT
+} from '../../../../shared/terminal-theme-selection'
 import type { UseWarpThemeImportReturn } from './useWarpThemeImport'
 
 let themeTarget: 'dark' | 'light' | undefined = 'dark'
@@ -59,8 +63,8 @@ function makeSettings(overrides: Partial<GlobalSettings> = {}): GlobalSettings {
   return {
     theme: 'system',
     terminalUseSeparateLightTheme: false,
-    terminalThemeDark: 'Ghostty Default Style Dark',
-    terminalThemeLight: 'Builtin Tango Light',
+    terminalThemeDark: DEFAULT_TERMINAL_THEME_DARK,
+    terminalThemeLight: DEFAULT_TERMINAL_THEME_LIGHT,
     terminalDividerColorDark: '#3f3f46',
     terminalDividerColorLight: '#d4d4d8',
     terminalCustomThemes: [],
@@ -203,7 +207,7 @@ describe('TerminalThemeCatalogSection', () => {
     const preview = findElementByTypeName(element, 'TerminalSettingsPreview')
     const selectTheme = picker?.props?.onSelectTheme as (theme: string) => void
 
-    expect(picker?.props?.selectedTheme).toBe('Builtin Tango Light')
+    expect(picker?.props?.selectedTheme).toBe(DEFAULT_TERMINAL_THEME_LIGHT)
     expect(preview?.props?.modeOverride).toBe('light')
 
     selectTheme('GitHub Light')
@@ -272,7 +276,7 @@ describe('TerminalThemeCatalogSection', () => {
     const picker = findElementByTypeName(reopened, 'ThemePicker')
     const preview = findElementByTypeName(reopened, 'TerminalSettingsPreview')
 
-    expect(picker?.props?.selectedTheme).toBe('Builtin Tango Light')
+    expect(picker?.props?.selectedTheme).toBe(DEFAULT_TERMINAL_THEME_LIGHT)
     expect(preview?.props?.modeOverride).toBe('light')
   })
 
@@ -315,7 +319,7 @@ describe('TerminalThemeCatalogSection', () => {
     const picker = findElementByTypeName(element, 'ThemePicker')
     const preview = findElementByTypeName(element, 'TerminalSettingsPreview')
 
-    expect(picker?.props?.selectedTheme).toBe('Builtin Tango Light')
+    expect(picker?.props?.selectedTheme).toBe(DEFAULT_TERMINAL_THEME_LIGHT)
     expect(preview?.props?.modeOverride).toBe('light')
   })
 

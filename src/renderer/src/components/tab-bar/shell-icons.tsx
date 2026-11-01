@@ -1,4 +1,5 @@
 import React from 'react'
+import { Terminal as TerminalPromptGlyph } from 'lucide-react'
 import { WINDOWS_GIT_BASH_SHELL } from '../../../../shared/windows-terminal-shell'
 import { translate } from '@/i18n/i18n'
 import gitForWindowsLogoUrl from '../../../../../resources/gwindows_logo.svg?url'
@@ -113,10 +114,13 @@ function GenericTerminalIcon({ size = 14 }: { size?: number }): React.JSX.Elemen
 
 export function ShellIcon({
   shell,
-  size = 14
+  size = 14,
+  genericVariant = 'tile'
 }: {
   shell: string | null | undefined
   size?: number
+  /** Cove: tabs draw unbranded shells as the design preview's outlined prompt glyph. */
+  genericVariant?: 'tile' | 'glyph'
 }): React.JSX.Element {
   const normalized = (shell ?? '').toLowerCase()
   const normalizedName = normalized.replaceAll('\\', '/').split('/').pop()
@@ -132,5 +136,9 @@ export function ShellIcon({
   if (normalized === WINDOWS_GIT_BASH_SHELL || normalizedName === 'bash.exe') {
     return <GitBashIcon size={size} />
   }
-  return <GenericTerminalIcon size={size} />
+  return genericVariant === 'glyph' ? (
+    <TerminalPromptGlyph size={size} aria-hidden />
+  ) : (
+    <GenericTerminalIcon size={size} />
+  )
 }

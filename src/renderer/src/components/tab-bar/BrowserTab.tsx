@@ -16,8 +16,8 @@ import { CLOSE_ALL_CONTEXT_MENUS_EVENT } from '@/lib/close-all-context-menus'
 import { getLiveBrowserUrl } from '../browser-pane/describe-page/live-browser-url-registry'
 import type { TabDragItemData } from '../tab-group/useTabDragSplit'
 import {
-  ACTIVE_TAB_INDICATOR_CLASSES,
   getDropIndicatorClasses,
+  getTabIndicatorClasses,
   getTabRootStateClasses,
   getTabStripBorderClasses,
   type DropIndicator
@@ -158,7 +158,7 @@ export default function BrowserTab({
       data-pinned={isPinned ? 'true' : 'false'}
       {...attributes}
       {...listeners}
-      className={`group relative flex items-center h-full px-1.5 text-xs cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
+      className={`group relative flex items-center h-full px-2.5 text-[13px] cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
       onPointerDown={(e) => {
         onTabPointerDown(
           e,
@@ -182,7 +182,7 @@ export default function BrowserTab({
         }
       }}
     >
-      {isActive && <span className={ACTIVE_TAB_INDICATOR_CLASSES} aria-hidden />}
+      <span className={getTabIndicatorClasses(isActive)} aria-hidden />
       {/* Keep browser identity distinct on inactive tabs too; muted icons look disabled. */}
       {agentDriving ? (
         // Why: the dimmed favicon keeps the site recognizable under the agent's arrow.

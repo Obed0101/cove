@@ -149,9 +149,10 @@ export function renderTabBarSurface({
           <div
             ref={tabStripRef}
             data-active-tab-docked={activeTabDockSide ?? undefined}
-            // Why: only `border-r` here — a strip-level `border-l` would render a heavier L-corner than the first tab's own `border-l`.
+            // Cove: tabs are floating 30px pills 2px apart, so no strip edge in any chrome.
             className={[
-              'terminal-tab-strip flex h-full min-w-0 max-w-full flex-1 items-stretch overflow-x-auto overflow-y-hidden border-r border-border/70',
+              'terminal-tab-strip flex h-full min-w-0 max-w-full flex-1 items-stretch gap-0.5 overflow-x-auto overflow-y-hidden',
+              includeTopTabBorder ? 'pt-0.5 pb-[7px] pl-1' : 'py-[5px]',
               getTabStripScrollMaskClassName(tabStripOverflowState, activeTabDockSide)
             ]
               .filter(Boolean)
@@ -212,12 +213,12 @@ export function renderTabBarSurface({
       >
         <DropdownMenuTrigger asChild>
           <button
-            className="ml-2 my-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+            className={`${includeTopTabBorder ? 'mt-0.5 self-start' : 'my-auto'} ml-1 flex size-6.5 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground`}
             style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
             title={translate('auto.components.tab.bar.TabBar.b1a132357f', 'New tab')}
             aria-label={translate('auto.components.tab.bar.TabBar.b1a132357f', 'New tab')}
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="size-4" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent

@@ -144,7 +144,7 @@ export function RetainedPaneHost({
       ref={overlayRef}
       style={style}
       // Pane-local layers cannot compete with app notifications or escape their split rectangle.
-      className="isolate z-10 min-h-0 min-w-0 overflow-hidden"
+      className="isolate z-10 min-h-0 min-w-0 overflow-hidden rounded-lg"
       data-retained-pane-host=""
       {...identity}
       inert={!isVisible}

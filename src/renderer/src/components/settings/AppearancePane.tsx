@@ -23,6 +23,8 @@ import {
   getThemeEntries,
   getTitlebarEntries,
   getTypographyEntries,
+  getWindowMaterialEntries,
+  getProjectIconStyleEntries,
   getZoomEntries
 } from './appearance-search'
 import { getTerminalAppearanceSearchEntries } from './terminal-search'
@@ -133,6 +135,8 @@ export function AppearancePane({
   const interfaceSearchEntries = [
     { title: interfaceTitle },
     ...getThemeEntries(),
+    ...getWindowMaterialEntries(),
+    ...getProjectIconStyleEntries(),
     ...getZoomEntries(),
     ...getTypographyEntries(),
     ...(SHOW_UI_LANGUAGE_SETTING ? getLanguageEntries() : []),

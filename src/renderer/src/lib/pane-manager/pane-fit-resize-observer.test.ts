@@ -10,6 +10,11 @@ import {
   endTerminalScrollIntentBufferRebuild
 } from './terminal-scroll-intent-rebuild'
 import { safeFitAndThen } from './pane-tree-ops'
+import {
+  SIDEBAR_TOGGLE_TRANSITION_MS,
+  beginSidebarToggleTransition,
+  endSidebarToggleTransition
+} from '../sidebar-toggle-transition'
 
 type ResizeObserverCallbackLike = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -222,6 +227,29 @@ describe('attachPaneFitResizeObserver', () => {
 
     expect(pane.fitAddon.fit).toHaveBeenCalledTimes(1)
     expect(pane.pendingObservedFitRafId).toBeNull()
+  })
+
+  it('holds observer fits until an animated sidebar toggle ends, then fits once', () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] })
+    try {
+      const pane = createPane()
+      attachPaneFitResizeObserver(pane)
+
+      beginSidebarToggleTransition()
+      for (let i = 0; i < 5; i += 1) {
+        mockResizeObservers[0]?.trigger()
+        flushAnimationFrames()
+      }
+      expect(pane.fitAddon.fit).not.toHaveBeenCalled()
+
+      vi.advanceTimersByTime(SIDEBAR_TOGGLE_TRANSITION_MS)
+      flushAnimationFrames()
+
+      expect(pane.fitAddon.fit).toHaveBeenCalledTimes(1)
+    } finally {
+      endSidebarToggleTransition()
+      vi.useRealTimers()
+    }
   })
 
   it('disconnects the observer and cancels any queued fit', () => {

@@ -50,7 +50,7 @@ describe('startup UI hydration fallback', () => {
 
     expect(hydratePersistedUI).toHaveBeenCalledTimes(1)
     expect(hydratePersistedUI.mock.calls[0][0].activeView).toBe('terminal')
-    expect(hydratePersistedUI.mock.calls[0][0].sidebarWidth).toBe(280)
+    expect(hydratePersistedUI.mock.calls[0][0].sidebarWidth).toBe(232)
     expect(hydratePersistedUI.mock.calls[0][0].groupBy).toBe('repo')
     expect(hydratePersistedUI.mock.calls[0][0].sortBy).toBe('name')
     expect(hydratePersistedUI.mock.calls[0][0].hideSleepingWorkspaces).toBe(false)

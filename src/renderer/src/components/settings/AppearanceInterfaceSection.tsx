@@ -22,6 +22,8 @@ import {
   getThemeEntries,
   getTitlebarEntries,
   getTypographyEntries,
+  getWindowMaterialEntries,
+  getProjectIconStyleEntries,
   getZoomEntries
 } from './appearance-search'
 import {
@@ -33,6 +35,9 @@ import { translate } from '@/i18n/i18n'
 import type { UiLanguage } from '../../../../shared/ui-language'
 import { matchesSettingsSearch, normalizeSettingsSearchQuery } from './settings-search'
 import { usePluginLanguagePacks } from '@/store/plugin-language-packs'
+import { isCoveConfigAvailable } from '@/lib/cove-config-sync'
+import { CoveConfigFileRow } from './CoveConfigFileRow'
+import { getCoveConfigFileEntries } from './appearance-cove-config-search'
 
 type AppearanceInterfaceSectionProps = {
   settings: GlobalSettings
@@ -64,10 +69,13 @@ export function AppearanceInterfaceSection({
   const menuBarIconEntry = getMenuBarIconEntries({ showMenuBarIcon: true })[0]
   const systemTrayEntry = getSystemTrayEntries({ showSystemTray: true })[0]
   const themeEntry = getThemeEntries()[0]
+  const [windowMaterialEntry] = getWindowMaterialEntries()
+  const [projectIconStyleEntry] = getProjectIconStyleEntries()
   const themeLabel = translate('auto.components.settings.AppearancePane.932ff1fbff', 'Theme')
   const titlebarEntry = getTitlebarEntries()[0]
   const typographyEntry = getTypographyEntries()[0]
   const zoomEntry = getZoomEntries()[0]
+  const [coveConfigEntry] = getCoveConfigFileEntries()
   const advancedEntries = [
     ...getTitlebarEntries(),
     ...getSystemTrayEntries({ showSystemTray: isDesktopWindows }),
@@ -106,6 +114,62 @@ export function AppearanceInterfaceSection({
                 {
                   value: 'light',
                   label: translate('auto.components.settings.AppearancePane.fd89b5487c', 'Light')
+                }
+              ]}
+            />
+          }
+        />
+      </SearchableSetting>
+
+      <SearchableSetting
+        title={windowMaterialEntry.title}
+        description={windowMaterialEntry.description}
+        keywords={windowMaterialEntry.keywords}
+        forceVisible={forceVisiblePrimary}
+      >
+        <SettingsRow
+          label={windowMaterialEntry.title}
+          control={
+            <SettingsSegmentedControl
+              ariaLabel={windowMaterialEntry.title}
+              value={settings.windowMaterial ?? 'solid'}
+              onChange={(option) => updateSettings({ windowMaterial: option })}
+              options={[
+                {
+                  value: 'solid',
+                  label: translate('settings.appearance.windowMaterial.solid', 'Solid')
+                },
+                {
+                  value: 'glass',
+                  label: translate('settings.appearance.windowMaterial.glass', 'Glass')
+                }
+              ]}
+            />
+          }
+        />
+      </SearchableSetting>
+
+      <SearchableSetting
+        title={projectIconStyleEntry.title}
+        description={projectIconStyleEntry.description}
+        keywords={projectIconStyleEntry.keywords}
+        forceVisible={forceVisiblePrimary}
+      >
+        <SettingsRow
+          label={projectIconStyleEntry.title}
+          control={
+            <SettingsSegmentedControl
+              ariaLabel={projectIconStyleEntry.title}
+              value={settings.projectIconStyle ?? 'pixel'}
+              onChange={(option) => updateSettings({ projectIconStyle: option })}
+              options={[
+                {
+                  value: 'pixel',
+                  label: translate('settings.appearance.projectIcons.pixel', 'Pixel')
+                },
+                {
+                  value: 'repository',
+                  label: translate('settings.appearance.projectIcons.repository', 'Repository')
                 }
               ]}
             />
@@ -193,6 +257,17 @@ export function AppearanceInterfaceSection({
         />
       </SearchableSetting>
 
+      {isCoveConfigAvailable() ? (
+        <SearchableSetting
+          title={translate('settings.appearance.coveConfig.title', 'Configuration File')}
+          description={coveConfigEntry?.description}
+          keywords={coveConfigEntry?.keywords ?? ['config', 'file', 'json', 'cove']}
+          forceVisible={forceVisiblePrimary}
+        >
+          <CoveConfigFileRow />
+        </SearchableSetting>
+      ) : null}
+
       {showAdvanced ? (
         <AppearanceAdvancedDisclosure showTopBorder={false}>
           <div className="divide-y divide-border/40">
@@ -233,7 +308,7 @@ export function AppearanceInterfaceSection({
                   // Explain the non-obvious platform restriction and keep-running consequence.
                   description={translate(
                     'auto.components.settings.AppearancePane.b707773a0d',
-                    'When enabled, closing the window keeps Orca running in the system tray instead of quitting.'
+                    'When enabled, closing the window keeps Cove running in the system tray instead of quitting.'
                   )}
                   checked={settings.minimizeToTrayOnClose === true}
                   onChange={() =>
@@ -254,7 +329,7 @@ export function AppearanceInterfaceSection({
                   // Hiding the status item preserves Dock activation and close-keeps-running behavior.
                   description={translate(
                     'settings.appearance.menuBarIcon.description',
-                    'Keep an Orca shortcut and activity indicator in the macOS menu bar.'
+                    'Keep a Cove shortcut and activity indicator in the macOS menu bar.'
                   )}
                   checked={settings.showMenuBarIcon !== false}
                   onChange={() =>

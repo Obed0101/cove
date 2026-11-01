@@ -10,6 +10,7 @@ import { renderTabBarSurface } from './tab-bar-surface'
 import { useTabBarItemActions } from './use-tab-bar-item-actions'
 import { useActiveClientHostedBrowserRowId } from '@/lib/pane-manager/client-hosted-browser-row-state'
 import { useEditorGroupFileDropOwner } from '../editor/use-editor-group-file-drop-owner'
+import { TabStripEntranceContext, useTabStripEntranceArming } from './tab-strip-entrance'
 
 function TabBarInner(props: TabBarProps): React.JSX.Element {
   const {
@@ -96,22 +97,27 @@ function TabBarInner(props: TabBarProps): React.JSX.Element {
     },
     [attachFileDropOwner, clearPendingNewTabMenuFocusOnUnmount]
   )
+  const entranceArmedRef = useTabStripEntranceArming()
   const tabStripDragScroll = useTabStripDragScrollHandlers(tabStripNavigation.scrollTabStrip, {
     start: tabStripNavigation.tabStripOverflowState.canScrollStart,
     end: tabStripNavigation.tabStripOverflowState.canScrollEnd
   })
 
-  return renderTabBarSurface({
-    props,
-    runtime,
-    createMenu,
-    itemProjection,
-    tabStripNavigation,
-    tabStripDragScroll,
-    activeClientHostedBrowserRowId,
-    itemActions,
-    surfaceRef
-  })
+  return (
+    <TabStripEntranceContext.Provider value={entranceArmedRef}>
+      {renderTabBarSurface({
+        props,
+        runtime,
+        createMenu,
+        itemProjection,
+        tabStripNavigation,
+        tabStripDragScroll,
+        activeClientHostedBrowserRowId,
+        itemActions,
+        surfaceRef
+      })}
+    </TabStripEntranceContext.Provider>
+  )
 }
 
 export default React.memo(TabBarInner)

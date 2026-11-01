@@ -49,7 +49,7 @@ export function WorktreeCardSurface({ card }: { card: WorktreeCardController }):
     <div
       className={cn(
         'relative flex cursor-pointer flex-col pr-1.5 transition-[background-color,border-color,opacity,box-shadow] duration-200 outline-none select-none',
-        titleOnlyCard ? 'py-2' : 'pt-1.25 pb-1.5',
+        titleOnlyCard ? 'py-1' : 'pt-1.25 pb-1.5',
         flushSurface ? 'ml-1 w-[calc(100%-0.25rem)]' : 'ml-1',
         'overflow-hidden rounded-lg',
         // Navigation updates the live attribute before React; it must own the complete active style.
@@ -58,7 +58,11 @@ export function WorktreeCardSurface({ card }: { card: WorktreeCardController }):
           : isActiveSurface
             ? 'border border-transparent'
             : 'border border-transparent worktree-sidebar-card-hover',
-        isActiveSurface && isMultiSelected && 'ring-1 ring-worktree-sidebar-ring/35',
+        // Why: a plain click selects just the active row; only a real multi-selection earns the ring.
+        isActiveSurface &&
+          isMultiSelected &&
+          (selectedWorktrees?.length ?? 0) > 1 &&
+          'ring-1 ring-worktree-sidebar-ring/35',
         revealHighlight && [
           'scroll-to-current-workspace-reveal-highlight',
           revealHighlightTone === 'ai' && 'scroll-to-current-workspace-reveal-highlight--ai'

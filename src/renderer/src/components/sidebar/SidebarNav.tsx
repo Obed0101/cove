@@ -1,16 +1,15 @@
 import React from 'react'
-import { BookOpen, CalendarClock, EyeOff, Files, Search, Smartphone } from 'lucide-react'
+import { BookOpen, Clock, EyeOff, Files, FolderOpen, Smartphone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@/store'
 import { cn } from '@/lib/utils'
-import { useShortcutKeyComboDetails } from '@/hooks/useShortcutLabel'
-import { ShortcutKeyCombo } from '@/components/ShortcutKeyCombo'
 import { useMobileSidebarOnboardingBadge } from './mobile-sidebar-onboarding-badge'
 import { ContextMenu, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { SetupGuideSidebarEntry } from './SetupGuideSidebarEntry'
 import { SidebarTaskNavButton } from './SidebarTaskNavButton'
+import { SidebarInboxNavButton } from './SidebarInboxNavButton'
 import { HideSidebarMenu } from './sidebar-nav-controls'
 import { translate } from '@/i18n/i18n'
 import { lazyWithRetry } from '@/lib/lazy-with-retry'
@@ -51,7 +50,6 @@ const AgentDashboardSidebarEntry = lazyWithRetry(() => import('./AgentDashboardS
 const SidebarNav = React.memo(function SidebarNav() {
   // Subscribe across this memo boundary; translate still handles pseudo-localization.
   useTranslation()
-  const worktreePaletteShortcutCombos = useShortcutKeyComboDetails('worktree.palette')
   const openAutomationsPage = useAppStore((s) => s.openAutomationsPage)
   const openMobilePage = useAppStore((s) => s.openMobilePage)
   const openArtifactsPage = useAppStore((s) => s.openArtifactsPage)
@@ -84,38 +82,21 @@ const SidebarNav = React.memo(function SidebarNav() {
 
   return (
     <div
-      className="flex flex-col gap-0.5 px-2 pt-2 pb-1"
+      className="flex flex-col gap-0.5 px-2 pt-1 pb-3"
       data-contextual-tour-target="sidebar-navigation"
     >
+      {/* Cove: search lives in the titlebar corner; the reused add-repo dialog covers local folders, clones and remote hosts. */}
       <button
         type="button"
-        onClick={() => openModal('worktree-palette')}
-        aria-label={translate(
-          'auto.components.sidebar.SidebarNav.0c3395fd32',
-          'Search worktrees and browser tabs'
-        )}
-        className="group flex w-full items-center gap-2 rounded-md bg-worktree-sidebar-foreground/5 px-2 py-1.5 text-left text-[13px] font-medium tracking-tight text-worktree-sidebar-foreground/60 transition-colors hover:bg-worktree-sidebar-foreground/8"
+        onClick={() => openModal('add-repo')}
+        className="mb-[7px] flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] text-worktree-sidebar-foreground transition-colors hover:bg-worktree-sidebar-foreground/8"
       >
-        <Search
-          className="size-4 shrink-0 text-worktree-sidebar-foreground/30"
-          strokeWidth={1.75}
-        />
+        <FolderOpen className="size-4 shrink-0 text-worktree-sidebar-foreground/60" />
         <span className="flex-1">
-          {translate('auto.components.sidebar.SidebarNav.80611a8b10', 'Search')}
-        </span>
-        <span className="pointer-events-none hidden shrink-0 items-center gap-1 group-hover:flex group-focus-within:flex">
-          {worktreePaletteShortcutCombos.map((combo) => (
-            <ShortcutKeyCombo
-              key={combo.keys.join('-')}
-              keys={combo.keys}
-              doubleTap={combo.doubleTap}
-              className="inline-flex gap-0.5"
-              keyCapClassName="min-w-4 border-worktree-sidebar-border/80 bg-worktree-sidebar-foreground/8 px-1 py-px text-[9px] text-worktree-sidebar-foreground/55 shadow-none"
-              separatorClassName="text-[9px] text-worktree-sidebar-foreground/45"
-            />
-          ))}
+          {translate('auto.components.sidebar.SidebarNav.openProject', 'Open project')}
         </span>
       </button>
+      <SidebarInboxNavButton />
       <SetupGuideSidebarEntry />
       <SidebarTaskNavButton />
       {showArtifactsButton ? (
@@ -126,7 +107,7 @@ const SidebarNav = React.memo(function SidebarNav() {
               onClick={openArtifactsPage}
               aria-current={artifactsActive ? 'page' : undefined}
               className={cn(
-                'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] font-medium tracking-tight transition-colors',
+                'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] transition-colors',
                 artifactsActive
                   ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
                   : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8'
@@ -135,9 +116,8 @@ const SidebarNav = React.memo(function SidebarNav() {
               <Files
                 className={cn(
                   'size-4 shrink-0',
-                  !artifactsActive && 'text-worktree-sidebar-foreground/30'
+                  !artifactsActive && 'text-worktree-sidebar-foreground/60'
                 )}
-                strokeWidth={artifactsActive ? 2.25 : 1.75}
               />
               <span className="flex-1">
                 {translate('auto.components.sidebar.SidebarNav.artifacts', 'Artifacts')}
@@ -155,7 +135,7 @@ const SidebarNav = React.memo(function SidebarNav() {
               onClick={openSkillsPage}
               aria-current={skillsActive ? 'page' : undefined}
               className={cn(
-                'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] font-medium tracking-tight transition-colors',
+                'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] transition-colors',
                 skillsActive
                   ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
                   : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8'
@@ -164,9 +144,8 @@ const SidebarNav = React.memo(function SidebarNav() {
               <BookOpen
                 className={cn(
                   'size-4 shrink-0',
-                  !skillsActive && 'text-worktree-sidebar-foreground/30'
+                  !skillsActive && 'text-worktree-sidebar-foreground/60'
                 )}
-                strokeWidth={skillsActive ? 2.25 : 1.75}
               />
               <span className="flex-1">
                 {translate('auto.components.sidebar.SidebarNav.skills', 'Skills')}
@@ -184,18 +163,19 @@ const SidebarNav = React.memo(function SidebarNav() {
               onClick={openAutomationsPage}
               aria-current={automationsActive ? 'page' : undefined}
               className={cn(
-                'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] font-medium tracking-tight transition-colors',
+                'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] transition-colors',
                 automationsActive
                   ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
                   : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8'
               )}
             >
-              <CalendarClock
+              <Clock
                 className={cn(
                   'size-4 shrink-0',
-                  !automationsActive && 'text-worktree-sidebar-foreground/30'
+                  automationsActive
+                    ? 'text-worktree-sidebar-accent-foreground'
+                    : 'text-worktree-sidebar-foreground/60'
                 )}
-                strokeWidth={automationsActive ? 2.25 : 1.75}
               />
               <span className="flex-1">
                 {translate('auto.components.sidebar.SidebarNav.f323383e9a', 'Automations')}
@@ -215,7 +195,7 @@ const SidebarNav = React.memo(function SidebarNav() {
           <ContextMenuTrigger asChild>
             <div
               className={cn(
-                'group flex w-full items-center rounded-md text-[13px] font-medium tracking-tight transition-colors',
+                'group flex h-8 w-full items-center rounded-md text-[13px] transition-colors',
                 mobileActive
                   ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
                   : 'text-worktree-sidebar-foreground/60 hover:bg-worktree-sidebar-foreground/8'
@@ -228,17 +208,16 @@ const SidebarNav = React.memo(function SidebarNav() {
                   openMobilePage()
                 }}
                 aria-current={mobileActive ? 'page' : undefined}
-                className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left"
+                className="flex h-full min-w-0 flex-1 items-center gap-2 rounded-md px-2.5 text-left"
               >
                 <Smartphone
                   className={cn(
                     'size-4 shrink-0',
-                    !mobileActive && 'text-worktree-sidebar-foreground/30'
+                    !mobileActive && 'text-worktree-sidebar-foreground/60'
                   )}
-                  strokeWidth={mobileActive ? 2.25 : 1.75}
                 />
                 <span className="min-w-0 flex-1 truncate">
-                  {translate('auto.components.sidebar.SidebarNav.1b5c41caee', 'Orca Mobile')}
+                  {translate('auto.components.sidebar.SidebarNav.1b5c41caee', 'Cove Mobile')}
                 </span>
                 {mobileOnboardingBadge.visible ? (
                   <span className="shrink-0 rounded-full bg-primary px-1.5 py-px text-[10px] font-semibold text-primary-foreground">

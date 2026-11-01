@@ -1,4 +1,34 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "Voltar ao espaço de trabalho",
+    "inboxDescription": "Atualizações de agentes que precisam da sua atenção.",
+    "tasksTitle": "Tarefas",
+    "tasksDescription": "Trabalho a retomar em todos os seus projetos.",
+    "taskProvider": "Provedor de tarefas"
+  },
+  "statusBar": {
+    "clock": "Relógio",
+    "footerWidgets": "Widgets do rodapé",
+    "localClock": "Relógio local",
+    "focusTimer": "Temporizador de foco",
+    "focusIdle": "Foco · {{time}}",
+    "focusRunning": "Pausar · {{time}}",
+    "focusComplete": "Foco concluído · Reiniciar",
+    "quickNote": "Nota rápida",
+    "quickNoteClose": "Fechar nota",
+    "quickNotePlaceholder": "Guarde uma ideia aqui…",
+    "quickNoteSaved": "Salva neste dispositivo.",
+    "weather": "Clima",
+    "weatherLabel": "Clima: {{temperature}} em {{city}}",
+    "weatherSetCity": "Definir cidade",
+    "weatherClose": "Fechar clima",
+    "weatherCity": "Cidade",
+    "weatherCityPlaceholder": "Cidade, ex.: Madrid",
+    "weatherSave": "Salvar",
+    "weatherNotFound": "Nenhuma cidade encontrada com esse nome.",
+    "weatherFailed": "Não foi possível acessar o Open-Meteo. Tente novamente.",
+    "weatherSource": "Clima atual do Open-Meteo. A cidade fica salva neste dispositivo."
+  },
   "common": {
     "retry": "Tentar novamente",
     "cancel": "Cancelar"
@@ -646,6 +676,18 @@
         "spanish": "Español",
         "french": "Français",
         "portuguese": "Português (Brasil)"
+      },
+      "windowMaterial": {
+        "title": "Material da janela",
+        "description": "Superfícies sólidas ou vidro translúcido sobre um fundo suave.",
+        "solid": "Sólido",
+        "glass": "Vidro"
+      },
+      "projectIcons": {
+        "title": "Ícones de projeto",
+        "description": "Sprites pixelados na barra lateral ou o ícone próprio de cada repositório.",
+        "pixel": "Pixel",
+        "repository": "Repositório"
       },
       "statusBar": {
         "claudeToggleDescription": "Mostra o uso de tokens e custo do Claude para o espaço de trabalho ativo.",

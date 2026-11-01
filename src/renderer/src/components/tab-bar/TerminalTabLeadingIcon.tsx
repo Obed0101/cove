@@ -92,11 +92,11 @@ export function TerminalTabLeadingIcon({
 
   return (
     <span
-      className={`mr-1 inline-flex shrink-0 ${isActive ? '' : 'opacity-70'}`}
+      className={`mr-2 inline-flex shrink-0 ${isActive ? '' : 'opacity-70'}`}
       data-shell-icon={shell ?? 'generic'}
       aria-hidden
     >
-      <ShellIcon shell={shell} size={12} />
+      <ShellIcon shell={shell} size={16} genericVariant="glyph" />
     </span>
   )
 }

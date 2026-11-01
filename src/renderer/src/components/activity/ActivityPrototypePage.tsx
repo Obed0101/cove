@@ -15,6 +15,7 @@ import { hasActivityThreadWorkspace } from './activity-thread-actions'
 import { useActivityThreadActionBindings } from './use-activity-thread-action-bindings'
 import { ActivityThreadListPane } from './activity-thread-list-pane'
 import { ActivityThreadDetailPane } from './activity-thread-detail-pane'
+import { ActivityPageHeading } from './ActivityPageHeading'
 import {
   otherActivityTerminalSlot,
   useActivityTerminalLoadingLabel,
@@ -318,8 +319,9 @@ export default function ActivityPrototypePage(): React.JSX.Element {
 
   // Page content reaches window edges; titlebars supply top spacing.
   return (
-    <div ref={setActivityPageRef} className="flex h-full min-h-0 flex-col bg-background pb-3">
-      <main className="flex min-h-0 flex-1 overflow-hidden">
+    <div ref={setActivityPageRef} className="flex h-full min-h-0 flex-col px-6 pt-6 pb-3">
+      <ActivityPageHeading />
+      <main className="flex min-h-0 flex-1 overflow-hidden border-t border-border/60">
         <ActivityThreadListPane
           threadListRef={threadListRef}
           threadListWidth={threadListWidth}

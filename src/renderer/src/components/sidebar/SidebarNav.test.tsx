@@ -51,6 +51,11 @@ vi.mock('@/components/dashboard/useAgentBucketCounts', () => ({
   }
 }))
 
+// Inbox shares the header's always-on counts; isolate it so these cases track only the dashboard chunk.
+vi.mock('./SidebarInboxNavButton', () => ({
+  SidebarInboxNavButton: () => null
+}))
+
 vi.mock('@/hooks/useShortcutLabel', () => ({
   useShortcutKeyComboDetails: () => [{ keys: ['⌘', 'J'], doubleTap: false }]
 }))
@@ -116,7 +121,7 @@ function folderRepo(): Repo {
 }
 
 function setSidebarState({
-  settings = getDefaultSettings('/tmp'),
+  settings = { ...getDefaultSettings('/tmp'), showMobileButton: true },
   repos = [gitRepo()]
 }: {
   settings?: GlobalSettings
@@ -307,7 +312,7 @@ describe('SidebarNav', () => {
     const container = await renderSidebarNav()
 
     expect(queryButtonByText(container, 'Automations')).not.toBeNull()
-    expect(queryButtonByText(container, 'Orca Mobile')).not.toBeNull()
+    expect(queryButtonByText(container, 'Cove Mobile')).not.toBeNull()
 
     await act(async () => {
       await i18n.changeLanguage('zh')
@@ -325,12 +330,12 @@ describe('SidebarNav', () => {
     })
 
     expect(queryButtonByText(container, '[Automations]')).not.toBeNull()
-    expect(queryButtonByText(container, '[Orca Mobile]')).not.toBeNull()
+    expect(queryButtonByText(container, '[Cove Mobile]')).not.toBeNull()
   })
 
   it('shows the inline hide control only once a device is paired', async () => {
     const beforePairing = await renderSidebarNav()
-    expect(queryButtonByText(beforePairing, 'Orca Mobile')).not.toBeNull()
+    expect(queryButtonByText(beforePairing, 'Cove Mobile')).not.toBeNull()
     expect(beforePairing.querySelector('button[aria-label="Hide from sidebar"]')).toBeNull()
 
     mocks.hasPairedMobileDevice = true
@@ -339,7 +344,7 @@ describe('SidebarNav', () => {
       'button[aria-label="Hide from sidebar"]'
     )
 
-    expect(queryButtonByText(container, 'Orca Mobile')).not.toBeNull()
+    expect(queryButtonByText(container, 'Cove Mobile')).not.toBeNull()
     expect(hideButton).not.toBeNull()
     expect(hideButton?.querySelector('svg')).not.toBeNull()
 
@@ -383,7 +388,7 @@ describe('SidebarNav', () => {
   it('hides Mobile from its sidebar context menu', async () => {
     const container = await renderSidebarNav()
 
-    const mobileMenu = getButtonByText(container, 'Orca Mobile').closest(
+    const mobileMenu = getButtonByText(container, 'Cove Mobile').closest(
       '[data-testid="context-menu"]'
     )
     expect(mobileMenu).not.toBeNull()
@@ -393,39 +398,19 @@ describe('SidebarNav', () => {
     expect(mocks.updateSettings).toHaveBeenCalledWith({ showMobileButton: false })
   })
 
-  it('places the worktree palette search above the sidebar nav rows', async () => {
+  it('leads the sidebar nav with Open project, which opens the add-project dialog', async () => {
     const container = await renderSidebarNav()
     const nav = container.querySelector('[data-contextual-tour-target="sidebar-navigation"]')
-    const searchButton = container.querySelector<HTMLButtonElement>(
-      'button[aria-label="Search worktrees and browser tabs"]'
-    )
-    const tasksButton = getButtonByText(container, 'Tasks')
+    const openProjectButton = getButtonByText(container, 'Open project')
 
-    expect(nav?.firstElementChild).toBe(searchButton)
-    if (!searchButton) {
-      throw new Error('worktree palette search button not rendered')
-    }
+    expect(nav?.firstElementChild).toBe(openProjectButton)
     expect(
-      searchButton.compareDocumentPosition(tasksButton) & Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy()
-  })
+      container.querySelector('button[aria-label="Search worktrees and browser tabs"]')
+    ).toBeNull()
 
-  it('hides the worktree palette shortcut until the search field is hovered or focused', async () => {
-    const container = await renderSidebarNav()
+    await clickButton(openProjectButton)
 
-    const searchButton = container.querySelector(
-      'button[aria-label="Search worktrees and browser tabs"]'
-    )
-    expect(searchButton).not.toBeNull()
-    expect(searchButton?.className).toContain('bg-worktree-sidebar-foreground/5')
-
-    const shortcuts = searchButton?.querySelector('span.hidden')
-    expect(shortcuts?.className).toContain('hidden')
-    expect(shortcuts?.className).toContain('group-hover:flex')
-    expect(shortcuts?.className).toContain('group-focus-within:flex')
-    expect(shortcuts?.textContent).toContain('⌘')
-    expect(shortcuts?.textContent).toContain('J')
-    expect(searchButton?.querySelector('kbd')).toBeNull()
+    expect(mocks.openModal).toHaveBeenCalledWith('add-repo')
   })
 
   it('keeps task source shortcuts keyboard-reachable and revealed on Tasks row hover or focus', async () => {

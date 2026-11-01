@@ -67,18 +67,19 @@ function RightSidebarInner(): React.JSX.Element {
     windowWidth,
     activityBarSideWidth
   )
-  const { containerRef, onResizeStart } = useSidebarResize<HTMLDivElement>({
+  const { containerRef, onResizeStart, contentOpen } = useSidebarResize<HTMLDivElement>({
     isOpen: rightSidebarOpen,
     width: renderedRightSidebarWidth,
     minWidth: RIGHT_SIDEBAR_MIN_WIDTH,
     maxWidth,
     deltaSign: -1,
     renderedExtraWidth: activityBarSideWidth,
-    setWidth: setRightSidebarWidth
+    setWidth: setRightSidebarWidth,
+    animateToggle: true
   })
   const topActivityStripRef = useMeasuredWidth(setTopActivityStripWidth)
 
-  const panelContent = rightSidebarOpen ? (
+  const panelContent = contentOpen ? (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden scrollbar-sleek-parent">
       {/* Keep panels mounted across worktree switches; remounts caused Windows IPC storms and multi-second freezes. */}
       <RightSidebarPanelContent effectiveTab={effectiveTab} rightSidebarOpen={rightSidebarOpen} />
@@ -101,12 +102,13 @@ function RightSidebarInner(): React.JSX.Element {
     />
   ))
 
+  // Cove: while open the toggle closes the explorer header; once closed it moves to the end of the tab row.
   const closeButton = rightSidebarOpen ? (
     <Tooltip>
       <TooltipTrigger asChild>
         <button
           type="button"
-          className="sidebar-toggle mr-1"
+          className="sidebar-toggle flex size-7 items-center justify-center rounded-md !p-0 !text-foreground"
           onClick={toggleRightSidebar}
           aria-label={translate(
             'auto.components.right.sidebar.index.e8e2e4ce74',
@@ -135,12 +137,7 @@ function RightSidebarInner(): React.JSX.Element {
         rightSidebarOpen ? 'overflow-visible' : 'overflow-hidden'
       )}
     >
-      <div
-        className="flex flex-col flex-1 min-w-0 bg-sidebar overflow-hidden"
-        style={{
-          borderLeft: rightSidebarOpen ? '1px solid var(--sidebar-border)' : 'none'
-        }}
-      >
+      <div className="flex flex-col flex-1 min-w-0 bg-shell overflow-hidden">
         {activityBarPosition === 'top' ? (
           <RightSidebarTopActivityBar
             hasDesktopWindowChrome={hasDesktopWindowChrome}
@@ -155,7 +152,7 @@ function RightSidebarInner(): React.JSX.Element {
           />
         ) : (
           /* The 40px activity bar absorbs part of the 138px window-control overlay; inset the header by the remaining 98px. */
-          <div className="flex items-center justify-between h-[36px] min-h-[36px] px-3 border-b border-border right-sidebar-header-side-inset right-sidebar-header-drag">
+          <div className="flex items-center justify-between h-[44px] min-h-[44px] px-3 border-b border-border right-sidebar-header-side-inset right-sidebar-header-drag">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
               {visibleItems.find((item) => item.id === effectiveTab)?.title ?? ''}
             </span>
@@ -176,7 +173,10 @@ function RightSidebarInner(): React.JSX.Element {
       {activityBarPosition === 'side' && (
         <ContextMenu>
           <ContextMenuTrigger asChild>
-            <div className="flex flex-col items-center w-10 min-w-[40px] bg-sidebar border-l border-border side-activity-bar-windows-inset">
+            <div
+              data-sidebar-fixed-width=""
+              className="flex flex-col items-center w-10 min-w-[40px] bg-sidebar border-l border-border side-activity-bar-windows-inset"
+            >
               <TooltipProvider delayDuration={400}>{sideActivityBarIcons}</TooltipProvider>
             </div>
           </ContextMenuTrigger>

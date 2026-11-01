@@ -112,7 +112,8 @@ export function buildWorktreeCardPresentation(card: WorktreeCardController) {
   const showUnreadQuickAction = !affiliateListMode && showStatus && !newCardStyle
   // Why: the slot owns the unread/status lane; legacy keeps the bell toggle, the new card keeps the glyph passive.
   const showCombinedStatusSlot = showStatus
-  const showTitleRowPrimary = compactCards && worktree.isMainWorktree && !isFolder
+  // Cove: compact rows show the active worktree's tab count instead of a primary star.
+  const showTitleRowTabCount = compactCards && card.isActive
   const showMetaRowDetails = !newCardStyle && !compactCards && (hasDetails || hasPorts)
   const showTitleRowIndicators = (newCardStyle || compactCards) && (hasDetails || hasPorts)
   // Why: grouped views can hide the repo badge; don't reserve a blank metadata lane unless there's real content.
@@ -131,7 +132,7 @@ export function buildWorktreeCardPresentation(card: WorktreeCardController) {
   const hasMetaRow = cardDetails.metaRow
     ? hasDetailedMetaRowContent
     : hasMetadataBadge || cacheStartedAt != null
-  const showHeaderActions = showTitleRowPrimary || showDeleteQuickAction
+  const showHeaderActions = showTitleRowTabCount || showDeleteQuickAction
   const trimmedVisibleCardTitle = visibleCardTitle.trim()
   const showBranchIdentityHover = newCardStyle
     ? Boolean(identityDisplay) &&
@@ -271,7 +272,7 @@ export function buildWorktreeCardPresentation(card: WorktreeCardController) {
     showConflictOperationBadge,
     showUnreadQuickAction,
     showCombinedStatusSlot,
-    showTitleRowPrimary,
+    showTitleRowTabCount,
     showMetaRowDetails,
     showTitleRowIndicators,
     hasMetaRow,

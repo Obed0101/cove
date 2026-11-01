@@ -29,14 +29,14 @@ export type ActivityBarItem = {
   statusIndicator?: CheckStatus
 }
 
-const STATUS_DOT_COLOR: Record<CheckStatus, string> = {
+export const STATUS_DOT_COLOR: Record<CheckStatus, string> = {
   success: 'bg-emerald-500',
   failure: 'bg-rose-500',
   pending: 'bg-amber-500',
   neutral: 'bg-muted-foreground'
 }
 
-function activityItemAriaLabel(item: ActivityBarItem, status?: CheckStatus | null): string {
+export function activityItemAriaLabel(item: ActivityBarItem, status?: CheckStatus | null): string {
   const base = item.shortcut ? `${item.title} (${item.shortcut})` : item.title
   return status === 'failure'
     ? `${base} — ${translate('auto.components.right.sidebar.activityBar.error', 'Error')}`
@@ -147,12 +147,14 @@ export function ActivityBarButton({
           className={cn(
             'relative flex shrink-0 items-center justify-center transition-colors',
             RIGHT_SIDEBAR_HEADER_NO_DRAG_CLASS_NAME,
-            isTop ? 'h-[36px] w-9' : 'w-10 h-10',
-            active ? 'text-foreground' : 'text-muted-foreground/60 hover:text-muted-foreground'
+            isTop ? 'h-7 w-8 rounded-md' : 'w-10 h-10',
+            active ? 'text-foreground' : 'text-muted-foreground/60 hover:text-muted-foreground',
+            active && isTop && 'bg-accent ring-1 ring-border'
           )}
           onClick={onClick}
           data-workspace-board-dismiss=""
           aria-label={activityItemAriaLabel(item, effectiveStatus)}
+          aria-pressed={isTop ? active : undefined}
         >
           <Icon size={isTop ? 16 : 18} />
 
@@ -160,15 +162,12 @@ export function ActivityBarButton({
             <div
               className={cn(
                 'absolute rounded-full size-[7px] ring-1 ring-sidebar',
-                isTop ? 'top-[8px] right-[5px]' : 'top-[7px] right-[7px]',
+                isTop ? 'top-[4px] right-[4px]' : 'top-[7px] right-[7px]',
                 STATUS_DOT_COLOR[effectiveStatus] ?? 'bg-muted-foreground'
               )}
             />
           )}
 
-          {active && isTop && (
-            <div className="absolute bottom-0 left-[25%] right-[25%] h-[2px] bg-foreground rounded-t" />
-          )}
           {active && !isTop && (
             <div className="absolute right-0 top-[25%] bottom-[25%] w-[2px] bg-foreground rounded-l" />
           )}

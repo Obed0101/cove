@@ -58,7 +58,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
               }
               data-workspace-board-preserve-open={preserveWorkspaceBoardOpen ? '' : undefined}
             >
-              <SlidersHorizontal className="size-3.5" strokeWidth={2.25} />
+              <SlidersHorizontal className="size-3.5" />
               <OptionsFilterCountBadge count={activeFilterCount} />
             </Button>
           </DropdownMenuTrigger>

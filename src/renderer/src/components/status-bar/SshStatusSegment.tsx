@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useId, useMemo, useRef, useState } from 'react'
 import { MonitorSmartphone, Server } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -63,6 +63,7 @@ export function SshStatusSegment({
   const [menuOpen, setMenuOpen] = useState(false)
   const [findOpen, setFindOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const hostCountId = useId()
   const [repairTarget, setRepairTarget] = useState<{ id: string; label: string } | null>(null)
 
   const projectHostIds = useMemo(
@@ -201,25 +202,23 @@ export function SshStatusSegment({
             'auto.components.status.bar.SshStatusSegment.fdc57e9970',
             'Remote host connection status'
           )}
+          aria-describedby={iconOnly || compact ? undefined : hostCountId}
         >
           {iconOnly ? (
             <MonitorSmartphone className="size-3" />
           ) : (
             <>
               <Server className="size-3" />
+              {/* Cove: icon + number like the other footer widgets; the localized word stays for assistive tech. */}
               {!compact && (
-                <span className="inline-grid text-2xs tabular-nums">
-                  {/* Reserve both localized forms so count changes don't resize the bar. */}
-                  <span aria-hidden className="invisible col-start-1 row-start-1">
-                    {connectedHostCountLabel(1)}
+                <>
+                  <span aria-hidden className="text-2xs tabular-nums">
+                    {connectedHostCount}
                   </span>
-                  <span aria-hidden className="invisible col-start-1 row-start-1">
-                    {connectedHostCountLabel(Math.max(99, statuses.length))}
-                  </span>
-                  <span className="col-start-1 row-start-1">
+                  <span id={hostCountId} className="sr-only">
                     {connectedHostCountLabel(connectedHostCount)}
                   </span>
-                </span>
+                </>
               )}
             </>
           )}

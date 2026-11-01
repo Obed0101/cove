@@ -153,12 +153,11 @@ export function FileExplorerRow({
           data-file-explorer-row=""
           data-selected={isSelected ? 'true' : undefined}
           className={cn(
-            'flex w-full items-center gap-1 rounded-sm px-2 py-1 text-left text-xs transition-colors',
-            !isSelected && 'hover:bg-accent hover:text-foreground',
-            isSelected && 'text-accent-foreground',
+            'flex h-7 w-full items-center gap-1.5 rounded-md pr-2 text-left text-[13px] text-muted-foreground transition-colors',
+            !isSelected && 'hover:text-foreground',
             isFlashing && 'bg-amber-400/20 ring-1 ring-inset ring-amber-400/70'
           )}
-          style={{ paddingLeft: `${(node.depth - displayDepthOffset) * 16 + 8}px` }}
+          style={{ paddingLeft: `${(node.depth - displayDepthOffset) * 14 + 8}px` }}
           ref={setRowDragNode}
           // The OS-drop owner reads the target folder here at drop time.
           data-file-explorer-drop-dir={rowDropDir}
@@ -211,24 +210,24 @@ export function FileExplorerRow({
                 )}
               />
               {isLoading ? (
-                <Loader2 className="size-3 shrink-0 animate-spin text-muted-foreground" />
+                <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />
               ) : showLoadError ? (
-                <CircleAlert className="size-3 shrink-0 text-destructive" />
+                <CircleAlert className="size-4 shrink-0 text-destructive" />
               ) : isExpanded ? (
-                <FolderOpen className="size-3 shrink-0 text-muted-foreground" />
+                <FolderOpen className="size-4 shrink-0 text-muted-foreground" />
               ) : (
-                <Folder className="size-3 shrink-0 text-muted-foreground" />
+                <Folder className="size-4 shrink-0 text-muted-foreground" />
               )}
             </>
           ) : (
             <>
               <span className="size-3 shrink-0" />
               {node.isSymlink ? (
-                <Link className="size-3 shrink-0 text-muted-foreground" />
+                <Link className="size-4 shrink-0 text-muted-foreground" />
               ) : (
                 React.createElement(FileTypeIcon, {
                   filePath: node.relativePath || node.name,
-                  className: 'size-3 shrink-0 text-muted-foreground'
+                  className: 'size-4 shrink-0 text-muted-foreground'
                 })
               )}
             </>
@@ -238,7 +237,7 @@ export function FileExplorerRow({
             {...{ [RENAME_HOTSPOT_ATTR]: '' }}
             className={cn(
               'truncate',
-              isSelected && !nodeStatus && !isIgnored && 'text-accent-foreground',
+              isSelected && !nodeStatus && !isIgnored && 'text-foreground',
               // Reserve space for italic overhang so truncation does not clip the final letter.
               isIgnored && 'italic pr-0.5'
             )}
@@ -264,7 +263,7 @@ export function FileExplorerRow({
           ) : null}
           {nodeStatus ? (
             <span
-              className="ml-auto shrink-0 text-[10px] font-semibold tracking-wide mr-2"
+              className="ml-auto shrink-0 pl-2 font-mono text-[11px]"
               style={{ color: statusColor ?? undefined }}
             >
               {STATUS_LABELS[nodeStatus]}

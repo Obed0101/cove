@@ -1,5 +1,6 @@
 import type { ManagedPane, ManagedPaneInternal } from './pane-manager-types'
 import { cancelPendingSafeFitContinuations, safeFitAndThen } from './pane-tree-ops'
+import { sidebarToggleTransitionRemainingMs } from '../sidebar-toggle-transition'
 
 type ProposedDimensions = {
   cols: number
@@ -12,6 +13,7 @@ type StableFitPane = ManagedPane &
 const MAX_STABILITY_FRAMES = 8
 const pendingStableFitRafIds = new WeakMap<StableFitPane, number>()
 const stableFitCallbacks = new WeakMap<StableFitPane, Set<() => void>>()
+const deferredSidebarFitTimers = new WeakMap<StableFitPane, ReturnType<typeof setTimeout>>()
 
 function getPendingObservedFitRafId(pane: StableFitPane): number | null {
   return pane.pendingObservedFitRafId ?? pendingStableFitRafIds.get(pane) ?? null
@@ -82,7 +84,18 @@ function finishStableFit(pane: StableFitPane): void {
 
 export function requestStablePaneFit(pane: StableFitPane, onSettled?: () => void): void {
   addStableFitCallback(pane, onSettled)
-  if (getPendingObservedFitRafId(pane) !== null) {
+  if (getPendingObservedFitRafId(pane) !== null || deferredSidebarFitTimers.has(pane)) {
+    return
+  }
+  const sidebarTransitionMs = sidebarToggleTransitionRemainingMs()
+  if (sidebarTransitionMs > 0) {
+    deferredSidebarFitTimers.set(
+      pane,
+      setTimeout(() => {
+        deferredSidebarFitTimers.delete(pane)
+        requestStablePaneFit(pane)
+      }, sidebarTransitionMs)
+    )
     return
   }
   if (!hasVisibleFitGeometry(pane)) {
@@ -156,6 +169,8 @@ export function detachPaneFitResizeObserver(pane: ManagedPaneInternal): void {
     cancelAnimationFrame(pendingObservedFitRafId)
     setPendingObservedFitRafId(pane, null)
   }
+  clearTimeout(deferredSidebarFitTimers.get(pane))
+  deferredSidebarFitTimers.delete(pane)
   stableFitCallbacks.delete(pane)
   cancelPendingSafeFitContinuations(pane)
 }

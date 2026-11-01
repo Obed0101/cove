@@ -90,6 +90,15 @@ export function composeActiveTerminalTheme(
   return theme
 }
 
+/** Glass shows the workbench card through main-window terminals, so their own background goes clear. */
+export function withWindowMaterialTerminalOpacity<
+  T extends Pick<GlobalSettings, 'windowMaterial' | 'terminalBackgroundOpacity'>
+>(settings: T): T {
+  return settings.windowMaterial === 'glass'
+    ? { ...settings, terminalBackgroundOpacity: 0 }
+    : settings
+}
+
 /** Publish at startup so hidden-at-launch PTYs can query OSC 10/11 before any pane mounts; returns whether sent (terminal-query-authority.md). */
 export function publishTerminalViewAttributesAtAppStart(
   settings: GlobalSettings | null | undefined,
@@ -134,7 +143,7 @@ function composedTerminalThemesEqual(a: ITheme | undefined, b: ITheme): boolean 
 
 export function applyTerminalAppearance(
   manager: PaneManager,
-  settings: GlobalSettings,
+  savedSettings: GlobalSettings,
   systemPrefersDark: boolean,
   paneFontSizes: Map<number, number>,
   paneTransports: Map<number, PtyTransport>,
@@ -142,6 +151,7 @@ export function applyTerminalAppearance(
   paneMode2031: Map<number, boolean>,
   paneLastThemeMode: Map<number, 'dark' | 'light'>
 ): void {
+  const settings = withWindowMaterialTerminalOpacity(savedSettings)
   const appearance = resolveEffectiveTerminalAppearance(settings, systemPrefersDark)
   const paneStyles = resolvePaneStyleOptions(settings)
   const baseTheme: ITheme | null = appearance.theme ?? getBuiltinTheme(appearance.themeName)

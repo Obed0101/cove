@@ -14,7 +14,6 @@ import { translate } from '@/i18n/i18n'
 import { cn } from '@/lib/utils'
 
 type FileExplorerToolbarProps = {
-  repoName: string
   worktreePath: string
   connectionId?: string | null
   runtimeEnvironmentId?: string | null
@@ -36,7 +35,6 @@ type FileExplorerToolbarProps = {
 }
 
 export function FileExplorerToolbar({
-  repoName,
   worktreePath,
   connectionId,
   runtimeEnvironmentId,
@@ -53,13 +51,7 @@ export function FileExplorerToolbar({
   onToggleDotfiles
 }: FileExplorerToolbarProps): React.JSX.Element {
   return (
-    <div className="flex h-8 min-h-8 items-center gap-2 border-b border-border px-2">
-      <span
-        className="min-w-0 flex-1 truncate text-xs font-medium text-foreground"
-        title={repoName}
-      >
-        {repoName}
-      </span>
+    <div className="flex shrink-0 items-center gap-0.5">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

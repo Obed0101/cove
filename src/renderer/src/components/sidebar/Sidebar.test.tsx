@@ -25,10 +25,11 @@ vi.mock('@/store', () => ({
 }))
 
 vi.mock('@/hooks/useSidebarResize', () => ({
-  useSidebarResize: () => ({
+  useSidebarResize: ({ isOpen }: { isOpen: boolean }) => ({
     containerRef: { current: null },
     isResizing: false,
-    onResizeStart: vi.fn()
+    onResizeStart: vi.fn(),
+    contentOpen: isOpen
   })
 }))
 

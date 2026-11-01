@@ -90,7 +90,7 @@ export function SkillUnsupportedStatusPill({
           )
         : translate(
             'auto.components.skills.SkillFreshnessStatusPill.updateServer',
-            'Update Orca on the server'
+            'Update Cove on the server'
           )}
     </IntegrationStatusPill>
   )

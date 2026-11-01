@@ -19,8 +19,8 @@ import { preventMiddleButtonDefault } from './middle-button-default-guard'
 import { CLOSE_ALL_CONTEXT_MENUS_EVENT } from '@/lib/close-all-context-menus'
 import type { TabDragItemData } from '../tab-group/useTabDragSplit'
 import {
-  ACTIVE_TAB_INDICATOR_CLASSES,
   getDropIndicatorClasses,
+  getTabIndicatorClasses,
   getTabRootStateClasses,
   getTabStripBorderClasses,
   type DropIndicator
@@ -229,7 +229,7 @@ export default function EditorFileTab({
       data-pinned={isPinned ? 'true' : 'false'}
       {...attributes}
       {...dragListeners}
-      className={`group relative flex items-center h-full px-1.5 text-xs cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
+      className={`group relative flex items-center h-full px-2.5 text-[13px] cursor-pointer select-none outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getDropIndicatorClasses(dropIndicator ?? null)} ${getTabRootStateClasses(isActive)}`}
       onPointerDown={(e) => {
         onTabPointerDown(
           e,
@@ -258,7 +258,7 @@ export default function EditorFileTab({
         }
       }}
     >
-      {isActive && <span className={ACTIVE_TAB_INDICATOR_CLASSES} aria-hidden />}
+      <span className={getTabIndicatorClasses(isActive)} aria-hidden />
       {isConflictReview ? (
         <ShieldAlert
           className={`w-3 h-3 mr-1 shrink-0 ${isActive ? 'text-orange-400' : 'text-orange-400/70'}`}

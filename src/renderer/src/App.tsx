@@ -37,6 +37,7 @@ import { useWindowVisibilityEffects } from './app-shell/use-window-visibility-ef
 import { SpaceWindowStatePublisher } from './components/workspace-space/SpaceWindowStatePublisher'
 import { PlainSshTerminalPanels } from './components/plain-ssh-terminal/PlainSshTerminalPanels'
 import { installActiveWorktreeRemovalSuccessor } from './lib/active-worktree-removal-successor'
+import { useCoveConfigSync } from './lib/cove-config-sync'
 
 function App(): React.JSX.Element {
   const layout = useAppChromeLayout()
@@ -52,6 +53,7 @@ function App(): React.JSX.Element {
   useRuntimeGraphSync()
   usePersistedUIWriter()
   useDocumentAppearance()
+  useCoveConfigSync()
   useWindowVisibilityEffects()
   useGlobalKeybindings({ layout, floatingWorkspace })
   // App owns active-selection removal; the Space window only mirrors selection.

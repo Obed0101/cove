@@ -1,17 +1,4 @@
 import type { StatusBarItem } from './ui-chrome-types'
 
-export const DEFAULT_STATUS_BAR_ITEMS: StatusBarItem[] = [
-  'claude',
-  'codex',
-  'gemini',
-  'antigravity',
-  'opencode-go',
-  'kimi',
-  'minimax',
-  'grok',
-  'cursor',
-  'zcode',
-  'ssh',
-  'resource-usage',
-  'ports'
-]
+// Cove: the footer starts with the design preview's widgets; the "+" picker adds the rest.
+export const DEFAULT_STATUS_BAR_ITEMS: StatusBarItem[] = ['claude', 'codex']

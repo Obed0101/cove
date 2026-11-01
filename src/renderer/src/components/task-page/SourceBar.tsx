@@ -2,7 +2,7 @@ import type { TaskPageComposerActionsModel } from '../use-task-page-composer-act
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { translate } from '@/i18n/i18n'
-import { X, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { LinearScopeSelector } from '@/components/linear-scope-selector'
@@ -21,7 +21,6 @@ export function TaskPageSourceBar({
 }): React.JSX.Element | null {
   const {
     openTaskPage,
-    closeTaskPage,
     updateSettings,
     selectJiraSite,
     linearConnected,
@@ -69,79 +68,70 @@ export function TaskPageSourceBar({
         className="flex min-w-0 flex-wrap items-center gap-2"
         data-contextual-tour-target="tasks-source-filters"
       >
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-7 rounded-full"
-              onClick={closeTaskPage}
-              aria-label={translate('auto.components.TaskPage.1a06219d5c', 'Close tasks')}
-            >
-              <X className="size-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" sideOffset={6}>
-            {translate('auto.components.TaskPage.4826fd1ad8', 'Close · Esc')}
-          </TooltipContent>
-        </Tooltip>
-        <div className="mx-1 h-5 w-px bg-border/50" aria-hidden />
-        {visibleSourceOptions.map((source) => {
-          const active = taskSource === source.id
-          const sourceAvailabilityNotice = taskSourceAvailabilityNoticeByProvider[source.id] ?? null
-          const sourceDisabled = source.disabled || sourceAvailabilityNotice?.blocking
-          return (
-            <Tooltip key={source.id}>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  disabled={sourceDisabled}
-                  onClick={() => {
-                    if (sourceAvailabilityNotice?.blocking) {
-                      return
-                    }
-                    taskSourceManuallyChangedRef.current = true
-                    openTaskPage(
-                      {
-                        taskSource: source.id
-                      },
-                      {
-                        recordTasksInteraction: false
-                      }
-                    )
-                    void updateSettings({
-                      defaultTaskSource: source.id
-                    }).catch(() => {
-                      toast.error(
-                        translate(
-                          'auto.components.TaskPage.609532fae7',
-                          'Failed to save default task source.'
-                        )
-                      )
-                    })
-                  }}
-                  data-task-source={source.id}
-                  aria-label={sourceAvailabilityNotice?.label ?? source.label}
-                  aria-pressed={active}
-                  className={cn(
-                    'group flex h-8 w-8 items-center justify-center rounded-md border transition',
-                    active
-                      ? 'border-foreground/40 bg-muted/70 text-foreground shadow-sm'
-                      : 'border-border/40 bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground',
-                    sourceDisabled && 'cursor-not-allowed opacity-55'
-                  )}
-                >
-                  <source.Icon className="size-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>
-                {sourceAvailabilityNotice?.label ?? source.label}
-              </TooltipContent>
-            </Tooltip>
-          )
-        })}
+        {/* Cove: named providers in the explorer's segmented control; Back to workspace lives in the page heading. */}
         <div
-          className="hidden min-w-0 max-w-[min(420px,40vw)] items-center rounded-md border border-border/50 bg-muted/35 px-2 py-1 text-xs text-muted-foreground sm:flex"
+          role="group"
+          aria-label={translate('workspacePage.taskProvider', 'Task provider')}
+          className="flex max-w-full gap-0.5 overflow-x-auto scrollbar-none rounded-lg bg-foreground/5 p-0.5"
+        >
+          {visibleSourceOptions.map((source) => {
+            const active = taskSource === source.id
+            const sourceAvailabilityNotice =
+              taskSourceAvailabilityNoticeByProvider[source.id] ?? null
+            const sourceDisabled = source.disabled || sourceAvailabilityNotice?.blocking
+            return (
+              <Tooltip key={source.id} open={sourceAvailabilityNotice ? undefined : false}>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    disabled={sourceDisabled}
+                    onClick={() => {
+                      if (sourceAvailabilityNotice?.blocking) {
+                        return
+                      }
+                      taskSourceManuallyChangedRef.current = true
+                      openTaskPage(
+                        {
+                          taskSource: source.id
+                        },
+                        {
+                          recordTasksInteraction: false
+                        }
+                      )
+                      void updateSettings({
+                        defaultTaskSource: source.id
+                      }).catch(() => {
+                        toast.error(
+                          translate(
+                            'auto.components.TaskPage.609532fae7',
+                            'Failed to save default task source.'
+                          )
+                        )
+                      })
+                    }}
+                    data-task-source={source.id}
+                    aria-label={sourceAvailabilityNotice?.label ?? source.label}
+                    aria-pressed={active}
+                    className={cn(
+                      'flex h-6 items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 text-xs transition-[color,background-color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+                      active
+                        ? 'bg-control-active text-foreground ring-1 ring-border'
+                        : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
+                      sourceDisabled && 'cursor-not-allowed opacity-55'
+                    )}
+                  >
+                    {source.label}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={6}>
+                  {sourceAvailabilityNotice?.label}
+                </TooltipContent>
+              </Tooltip>
+            )
+          })}
+        </div>
+        <div
+          className="hidden min-w-0 max-w-[min(420px,40vw)] items-center text-xs text-muted-foreground sm:flex"
           title={sourceSummary.title}
         >
           <span className="truncate">{sourceSummary.label}</span>

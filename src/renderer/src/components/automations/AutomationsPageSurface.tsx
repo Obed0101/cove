@@ -138,7 +138,7 @@ export function AutomationsPageSurface({
     setActivePaneTab('runs')
   }
   return (
-    <main className="relative flex h-full min-h-0 flex-col bg-background pt-5 text-foreground md:pt-6">
+    <main className="relative flex h-full min-h-0 flex-col pt-5 text-foreground md:pt-6">
       <AutomationsPageTopBar
         pageView={pageView}
         isDetailOpen={isDetailOpen}

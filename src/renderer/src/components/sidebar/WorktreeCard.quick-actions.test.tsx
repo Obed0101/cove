@@ -415,7 +415,7 @@ describe('WorktreeCard quick actions', () => {
     expect(markup).toContain('data-worktree-card-meta-row=""')
   })
 
-  it('keeps unread in the status lane and moves primary into the title row when compact cards are enabled', () => {
+  it('drops the primary marker from compact rows, which reserve the title row for the tab count', () => {
     worktreeCardProperties = ['status']
     settings = { compactWorktreeCards: true }
 
@@ -432,7 +432,7 @@ describe('WorktreeCard quick actions', () => {
       />
     )
 
-    expect(markup).toContain('aria-label="Primary worktree"')
+    expect(markup).not.toContain('aria-label="Primary worktree"')
     expect(markup).not.toContain('>primary<')
     expect(markup).not.toContain('data-worktree-card-meta-row=""')
   })

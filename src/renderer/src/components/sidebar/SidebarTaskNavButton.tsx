@@ -1,5 +1,5 @@
 import React from 'react'
-import { EyeOff, Github, Gitlab, List } from 'lucide-react'
+import { ClipboardCheck, EyeOff, Github, Gitlab } from 'lucide-react'
 import { JiraIcon } from '@/components/icons/JiraIcon'
 import { LinearIcon } from '@/components/icons/LinearIcon'
 import {
@@ -166,18 +166,19 @@ export function SidebarTaskNavButton(): React.JSX.Element | null {
             aria-current={tasksActive ? 'page' : undefined}
             data-contextual-tour-target="sidebar-tasks"
             className={cn(
-              'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] font-medium tracking-tight transition-colors',
+              'flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-left text-[13px] transition-colors',
               tasksActive
                 ? 'bg-worktree-sidebar-accent text-worktree-sidebar-accent-foreground'
                 : 'text-worktree-sidebar-foreground/60 group-hover:bg-worktree-sidebar-foreground/8'
             )}
           >
-            <List
+            <ClipboardCheck
               className={cn(
                 'size-4 shrink-0',
-                !tasksActive && 'text-worktree-sidebar-foreground/30'
+                tasksActive
+                  ? 'text-worktree-sidebar-accent-foreground'
+                  : 'text-worktree-sidebar-foreground/60'
               )}
-              strokeWidth={tasksActive ? 2.25 : 1.75}
             />
             <span className="flex-1">
               {translate('auto.components.sidebar.SidebarNav.fee535205b', 'Tasks')}

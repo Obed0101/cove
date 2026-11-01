@@ -1,4 +1,34 @@
 {
+  "workspacePage": {
+    "backToWorkspace": "ワークスペースに戻る",
+    "inboxDescription": "対応が必要な Agent の更新。",
+    "tasksTitle": "タスク",
+    "tasksDescription": "プロジェクト全体で取り組む作業。",
+    "taskProvider": "タスクの提供元"
+  },
+  "statusBar": {
+    "clock": "時計",
+    "footerWidgets": "フッターウィジェット",
+    "localClock": "ローカル時計",
+    "focusTimer": "集中タイマー",
+    "focusIdle": "集中 · {{time}}",
+    "focusRunning": "一時停止 · {{time}}",
+    "focusComplete": "集中完了 · 再開",
+    "quickNote": "クイックメモ",
+    "quickNoteClose": "メモを閉じる",
+    "quickNotePlaceholder": "ここにメモを残す…",
+    "quickNoteSaved": "このデバイスに保存されます。",
+    "weather": "天気",
+    "weatherLabel": "天気: {{city}} {{temperature}}",
+    "weatherSetCity": "都市を設定",
+    "weatherClose": "天気を閉じる",
+    "weatherCity": "都市",
+    "weatherCityPlaceholder": "都市 (例: Madrid)",
+    "weatherSave": "保存",
+    "weatherNotFound": "その名前の都市は見つかりませんでした。",
+    "weatherFailed": "Open-Meteo に接続できませんでした。もう一度お試しください。",
+    "weatherSource": "現在の天気は Open-Meteo から取得します。都市はこのデバイスに保存されます。"
+  },
   "app": {
     "saving": {
       "delayedTitle": "プロファイルのストレージ処理に通常より時間がかかっています",
@@ -107,6 +137,18 @@
         "spanish": "Español",
         "french": "Français",
         "portuguese": "Português (Brasil)"
+      },
+      "windowMaterial": {
+        "title": "ウィンドウの素材",
+        "description": "不透明なサーフェス、または柔らかな背景に重なる半透明のガラス。",
+        "solid": "ソリッド",
+        "glass": "ガラス"
+      },
+      "projectIcons": {
+        "title": "プロジェクトアイコン",
+        "description": "サイドバーのピクセルスプライト、または各リポジトリ独自のアイコン。",
+        "pixel": "ピクセル",
+        "repository": "リポジトリ"
       },
       "statusBar": {
         "claudeToggleDescription": "アクティブなワークスペースの Claude トークンとコストの使用状況を表示します。",
@@ -4035,7 +4077,8 @@
             "codexSignInError": "Codex のサインインに失敗しました。もう一度お試しください。",
             "cursorUsageMenu": "Cursor の使用状況",
             "hiddenUsageProviders": "ほかに: {{value0}}",
-            "zcodeUsageMenu": "ZCode の使用量"
+            "zcodeUsageMenu": "ZCode の使用量",
+            "customizeWidgets": "ウィジェットをカスタマイズ"
           },
           "StatusBarUsageEmptyCta": {
             "828c764a79": "アカウントを接続する",

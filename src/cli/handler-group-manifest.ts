@@ -1,5 +1,6 @@
 import type { CommandHandler } from './dispatch'
 import { BROWSER_HANDLER_GROUPS } from './browser-handler-groups'
+import { COVE_CONFIG_HANDLER_GROUP } from './cove-config-handler-group'
 import { JIRA_HANDLER_GROUP } from './jira-handler-group'
 import { LINEAR_HANDLER_GROUP } from './linear-handler-group'
 import { REFERENCE_HANDLER_GROUP } from './reference-handler-group'
@@ -227,6 +228,7 @@ export const HANDLER_GROUPS: readonly HandlerGroup[] = [
     keys: ['profile state exports', 'profile state rollback'],
     load: async () => (await import('./handlers/profile-state.js')).PROFILE_STATE_HANDLERS
   },
+  COVE_CONFIG_HANDLER_GROUP,
   {
     name: 'diagnostics',
     keys: ['diagnostics memory', 'terminal-daemon status', 'terminal-daemon restart'],

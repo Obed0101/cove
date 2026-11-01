@@ -3,7 +3,7 @@ import { TabHoverCard } from './TabHoverCard'
 import { translate } from '@/i18n/i18n'
 import type { ClientHostedBrowserRow } from '../../../../shared/client-hosted-browser-rows'
 import {
-  ACTIVE_TAB_INDICATOR_CLASSES,
+  getTabIndicatorClasses,
   getTabRootStateClasses,
   getTabStripBorderClasses
 } from './drop-indicator'
@@ -47,7 +47,7 @@ export default function ClientHostedBrowserTab({
       >
         <div
           data-client-hosted-browser-row-id={row.browserPageId}
-          className={`group relative flex h-full cursor-pointer select-none items-center px-1.5 text-xs outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getTabRootStateClasses(isActive)}`}
+          className={`group relative flex h-full cursor-pointer select-none items-center px-2.5 text-[13px] outline-none focus:outline-none focus-visible:outline-none ${getTabStripBorderClasses(hasTabsToRight, { includeTopBorder: includeTopTabBorder })} ${getTabRootStateClasses(isActive)}`}
           onPointerDown={onActivate}
           onMouseDown={(event) => {
             if (event.button === 1) {
@@ -63,7 +63,7 @@ export default function ClientHostedBrowserTab({
             }
           }}
         >
-          {isActive && <span className={ACTIVE_TAB_INDICATOR_CLASSES} aria-hidden />}
+          <span className={getTabIndicatorClasses(isActive)} aria-hidden />
           <PageIcon
             className={`mr-1 size-3 shrink-0 ${loading ? 'motion-safe:animate-spin' : ''} ${row.hostAbsent ? 'text-muted-foreground' : 'text-blue-500'}`}
             aria-hidden

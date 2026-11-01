@@ -69,7 +69,7 @@ function DialogContentCloseButton({ variant }: { variant: 'close' | 'minimize' }
   const button = (
     <DialogPrimitive.Close
       data-slot="dialog-close"
-      className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+      className="absolute top-3 right-3 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out hover:bg-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
     >
       {variant === 'minimize' ? <Minus className="size-3.5" /> : <XIcon />}
       <span className="sr-only">{label}</span>
@@ -113,9 +113,9 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         data-size={size}
-        // Match dropdown surface/border/shadow tokens for dark-mode contrast; minmax(0,1fr) prevents long tokens from widening the grid and pushing footers outside.
+        // Cove: the floating surface/border/shadow tokens of popovers at the window's 14px radius; minmax(0,1fr) prevents long tokens from widening the grid and pushing footers outside.
         className={cn(
-          'fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] grid-cols-[minmax(0,1fr)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-black/14 bg-background/96 p-6 text-foreground shadow-[0_20px_60px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl duration-200 outline-none dark:border-white/14 dark:bg-[rgba(23,23,23,0.96)] dark:shadow-[0_24px_72px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:max-w-lg data-[size=compact]:sm:max-w-sm',
+          'fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] grid-cols-[minmax(0,1fr)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-xl border border-border bg-floating-surface p-6 text-popover-foreground shadow-floating backdrop-blur-[20px] duration-150 ease-out outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-97 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-97 motion-reduce:data-[state=closed]:zoom-out-100 motion-reduce:data-[state=open]:zoom-in-100 sm:max-w-lg data-[size=compact]:sm:max-w-sm',
           dialogContentSurfaceVariants({ surface }),
           scrollable && 'max-h-[calc(100vh-3rem)] overflow-y-auto scrollbar-sleek',
           className
